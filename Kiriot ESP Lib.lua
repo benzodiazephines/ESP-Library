@@ -2,9 +2,8 @@
 local ESP = {
     Enabled = false,
     Boxes = true,
-    Distance = true,
     BoxShift = CFrame.new(0,-1.5,0),
-    BoxSize = Vector3.new(4,6,0),
+	BoxSize = Vector3.new(4,6,0),
     Color = Color3.fromRGB(255, 170, 0),
     FaceCamera = false,
     Names = true,
@@ -228,19 +227,18 @@ function boxBase:Update()
             self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
             self.Components.Name.Text = self.Name
             self.Components.Name.Color = color
-            if ESP.Distance then
-                self.Components.Distance.Visible = true
-                self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
-                self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m away"
-                self.Components.Distance.Color = color
-            else
-                self.Components.Distance.Visible = false
-            end       
+            
+            self.Components.Distance.Visible = true
+            self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
+            self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m away"
+            self.Components.Distance.Color = color
         else
             self.Components.Name.Visible = false
+            self.Components.Distance.Visible = false
         end
     else
         self.Components.Name.Visible = false
+        self.Components.Distance.Visible = false
     end
     
     if ESP.Tracers then
