@@ -266,8 +266,8 @@ function boxBase:Update()
         local TorsoPos, Vis7 = WorldToViewportPoint(cam, locs.Torso.p)
         local TagPos, Vis8 = WorldToViewportPoint(cam, locs.TagPos.p)
     
-        if Vis7 and Vis8 and self:FindFirstChildOfClass("Humanoid") then
-            local CheckHumanoid = self:FindFirstChildOfClass("Humanoid")
+        if Vis7 and Vis8 and self.Humanoid then
+            local CheckHumanoid = self.Humanoid
             local d = (Vector2.new(TorsoPos.X, TorsoPos.Y * 2) - Vector2.new(TorsoPos.X, TorsoPos.Y * 2)).magnitude
             local HealthOffset = CheckHumanoid.Health / CheckHumanoid.MaxHealth * d
             self.Components.Health.Visible = true
@@ -301,6 +301,7 @@ function ESP:Add(obj, options)
         Size = options.Size or self.BoxSize,
         Object = obj,
         Player = options.Player or plrs:GetPlayerFromCharacter(obj),
+        Humanoid = obj::FindFirstChildOfClass("Humanoid"),
         PrimaryPart = options.PrimaryPart or obj.ClassName == "Model" and (obj.PrimaryPart or obj:FindFirstChild("HumanoidRootPart") or obj:FindFirstChildWhichIsA("BasePart")) or obj:IsA("BasePart") and obj,
         Components = {},
         IsEnabled = options.IsEnabled,
