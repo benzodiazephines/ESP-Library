@@ -301,7 +301,7 @@ function ESP:Add(obj, options)
         Size = options.Size or self.BoxSize,
         Object = obj,
         Player = options.Player or plrs:GetPlayerFromCharacter(obj),
-        Humanoid = obj::FindFirstChildOfClass("Humanoid"),
+        Humanoid = obj:FindFirstChildOfClass("Humanoid"),
         PrimaryPart = options.PrimaryPart or obj.ClassName == "Model" and (obj.PrimaryPart or obj:FindFirstChild("HumanoidRootPart") or obj:FindFirstChildWhichIsA("BasePart")) or obj:IsA("BasePart") and obj,
         Components = {},
         IsEnabled = options.IsEnabled,
