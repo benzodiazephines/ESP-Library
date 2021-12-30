@@ -8,14 +8,11 @@ local ESP = {
     Color = Color3.fromRGB(255, 170, 0),
     FaceCamera = false,
     Names = true,
-    Health = true,
     TeamColor = true,
     Thickness = 2,
     AttachShift = 1,
-    RefreshRate = 230,
     TeamMates = true,
     Players = true,
-    
     Objects = setmetatable({}, {__mode="kv"}),
     Overrides = {}
 }
@@ -261,32 +258,6 @@ function boxBase:Update()
     else
         self.Components.Tracer.Visible = false
     end
-
-    if ESP.Health then
-        local TorsoPos, Vis7 = WorldToViewportPoint(cam, locs.Torso.p)
-        local TagPos, Vis8 = WorldToViewportPoint(cam, locs.TagPos.p)
-    
-        if Vis7 and Vis8 and self.Object:FindFirstChildOfClass("Humanoid") then
-            local CheckHumanoid = self.Object:FindFirstChildOfClass("Humanoid")
-            local d = (Vector2.new(TorsoPos.X, TorsoPos.Y) - Vector2.new(TorsoPos.X, TorsoPos.Y)).magnitude
-            local HealthOffset = CheckHumanoid.Health / CheckHumanoid.MaxHealth * d
-            self.Components.Health.Visible = true
-            self.Components.Health.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
-            self.Components.Health.To = Vector2.new(TorsoPos.X, TorsoPos.Y)
-            self.Components.HealthBar.Visible = true
-            self.Components.HealthBar.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
-            self.Components.HealthBar.To = Vector2.new(TorsoPos.X, TorsoPos.Y)
-            local Green = Color3.fromRGB(0, 255, 0)
-            local Red = Color3.fromRGB(255, 0, 0)
-            self.Components.Health.Color = Red:lerp(Green, CheckHumanoid.Health / CheckHumanoid.MaxHealth)
-        else
-            self.Components.Health.Visible = false
-            self.Components.HealthBar.Visible = false
-        end
-    else
-        self.Components.Health.Visible = false
-        self.Components.HealthBar.Visible = false
-    end
 end
 
 function ESP:Add(obj, options)
@@ -335,23 +306,12 @@ function ESP:Add(obj, options)
         Size = 19,
         Visible = self.Enabled and self.Names
 	})
+	
 	box.Components["Tracer"] = Draw("Line", {
 		Thickness = ESP.Thickness,
 		Color = box.Color,
         Transparency = 1,
         Visible = self.Enabled and self.Tracers
-    })
-    box.Components["HealthBar"] = Draw("Line", {
-		Thickness = ESP.Thickness,
-		Color = box.Color,
-        Transparency = 3,
-        Visible = self.Enabled and self.Health
-    })
-    box.Components["Health"] = Draw("Line", {
-		Thickness = ESP.Thickness,
-		Color = box.Color,
-        Transparency = 1.5,
-        Visible = self.Enabled and self.Health
     })
     self.Objects[obj] = box
     
@@ -413,7 +373,7 @@ for i,v in pairs(plrs:GetPlayers()) do
     end
 end
 
-game:GetService("RunService"):BindToRenderStep("Aiming", ESP.RefreshRate, function()
+game:GetService("RunService"):BindToRenderStep("Aiming", 230, function()
     cam = workspace.CurrentCamera
     for i,v in (ESP.Enabled and pairs or ipairs)(ESP.Objects) do
         if v.Update then
