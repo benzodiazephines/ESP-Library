@@ -268,15 +268,14 @@ function boxBase:Update()
     
         if Vis7 and Vis8 and self.Object:FindFirstChildOfClass("Humanoid") then
             local CheckHumanoid = self.Object:FindFirstChildOfClass("Humanoid")
-            local DistanceY = math.clamp((Vector2.new(TagPos.X, TagPos.Y) - Vector2.new(TorsoPos.X, TorsoPos.Y)).magnitude, 2, math.huge)
-            local d = (Vector2.new(TorsoPos.X - DistanceY, TorsoPos.Y - DistanceY * 2) - Vector2.new(TorsoPos.X - DistanceY, TorsoPos.Y + DistanceY * 2)).magnitude
+            local d = (Vector2.new(TorsoPos.X, TorsoPos.Y * 2) - Vector2.new(TorsoPos.X, TorsoPos.Y * 2)).magnitude
             local HealthOffset = CheckHumanoid.Health / CheckHumanoid.MaxHealth * d
             self.Components.Health.Visible = true
-            self.Components.Health.From = Vector2.new(TorsoPos.X - DistanceY - 4, TorsoPos.Y + DistanceY * 2)
-            self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceY - 4, TorsoPos.Y + DistanceY * 2 - HealthOffset)
+            self.Components.Health.From = Vector2.new(TorsoPos.X - 4, TorsoPos.Y * 2)
+            self.Components.Health.To = Vector2.new(TorsoPos.X - 4, TorsoPos.Y * 2 - HealthOffset)
             self.Components.HealthBar.Visible = true
-            self.Components.HealthBar.From = Vector2.new(TorsoPos.X - DistanceY - 4, TorsoPos.Y + DistanceY * 2)
-            self.Components.HealthBar.To = Vector2.new(TorsoPos.X - DistanceY - 4, TorsoPos.Y - DistanceY * 2)
+            self.Components.HealthBar.From = Vector2.new(TorsoPos.X - 4, TorsoPos.Y * 2)
+            self.Components.HealthBar.To = Vector2.new(TorsoPos.X - 4, TorsoPos.Y * 2)
             local Green = Color3.fromRGB(0, 255, 0)
             local Red = Color3.fromRGB(255, 0, 0)
             self.Components.Health.Color = Red:lerp(Green, CheckHumanoid.Health / CheckHumanoid.MaxHealth)
