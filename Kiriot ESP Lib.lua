@@ -266,8 +266,8 @@ function boxBase:Update()
         local TorsoPos, Vis7 = WorldToViewportPoint(cam, locs.Torso.p)
         local TagPos, Vis8 = WorldToViewportPoint(cam, locs.TagPos.p)
     
-        if Vis7 and Vis8 and self.Object:FindFirstChildOfClass("Humanoid") then
-            local CheckHumanoid = self.Object:FindFirstChildOfClass("Humanoid")
+        if Vis7 and Vis8 and self:FindFirstChildOfClass("Humanoid") then
+            local CheckHumanoid = self:FindFirstChildOfClass("Humanoid")
             local d = (Vector2.new(TorsoPos.X, TorsoPos.Y * 2) - Vector2.new(TorsoPos.X, TorsoPos.Y * 2)).magnitude
             local HealthOffset = CheckHumanoid.Health / CheckHumanoid.MaxHealth * d
             self.Components.Health.Visible = true
