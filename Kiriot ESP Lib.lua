@@ -187,7 +187,6 @@ function boxBase:Update()
 
     --calculations--
     local cf = self.PrimaryPart.CFrame
-    local Root = self.Object:FindFirstChild("HumanoidRootPart")
     if ESP.FaceCamera then
         cf = CFrame.new(cf.p, cam.CFrame.p)
     end
@@ -269,6 +268,7 @@ function boxBase:Update()
     
         if Vis7 and Vis8 and self.Object:FindFirstChildOfClass("Humanoid") then
             local CheckHumanoid = self.Object:FindFirstChildOfClass("Humanoid")
+            local d = (Vector2.new(TorsoPos.X - DistanceY, TorsoPos.Y - DistanceY * 2) - Vector2.new(TorsoPos.X - DistanceY, TorsoPos.Y + DistanceY * 2)).magnitude
             local HealthOffset = CheckHealth.Health / CheckHumanoid.MaxHealth * d
             local DistanceY = math.clamp((Vector2.new(TagPos.X, TagPos.Y) - Vector2.new(TorsoPos.X, TorsoPos.Y)).magnitude, 2, math.huge)
             self.Components.Health.Visible = true
