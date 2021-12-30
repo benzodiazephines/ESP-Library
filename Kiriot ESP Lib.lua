@@ -11,6 +11,7 @@ local ESP = {
     TeamColor = true,
     Thickness = 2,
     AttachShift = 1,
+    RefreshRate = 230,
     TeamMates = true,
     Players = true,
     
@@ -374,7 +375,7 @@ for i,v in pairs(plrs:GetPlayers()) do
     end
 end
 
-game:GetService("RunService"):BindToRenderStep("Aiming", 199, function()
+game:GetService("RunService"):BindToRenderStep("Aiming", ESP.RefreshRate, function()
     cam = workspace.CurrentCamera
     for i,v in (ESP.Enabled and pairs or ipairs)(ESP.Objects) do
         if v.Update then
