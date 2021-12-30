@@ -345,7 +345,7 @@ function ESP:Add(obj, options)
 		Thickness = ESP.Thickness,
 		Color = box.Color,
         Transparency = 3,
-        Visible = self.Enabled and self.HealthBar
+        Visible = self.Enabled and self.Health
     })
     box.Components["Health"] = Draw("Line", {
 		Thickness = ESP.Thickness,
