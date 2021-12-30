@@ -262,21 +262,21 @@ function boxBase:Update()
     else
         self.Components.Tracer.Visible = false
     end
-    
+
     if ESP.Health then
-        local RootPos, Vis7 = WorldToViewportPoint(cam, Root.p)
+        local TorsoPos, Vis7 = WorldToViewportPoint(cam, locs.Torso.p)
         local TagPos, Vis8 = WorldToViewportPoint(cam, locs.TagPos.p)
     
         if Vis7 and Vis8 and self.Object:FindFirstChildOfClass("Humanoid") then
             local CheckHumanoid = self.Object:FindFirstChildOfClass("Humanoid")
             local HealthOffset = CheckHealth.Health / CheckHumanoid.MaxHealth * d
-            local DistanceY = math.clamp((Vector2.new(TagPos.X, TagPos.Y) - Vector2.new(RootPos.X, RootPos.Y)).magnitude, 2, math.huge)
+            local DistanceY = math.clamp((Vector2.new(TagPos.X, TagPos.Y) - Vector2.new(TorsoPos.X, TorsoPos.Y)).magnitude, 2, math.huge)
             self.Components.Health.Visible = true
-            self.Components.Health.From = Vector2.new(RootPos.X - DistanceY - 4, TorsoPos.Y + DistanceY * 2)
-            self.Components.Health.To = Vector2.new(RootPos.X - DistanceY - 4, RootPos.Y + DistanceY * 2 - HealthOffset)
+            self.Components.Health.From = Vector2.new(TorsoPos.X - DistanceY - 4, TorsoPos.Y + DistanceY * 2)
+            self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceY - 4, TorsoPos.Y + DistanceY * 2 - HealthOffset)
             self.Components.HealthBar.Visible = true
-            self.Components.HealthBar.From = Vector2.new(RootPos.X - DistanceY - 4, RootPos.Y + DistanceY * 2)
-            self.Components.HealthBar.To = Vector2.new(RootPos.X - DistanceY - 4, RootPos.Y - DistanceY * 2)
+            self.Components.HealthBar.From = Vector2.new(TorsoPos.X - DistanceY - 4, TorsoPos.Y + DistanceY * 2)
+            self.Components.HealthBar.To = Vector2.new(TorsoPos.X - DistanceY - 4, TorsoPos.Y - DistanceY * 2)
             local Green = Color3.fromRGB(0, 255, 0)
             local Red = Color3.fromRGB(255, 0, 0)
             self.Components.Health.Color = Red:lerp(Green, CheckHumanoid.Health / CheckHumanoid.MaxHealth)
