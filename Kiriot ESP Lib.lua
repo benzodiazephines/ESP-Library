@@ -373,7 +373,7 @@ for i,v in pairs(plrs:GetPlayers()) do
     end
 end
 
-game:GetService("RunService"):BindToRenderStep("Aiming", 200, function()
+game:GetService("RunService").RenderStepped:Connect(function()
     cam = workspace.CurrentCamera
     for i,v in (ESP.Enabled and pairs or ipairs)(ESP.Objects) do
         if v.Update then
