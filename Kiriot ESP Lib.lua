@@ -385,6 +385,6 @@ end
 
 game:GetService("RunService"):UnbindFromRenderStep("ESPUpdate")
 
-game:GetService("RunService"):BindToRenderStep("ESPUpdate", 199, UpdateESP)
+game:GetService("RunService"):BindToRenderStep("ESPUpdate", 100, UpdateESP)
 
 return ESP
