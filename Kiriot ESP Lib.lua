@@ -227,13 +227,13 @@ function boxBase:Update()
             self.Components.Name.Visible = true
             self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
             self.Components.Name.Text = self.Name
-            self.Components.Name.Text.Size = ESP.TextSize
+            self.Components.Name.Size = ESP.TextSize
             self.Components.Name.Color = color
             if ESP.Distance then
                 self.Components.Distance.Visible = true
                 self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
                 self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m away"
-                self.Components.Distance.Text.Size = ESP.TextSize
+                self.Components.Distance.Size = ESP.TextSize
                 self.Components.Distance.Color = color
             else
                 self.Components.Distance.Visible = false
