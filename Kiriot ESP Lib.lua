@@ -1,7 +1,7 @@
 --Settings--
 local ESP = {
-	Enabled = false,
-	Boxes = false,
+	Enabled = true,
+	Boxes = true,
 	BoxShift = CFrame.new(0,-1.5,0),
 	BoxSize = Vector3.new(4,6,0),
 	Color = Color3.fromRGB(199, 255, 255),
@@ -18,7 +18,6 @@ local ESP = {
 	TeamMates = true,
 	Players = true,
     DistanceS = 2000,
-
 	Objects = setmetatable({}, {__mode="kv"}),
 	Overrides = {}
 }
@@ -228,12 +227,12 @@ function boxBase:Update()
             end
 
             if ESP.Distance then
-                local TagPos, Vis3 = WorldToViewportPoint(cam, locs.TagPos.p)
+                local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
 
-                if Vis3 then
+                if Vis5 then
                     self.Components.Distance.Visible = true
                     self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 28)
-                    self.Components.Distance.Size = ESP.TextSize 
+                    self.Components.Distance.Size = ESP.TextSize
                     self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m"
                     self.Components.Distance.Color = color
                 else
@@ -245,13 +244,13 @@ function boxBase:Update()
             
             if self.Player then
                 if ESP.Health then
-                    local TagPos, Vis4 = WorldToViewportPoint(cam, locs.TagPos.p)
+                    local TagPos, Vis6 = WorldToViewportPoint(cam, locs.TagPos.p)
 
-                        if Vis4 then
+                        if Vis6 then
                             self.Components.Health.Visible = true
-                            self.Components.Health.Position = Vector2.new(TagPos.X, TagPos.Y + 14)   
-                            self.Components.Health.Size = ESP.TextSize            
-                            self.Components.Health.Text = "Health: " .. math.floor(self.Player.Character.Humanoid.Health + 0.5)  .. " | " .. self.Player.Character.Humanoid.MaxHealth
+                            self.Components.Health.Position = Vector2.new(TagPos.X, TagPos.Y + 14)        
+                            self.Components.Health.Size = ESP.TextSize       
+                            self.Components.Health.Text = math.floor(self.Player.Character.Humanoid.Health + 0.5)  .. ":" .. self.Player.Character.Humanoid.MaxHealth
                             self.Components.Health.Color = color
                         else
                             self.Components.Health.Visible = false
@@ -265,13 +264,13 @@ function boxBase:Update()
 
             if self.Player then
                 if ESP.Tool then
-                    local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
+                    local TagPos, Vis7 = WorldToViewportPoint(cam, locs.TagPos.p)
 
-                    if Vis5 then
+                    if Vis7 then
                         self.Components.Tool.Visible = true
                         self.Components.Tool.Position = Vector2.new(TagPos.X, TagPos.Y - 14)
                         if self.Player.Character:FindFirstChildOfClass("Tool") then
-                            self.Components.Tool.Size = ESP.TextSize  
+                            self.Components.Tool.Size = ESP.TextSize
                             self.Components.Tool.Text = self.Player.Character:FindFirstChildOfClass("Tool").Name
                             self.Components.Tool.Color = ESP.ToolColor
                         else
@@ -288,12 +287,12 @@ function boxBase:Update()
             end
             
             if ESP.Names then
-                local TagPos, Vis6 = WorldToViewportPoint(cam, locs.TagPos.p)
+                local TagPos, Vis8 = WorldToViewportPoint(cam, locs.TagPos.p)
 
-                if Vis6 then
+                if Vis8 then
                     self.Components.Name.Visible = true
                     self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
-                    self.Components.Name.Size = ESP.TextSize  
+                    self.Components.Name.Size = ESP.TextSize
                     self.Components.Name.Text = self.Name
                     self.Components.Name.Color = color
                 else
@@ -304,9 +303,9 @@ function boxBase:Update()
             end
 
             if ESP.Tracers then
-                local TorsoPos, Vis7 = WorldToViewportPoint(cam, locs.Torso.p)
+                local TorsoPos, Vis9 = WorldToViewportPoint(cam, locs.Torso.p)
 
-                if Vis7 then
+                if Vis9 then
                     self.Components.Tracer.Visible = true
                     self.Components.Tracer.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
                     self.Components.Tracer.To = Vector2.new(cam.ViewportSize.X/2,cam.ViewportSize.Y/ESP.AttachShift)
