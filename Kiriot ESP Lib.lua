@@ -2,7 +2,6 @@
 local ESP = {
 	Enabled = false,
 	Players = true,
-    Chams = true,
 	Names = true,
     Distance = false,
 	Boxes = true,
@@ -15,8 +14,6 @@ local ESP = {
 	BoxShift = CFrame.new(0, -1.5, 0),
 	BoxSize = Vector3.new(4, 6, 0),
 	Color = Color3.fromRGB(255, 170, 0),
-    FillColor = Color3.fromRGB(255, 170, 0),
-    FillTransparency = 0.5,
 	Thickness = 2,
 	AttachShift = 1,
 	Objects = setmetatable({}, { __mode = "kv" }),
@@ -36,16 +33,6 @@ local WorldToViewportPoint = cam.WorldToViewportPoint
 --Functions--
 local function Draw(obj, props)
 	local new = Drawing.new(obj)
-	
-	props = props or {}
-	for i,v in pairs(props) do
-		new[i] = v
-	end
-	return new
-end
-
-local function Highlight(props)
-	local new = Instance.new("Highlight")
 	
 	props = props or {}
 	for i,v in pairs(props) do
@@ -101,7 +88,7 @@ function ESP:Toggle(bool)
 					v:Remove()
 				else
 					for i,v in pairs(v.Components) do
-                        v.Visible = false
+						v.Visible = false
 					end
 				end
 			end
@@ -154,18 +141,11 @@ boxBase.__index = boxBase
 function boxBase:Remove()
 	ESP.Objects[self.Object] = nil
 	for i,v in pairs(self.Components) do
-        if v == "Highlight" then
-            v.Enabled = false
-            v:Remove()    
-        else
-            v.Visible = false
-            v:Remove()    
-        end
+		v.Visible = false
+		v:Remove()
 		self.Components[i] = nil
 	end
 end
-
-local Ya = {}
 
 function boxBase:Update()
 	if not self.PrimaryPart then
@@ -260,12 +240,6 @@ function boxBase:Update()
 		self.Components.Quad.Visible = false
 	end
 
-    if ESP.Chams then
-        Ya.Highlight.Enabled = true
-    else
-        Ya.Highlight.Enabled = false
-    end
-
     if ESP.Names then
         local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
 
@@ -325,7 +299,6 @@ function ESP:Add(obj, options)
 		Name = options.Name or obj.Name,
 		Type = "Box",
 		Color = options.Color,
-        FillColor = options.FillColor,
 		Size = options.Size or self.BoxSize,
 		Object = obj,
 		Player = options.Player or plrs:GetPlayerFromCharacter(obj),
@@ -335,11 +308,6 @@ function ESP:Add(obj, options)
 		Temporary = options.Temporary,
 		ColorDynamic = options.ColorDynamic,
 		RenderInNil = options.RenderInNil
-	}, boxBase)
-
-    local HighlightCham = setmetatable({
-        FillColor = options.FillColor,
-        Components = {}
 	}, boxBase)
 
 	if self:GetBox(obj) then
@@ -377,11 +345,12 @@ function ESP:Add(obj, options)
 		Transparency = 1,
 		Visible = self.Enabled and self.Tracers
 	})
-    HighlightCham.Components["Highlight"] = Highlight({
-        Parent = obj,
-		FillColor = self.FillColor,
-		FillTransparency = self.FillTransparency,
-		Enabled = self.Enabled and self.Chams
+
+    box.Components["Tracer"] = Draw("Line", {
+		Thickness = ESP.Thickness,
+		Color = box.Color,
+		Transparency = 1,
+		Visible = self.Enabled and self.Tracers
 	})
 	self.Objects[obj] = box
 	
