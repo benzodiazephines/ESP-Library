@@ -228,9 +228,9 @@ function boxBase:Update()
             end
 
             if ESP.Distance then
-                local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
+                local TagPos, Vis3 = WorldToViewportPoint(cam, locs.TagPos.p)
 
-                if Vis5 then
+                if Vis3 then
                     self.Components.Distance.Visible = true
                     self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 28)
                     self.Components.Distance.Size = ESP.TextSize 
@@ -245,9 +245,9 @@ function boxBase:Update()
             
             if self.Player then
                 if ESP.Health then
-                    local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
+                    local TagPos, Vis4 = WorldToViewportPoint(cam, locs.TagPos.p)
 
-                        if Vis5 then
+                        if Vis4 then
                             self.Components.Health.Visible = true
                             self.Components.Health.Position = Vector2.new(TagPos.X, TagPos.Y + 14)   
                             self.Components.Health.Size = ESP.TextSize            
@@ -288,9 +288,9 @@ function boxBase:Update()
             end
             
             if ESP.Names then
-                local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
+                local TagPos, Vis6 = WorldToViewportPoint(cam, locs.TagPos.p)
 
-                if Vis5 then
+                if Vis6 then
                     self.Components.Name.Visible = true
                     self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
                     self.Components.Name.Size = ESP.TextSize  
@@ -304,9 +304,9 @@ function boxBase:Update()
             end
 
             if ESP.Tracers then
-                local TorsoPos, Vis6 = WorldToViewportPoint(cam, locs.Torso.p)
+                local TorsoPos, Vis7 = WorldToViewportPoint(cam, locs.Torso.p)
 
-                if Vis6 then
+                if Vis7 then
                     self.Components.Tracer.Visible = true
                     self.Components.Tracer.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
                     self.Components.Tracer.To = Vector2.new(cam.ViewportSize.X/2,cam.ViewportSize.Y/ESP.AttachShift)
