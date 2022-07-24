@@ -7,11 +7,12 @@ local ESP = {
 	Color = Color3.fromRGB(199, 255, 255),
     ToolColor = Color3.fromRGB(199, 255, 255),
 	FaceCamera = false,
-	Names = false,
+	Names = true,
 	Distance = false,
-	Health = false,
+	Health = true,
     Tool = false,
 	TeamColor = true,
+    TextSize = 15,
 	Thickness = 1.5,
 	AttachShift = 1,
 	TeamMates = true,
@@ -232,6 +233,7 @@ function boxBase:Update()
                 if Vis5 then
                     self.Components.Distance.Visible = true
                     self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 28)
+                    self.Components.Distance.Size = ESP.TextSize 
                     self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m"
                     self.Components.Distance.Color = color
                 else
@@ -247,7 +249,8 @@ function boxBase:Update()
 
                         if Vis5 then
                             self.Components.Health.Visible = true
-                            self.Components.Health.Position = Vector2.new(TagPos.X, TagPos.Y + 14)               
+                            self.Components.Health.Position = Vector2.new(TagPos.X, TagPos.Y + 14)   
+                            self.Components.Health.Size = ESP.TextSize            
                             self.Components.Health.Text = math.floor(self.Player.Character.Humanoid.Health + 0.5)  .. ":" .. self.Player.Character.Humanoid.MaxHealth
                             self.Components.Health.Color = color
                         else
@@ -268,6 +271,7 @@ function boxBase:Update()
                         self.Components.Tool.Visible = true
                         self.Components.Tool.Position = Vector2.new(TagPos.X, TagPos.Y - 14)
                         if self.Player.Character:FindFirstChildOfClass("Tool") then
+                            self.Components.Tool.Size = ESP.TextSize  
                             self.Components.Tool.Text = self.Player.Character:FindFirstChildOfClass("Tool").Name
                             self.Components.Tool.Color = ESP.ToolColor
                         else
@@ -289,6 +293,7 @@ function boxBase:Update()
                 if Vis5 then
                     self.Components.Name.Visible = true
                     self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
+                    self.Components.Name.Size = ESP.TextSize  
                     self.Components.Name.Text = self.Name
                     self.Components.Name.Color = color
                 else
@@ -358,28 +363,28 @@ function ESP:Add(obj, options)
 		Color = box.Color,
 		Center = true,
 		Outline = true,
-		Size = 15,
+		Size = ESP.TextSize,
 		Visible = self.Enabled and self.Names
 	})
 	box.Components["Distance"] = Draw("Text", {
 		Color = box.Color,
 		Center = true,
 		Outline = true,
-		Size = 15,
+		Size = ESP.TextSize,
 		Visible = self.Enabled and self.Distance
 	})
 	box.Components["Health"] = Draw("Text", {
 		Color = box.Color,
 		Center = true,
 		Outline = true,
-		Size = 15,
+		Size = ESP.TextSize,
 		Visible = self.Enabled and self.Health
 	})
     box.Components["Tool"] = Draw("Text", {
 		Color = box.Color,
 		Center = true,
 		Outline = true,
-		Size = 15,
+		Size = ESP.TextSize,
 		Visible = self.Enabled and self.Tool
 	})
 	box.Components["Tracer"] = Draw("Line", {
