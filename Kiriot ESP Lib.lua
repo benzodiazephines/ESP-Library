@@ -401,7 +401,6 @@ function ESP:Add(obj, options)
 		hum.Died:Connect(function()
 			if ESP.AutoRemove ~= false then
 				box:Remove()
-                HighlightCham:Remove()
 			end
 		end)
 	end
