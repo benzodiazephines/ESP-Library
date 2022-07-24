@@ -158,7 +158,7 @@ boxBase.__index = boxBase
 function boxBase:Remove()
 	ESP.Objects[self.Object] = nil
 	for i,v in pairs(self.Components) do
-        if self.Components[i] == "Highlight" then
+        if v[i] == "Highlight" then
             v.Enabled = false
             v:Remove()    
         else
