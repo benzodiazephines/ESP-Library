@@ -339,7 +339,7 @@ function ESP:Add(obj, options)
 
     local HighlightCham = setmetatable({
         FillColor = options.FillColor,
-		Object = obj,
+        Components = {}
 	}, boxBase)
 
 	if self:GetBox(obj) then
@@ -377,7 +377,7 @@ function ESP:Add(obj, options)
 		Transparency = 1,
 		Visible = self.Enabled and self.Tracers
 	})
-    Ya["Highlight"] = Highlight({
+    HighlightCham.Components["Highlight"] = Highlight({
         Parent = obj,
 		FillColor = self.FillColor,
 		FillTransparency = self.FillTransparency,
@@ -388,13 +388,13 @@ function ESP:Add(obj, options)
 	obj.AncestryChanged:Connect(function(_, parent)
 		if parent == nil and ESP.AutoRemove ~= false then
 			box:Remove()
-            Ya:Remove()
+            HighlightCham:Remove()
 		end
 	end)
 	obj:GetPropertyChangedSignal("Parent"):Connect(function()
 		if obj.Parent == nil and ESP.AutoRemove ~= false then
 			box:Remove()
-            Ya:Remove()
+            HighlightCham:Remove()
 		end
 	end)
 
@@ -403,7 +403,7 @@ function ESP:Add(obj, options)
 		hum.Died:Connect(function()
 			if ESP.AutoRemove ~= false then
 				box:Remove()
-                Ya:Remove()
+                HighlightCham:Remove()
 			end
 		end)
 	end
