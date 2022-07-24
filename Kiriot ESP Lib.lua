@@ -101,11 +101,7 @@ function ESP:Toggle(bool)
 					v:Remove()
 				else
 					for i,v in pairs(v.Components) do
-                        if v == "Highlight" then
-						    v.Enabled = false
-                        else
-                            v.Visible = false
-                        end
+                        v.Visible = false
 					end
 				end
 			end
@@ -168,6 +164,8 @@ function boxBase:Remove()
 		self.Components[i] = nil
 	end
 end
+
+local Ya = {}
 
 function boxBase:Update()
 	if not self.PrimaryPart then
@@ -263,9 +261,9 @@ function boxBase:Update()
 	end
 
     if ESP.Chams then
-        self.Components.Highlight.Enabled = true
+        Ya.Highlight.Enabled = true
     else
-        self.Components.Highlight.Enabled = false
+        Ya.Highlight.Enabled = false
     end
 
     if ESP.Names then
@@ -379,25 +377,24 @@ function ESP:Add(obj, options)
 		Transparency = 1,
 		Visible = self.Enabled and self.Tracers
 	})
-
-    HighlightCham.Components["Highlight"] = Highlight({
+    Ya["Highlight"] = Highlight({
+        Parent = obj,
 		FillColor = self.FillColor,
 		FillTransparency = self.FillTransparency,
 		Enabled = self.Enabled and self.Chams
 	})
 	self.Objects[obj] = box
-    self.Objects[obj] = HighlightCham
 	
 	obj.AncestryChanged:Connect(function(_, parent)
 		if parent == nil and ESP.AutoRemove ~= false then
 			box:Remove()
-            HighlightCham:Remove()
+            Ya:Remove()
 		end
 	end)
 	obj:GetPropertyChangedSignal("Parent"):Connect(function()
 		if obj.Parent == nil and ESP.AutoRemove ~= false then
 			box:Remove()
-            HighlightCham:Remove()
+            Ya:Remove()
 		end
 	end)
 
@@ -406,12 +403,12 @@ function ESP:Add(obj, options)
 		hum.Died:Connect(function()
 			if ESP.AutoRemove ~= false then
 				box:Remove()
-                HighlightCham:Remove()
+                Ya:Remove()
 			end
 		end)
 	end
 
-	return box and HighlightCham
+	return box
 end
 
 local function CharAdded(char)
