@@ -370,11 +370,10 @@ function ESP:Add(obj, options)
 	})
 
     box.Components["Highlight"] = Highlight({
-		FillColor = box.Color,
+		FillColor = box.FillColor,
 		FillTransparency = 1,
-		Enabled = self.Enabled and self.Highlight
+		Enabled = self.Enabled and self.Chams
 	})
-
 	self.Objects[obj] = box
 	
 	obj.AncestryChanged:Connect(function(_, parent)
