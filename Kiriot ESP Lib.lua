@@ -101,7 +101,11 @@ function ESP:Toggle(bool)
 					v:Remove()
 				else
 					for i,v in pairs(v.Components) do
-						v.Visible = false
+                        if v == "Highlight" then
+						    v.Enabled = false
+                        else
+                            v.Visible = false
+                        end
 					end
 				end
 			end
