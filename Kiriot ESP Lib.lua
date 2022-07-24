@@ -257,7 +257,6 @@ function boxBase:Update()
 	end
 
     if ESP.Chams then
-        self.Components.Highlight.Parent = self.Player.Character 
         self.Components.Highlight.Visible = true
     else
         self.Components.Highlight.Visible = false
