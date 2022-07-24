@@ -16,10 +16,10 @@ local ESP = {
 	BoxSize = Vector3.new(4, 6, 0),
 	Color = Color3.fromRGB(255, 170, 0),
     FillColor = Color3.fromRGB(255, 170, 0),
+    FillTransparency = 0.5,
 	Thickness = 2,
 	AttachShift = 1,
 	Objects = setmetatable({}, { __mode = "kv" }),
-    HighlightCham = setmetatable({}, { __mode = "kv" }),
 	Overrides = {},
 	IgnoreHumanoids = false,
 }
@@ -322,6 +322,7 @@ function ESP:Add(obj, options)
 		Name = options.Name or obj.Name,
 		Type = "Box",
 		Color = options.Color,
+        FillColor = options.FillColor,
 		Size = options.Size or self.BoxSize,
 		Object = obj,
 		Player = options.Player or plrs:GetPlayerFromCharacter(obj),
@@ -371,7 +372,7 @@ function ESP:Add(obj, options)
 
     box.Components["Highlight"] = Highlight({
 		FillColor = box.FillColor,
-		FillTransparency = 1,
+		FillTransparency = self.FillTransparency,
 		Enabled = self.Enabled and self.Chams
 	})
 	self.Objects[obj] = box
