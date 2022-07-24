@@ -258,9 +258,9 @@ function boxBase:Update()
 	end
 
     if ESP.Chams then
-        self.Components.Highlight.Visible = true
+        self.Components.Highlight.Enabled = true
     else
-        self.Components.Highlight.Visible = false
+        self.Components.Highlight.Enabled = false
     end
 
     if ESP.Names then
