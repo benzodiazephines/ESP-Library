@@ -101,8 +101,8 @@ function ESP:Toggle(bool)
 					v:Remove()
 				else
 					for i,v in pairs(v.Components) do
-                        if v.ClassName == "Highlight" then
-						    v.Highlight.Enabled = false
+                        if v == "Highlight" then
+						    v.Enabled = false
                         else
                             v.Visible = false
                         end
@@ -115,10 +115,6 @@ end
 
 function ESP:GetBox(obj)
 	return self.Objects[obj]
-end
-
-function ESP:GetHighlight(obj)
-	return self.HighlightCham[obj]
 end
 
 function ESP:AddObjectListener(parent, options)
