@@ -15,7 +15,7 @@ local ESP = {
     TextSize = 15,
 	Thickness = 1.5,
 	AttachShift = 1,
-	TeamMates = true,
+	TeamMates = false,
 	Players = true,
     DistanceS = 2000,
 	Objects = setmetatable({}, {__mode="kv"}),
