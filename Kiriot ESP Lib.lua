@@ -388,13 +388,11 @@ function ESP:Add(obj, options)
 	obj.AncestryChanged:Connect(function(_, parent)
 		if parent == nil and ESP.AutoRemove ~= false then
 			box:Remove()
-            HighlightCham:Remove()
 		end
 	end)
 	obj:GetPropertyChangedSignal("Parent"):Connect(function()
 		if obj.Parent == nil and ESP.AutoRemove ~= false then
 			box:Remove()
-            HighlightCham:Remove()
 		end
 	end)
 
