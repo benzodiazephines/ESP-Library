@@ -18,6 +18,7 @@ local ESP = {
 	Thickness = 2,
 	AttachShift = 1,
 	Objects = setmetatable({}, { __mode = "kv" }),
+    HighlightCham = setmetatable({}, { __mode = "kv" }),
 	Overrides = {},
 	IgnoreHumanoids = false,
 }
@@ -37,6 +38,16 @@ local function Draw(obj, props)
 	
 	props = props or {}
 	for i,v in pairs(props) do
+		new[i] = v
+	end
+	return new
+end
+
+local function Highlight()
+	local new = Instance.new("Highlight")
+	
+	local Highlights = {}
+	for i,v in pairs(Highlights) do
 		new[i] = v
 	end
 	return new
@@ -99,6 +110,10 @@ end
 
 function ESP:GetBox(obj)
 	return self.Objects[obj]
+end
+
+function ESP:GetHighlight(obj)
+	return self.HighlightCham[obj]
 end
 
 function ESP:AddObjectListener(parent, options)
@@ -241,15 +256,11 @@ function boxBase:Update()
 		self.Components.Quad.Visible = false
 	end
 
-    local Highlight = nil
     if ESP.Chams then
-        if self.Player then
-            Highlight = Instance.new("Highlight", self.Player.Character)
-        else
-            Highlight:Destroy()
-        end
+        self.Components.Highlight.Parent = self.Player.Character 
+        self.Components.Highlight.Visible = true
     else
-        Highlight:Destroy()
+        self.Components.Highlight.Visible = false
     end
 
     if ESP.Names then
@@ -357,6 +368,8 @@ function ESP:Add(obj, options)
 		Transparency = 1,
 		Visible = self.Enabled and self.Tracers
 	})
+
+    box.Components["Highlight"] = Highlight()
 	self.Objects[obj] = box
 	
 	obj.AncestryChanged:Connect(function(_, parent)
