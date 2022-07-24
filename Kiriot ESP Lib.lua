@@ -2,6 +2,7 @@
 local ESP = {
 	Enabled = false,
 	Players = true,
+    Chams = true,
 	Names = true,
     Distance = false,
 	Boxes = true,
@@ -239,6 +240,17 @@ function boxBase:Update()
 	else
 		self.Components.Quad.Visible = false
 	end
+
+    local Highlight = nil
+    if ESP.Chams then
+        if self.Player then
+            Highlight = Instance.new("Highlight", self.Player)
+        else
+            Highlight:Destroy()
+        end
+    else
+        Highlight:Destroy()
+    end
 
     if ESP.Names then
         local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
