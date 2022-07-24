@@ -389,8 +389,10 @@ function ESP:Add(obj, options)
 		Visible = self.Enabled and self.Tracers
 	})
 	self.Objects[obj] = box
-
-    local Highlight = Instance.new("Highlight", obj)
+    
+    if obj.ClassName == "Model" then
+        local Highlight = Instance.new("Highlight", obj)
+    end
 
 	obj.AncestryChanged:Connect(function(_, parent)
 		if parent == nil and ESP.AutoRemove ~= false then
