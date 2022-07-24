@@ -244,7 +244,7 @@ function boxBase:Update()
     local Highlight = nil
     if ESP.Chams then
         if self.Player then
-            Highlight = Instance.new("Highlight", self.Player)
+            Highlight = Instance.new("Highlight", self.Player.Character)
         else
             Highlight:Destroy()
         end
