@@ -15,6 +15,7 @@ local ESP = {
 	BoxShift = CFrame.new(0, -1.5, 0),
 	BoxSize = Vector3.new(4, 6, 0),
 	Color = Color3.fromRGB(255, 170, 0),
+    FillColor = Color3.fromRGB(255, 170, 0),
 	Thickness = 2,
 	AttachShift = 1,
 	Objects = setmetatable({}, { __mode = "kv" }),
@@ -43,11 +44,11 @@ local function Draw(obj, props)
 	return new
 end
 
-local function Highlight()
+local function Highlight(props)
 	local new = Instance.new("Highlight")
 	
-	local Highlights = {}
-	for i,v in pairs(Highlights) do
+	props = props or {}
+	for i,v in pairs(props) do
 		new[i] = v
 	end
 	return new
@@ -368,7 +369,12 @@ function ESP:Add(obj, options)
 		Visible = self.Enabled and self.Tracers
 	})
 
-    box.Components["Highlight"] = Highlight()
+    box.Components["Highlight"] = Highlight({
+		FillColor = box.Color,
+		FillTransparency = 1,
+		Enabled = self.Enabled and self.Highlight
+	})
+
 	self.Objects[obj] = box
 	
 	obj.AncestryChanged:Connect(function(_, parent)
