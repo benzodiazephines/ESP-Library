@@ -244,9 +244,9 @@ function boxBase:Update()
 
         if Vis5 then
             self.Components.Name.Visible = true
-			self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
-			self.Components.Name.Text = self.Name
-			self.Components.Name.Color = color
+            self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
+            self.Components.Name.Text = self.Name
+            self.Components.Name.Color = color
             self.Components.Name.Size = ESP.FontSize
             self.Components.Name.ZIndex = IsPlrHighlighted and 2 or 1
             if Drawing.Fonts and Drawing.Fonts[ESP.Font] then
@@ -258,15 +258,15 @@ function boxBase:Update()
     else
         self.Components.Name.Visible = false
     end
-    
+
     if ESP.Distance then
         local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
 
         if Vis5 then
             self.Components.Distance.Visible = true
-			self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
-			self.Components.Distance.Text = distance .."m away"
-			self.Components.Distance.Color = color
+            self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 28)
+            self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m"
+            self.Components.Distance.Color = color
             self.Components.Distance.Size = ESP.FontSize
             self.Components.Distance.ZIndex = IsPlrHighlighted and 2 or 1
             if Drawing.Fonts and Drawing.Fonts[ESP.Font] then
