@@ -1,4 +1,3 @@
---Settings--
 local ESP = {
 	Enabled = false,
 	Boxes = true,
@@ -7,6 +6,7 @@ local ESP = {
 	Color = Color3.fromRGB(255, 170, 0),
 	FaceCamera = false,
 	Names = true,
+    Distance = false,
 	TeamColor = true,
 	Thickness = 2,
 	AttachShift = 1,
@@ -218,32 +218,40 @@ function boxBase:Update()
 		self.Components.Quad.Visible = false
 	end
 
-	if ESP.Names then
-		local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
-		
-		if Vis5 then
-			self.Components.Name.Visible = true
-			self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
-			self.Components.Name.Text = self.Name
-			self.Components.Name.Color = color
-			
-			self.Components.Distance.Visible = true
-			self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
-			self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m away"
-			self.Components.Distance.Color = color
-		else
-			self.Components.Name.Visible = false
-			self.Components.Distance.Visible = false
-		end
-	else
-		self.Components.Name.Visible = false
-		self.Components.Distance.Visible = false
-	end
+    if ESP.Names then
+        local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
+
+        if Vis5 then
+            self.Components.Name.Visible = true
+            self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
+            self.Components.Name.Text = self.Name
+            self.Components.Name.Color = color
+        else
+            self.Components.Name.Visible = false
+        end
+    else
+        self.Components.Name.Visible = false
+    end
+
+    if ESP.Distance then
+        local TagPos, Vis6 = WorldToViewportPoint(cam, locs.TagPos.p)
+
+        if Vis6 then
+            self.Components.Distance.Visible = true
+            self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 28)
+            self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m"
+            self.Components.Distance.Color = color
+        else
+            self.Components.Distance.Visible = false
+        end
+    else
+        self.Components.Distance.Visible = false
+    end
 	
 	if ESP.Tracers then
-		local TorsoPos, Vis6 = WorldToViewportPoint(cam, locs.Torso.p)
+		local TorsoPos, Vis7 = WorldToViewportPoint(cam, locs.Torso.p)
 
-		if Vis6 then
+		if Vis7 then
 			self.Components.Tracer.Visible = true
 			self.Components.Tracer.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
 			self.Components.Tracer.To = Vector2.new(cam.ViewportSize.X/2,cam.ViewportSize.Y/ESP.AttachShift)
@@ -300,7 +308,7 @@ function ESP:Add(obj, options)
 		Center = true,
 		Outline = true,
 		Size = 19,
-		Visible = self.Enabled and self.Names
+		Visible = self.Enabled and self.Distance
 	})
 	
 	box.Components["Tracer"] = Draw("Line", {
