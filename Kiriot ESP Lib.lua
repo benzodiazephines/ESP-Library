@@ -1,12 +1,12 @@
 local ESP = {
 	Enabled = false,
+    Names = true,
+    Distance = false,
 	Boxes = true,
 	BoxShift = CFrame.new(0,-1.5,0),
 	BoxSize = Vector3.new(4,6,0),
 	Color = Color3.fromRGB(255, 170, 0),
 	FaceCamera = false,
-	Names = true,
-    Distance = false,
 	TeamColor = true,
 	Thickness = 2,
 	AttachShift = 1,
@@ -219,11 +219,11 @@ function boxBase:Update()
 	end
 
     if ESP.Names then
-        local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
-
-        if Vis5 then
+        local TagPos, Vis4 = WorldToViewportPoint(cam, locs.TagPos.Position)
+        
+        if Vis4 then            
             self.Components.Name.Visible = true
-            self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
+            self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
             self.Components.Name.Text = self.Name
             self.Components.Name.Color = color
         else
@@ -232,11 +232,11 @@ function boxBase:Update()
     else
         self.Components.Name.Visible = false
     end
-
+    
     if ESP.Distance then
-        local TagPos, Vis6 = WorldToViewportPoint(cam, locs.TagPos.p)
+        local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
         
-        if Vis6 then
+        if Vis5 then
             self.Components.Distance.Visible = true
             self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
             self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m"
