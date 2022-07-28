@@ -1,19 +1,24 @@
+-- Settings
 local ESP = {
 	Enabled = false,
-    Names = true,
+	Players = true,
+	Names = true,
     Distance = false,
 	Boxes = true,
-	BoxShift = CFrame.new(0,-1.5,0),
-	BoxSize = Vector3.new(4,6,0),
-	Color = Color3.fromRGB(255, 170, 0),
+	Tracers = false,
 	FaceCamera = false,
 	TeamColor = true,
+	TeamMates = true,
+	Font = "UI",
+	TextSize = 15,
+	BoxShift = CFrame.new(0, -1.5, 0),
+	BoxSize = Vector3.new(4, 6, 0),
+	Color = Color3.fromRGB(255, 170, 0),
 	Thickness = 2,
 	AttachShift = 1,
-	TeamMates = true,
-	Players = true,
-	Objects = setmetatable({}, {__mode="kv"}),
-	Overrides = {}
+	Objects = setmetatable({}, { __mode = "kv" }),
+	Overrides = {},
+	IgnoreHumanoids = false,
 }
 
 --Declarations--
@@ -35,6 +40,8 @@ local function Draw(obj, props)
 	end
 	return new
 end
+
+ESP.Draw = Draw
 
 function ESP:GetTeam(p)
 	local ov = self.Overrides.GetTeam
@@ -181,19 +188,32 @@ function boxBase:Update()
 		color = ESP.HighlightColor
 	end
 
+	local IsPlrHighlighted = (ESP.Highlighted == self.Object and self.Player ~= nil)
+
 	--calculations--
 	local cf = self.PrimaryPart.CFrame
 	if ESP.FaceCamera then
 		cf = CFrame.new(cf.p, cam.CFrame.p)
 	end
+
+	local distance = math.floor((cam.CFrame.p - cf.p).magnitude)
+	if self.Player and ESP.UsePlrDistance and distance > ESP.MaxPlrDistance then
+		for i,v in pairs(self.Components) do
+			v.Visible = false
+		end
+		return
+	end
+
+	self.Distance = distance;
+
 	local size = self.Size
 	local locs = {
-		TopLeft = cf * ESP.BoxShift * CFrame.new(size.X/2,size.Y/2,0),
-		TopRight = cf * ESP.BoxShift * CFrame.new(-size.X/2,size.Y/2,0),
-		BottomLeft = cf * ESP.BoxShift * CFrame.new(size.X/2,-size.Y/2,0),
-		BottomRight = cf * ESP.BoxShift * CFrame.new(-size.X/2,-size.Y/2,0),
-		TagPos = cf * ESP.BoxShift * CFrame.new(0,size.Y/2,0),
-		Torso = cf * ESP.BoxShift
+		TopLeft 	= cf * ESP.BoxShift * CFrame.new(size.X   / 2,  size.Y / 2, 0),
+		TopRight 	= cf * ESP.BoxShift * CFrame.new(-size.X  / 2,  size.Y / 2, 0),
+		BottomLeft 	= cf * ESP.BoxShift * CFrame.new(size.X   / 2, -size.Y / 2, 0),
+		BottomRight = cf * ESP.BoxShift * CFrame.new(-size.X  / 2, -size.Y / 2, 0),
+		TagPos 		= cf * ESP.BoxShift * CFrame.new(0,			 	size.Y / 2, 0),
+		Torso 		= cf * ESP.BoxShift
 	}
 
 	if ESP.Boxes then
@@ -210,6 +230,8 @@ function boxBase:Update()
 				self.Components.Quad.PointC = Vector2.new(BottomLeft.X, BottomLeft.Y)
 				self.Components.Quad.PointD = Vector2.new(BottomRight.X, BottomRight.Y)
 				self.Components.Quad.Color = color
+
+				self.Components.Quad.ZIndex = IsPlrHighlighted and 2 or 1
 			else
 				self.Components.Quad.Visible = false
 			end
@@ -219,11 +241,12 @@ function boxBase:Update()
 	end
 
     if ESP.Names then
-        local TagPos, Vis4 = WorldToViewportPoint(cam, locs.TagPos.Position)
-        
-        if Vis4 then            
+        local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
+
+        if Vis5 then
             self.Components.Name.Visible = true
-            self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
+            self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
+            self.Components.Name.Size = ESP.TextSize
             self.Components.Name.Text = self.Name
             self.Components.Name.Color = color
         else
@@ -232,20 +255,21 @@ function boxBase:Update()
     else
         self.Components.Name.Visible = false
     end
-    
-    if ESP.Distance then
-        local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
-        
-        if Vis5 then
+
+	if ESP.Distance then
+        local TagPos, Vis6 = WorldToViewportPoint(cam, locs.TagPos.p)
+
+        if Vis6 then
             self.Components.Distance.Visible = true
-            self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
+            self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 28)
+            self.Components.Distance.Size = ESP.TextSize
             self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m"
             self.Components.Distance.Color = color
-	    else
-	        self.Components.Distance.Visible = false
+        else
+            self.Components.Distance.Visible = false
         end
     else
-	    self.Components.Distance.Visible = false
+        self.Components.Distance.Visible = false
     end
 	
 	if ESP.Tracers then
@@ -256,6 +280,8 @@ function boxBase:Update()
 			self.Components.Tracer.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
 			self.Components.Tracer.To = Vector2.new(cam.ViewportSize.X/2,cam.ViewportSize.Y/ESP.AttachShift)
 			self.Components.Tracer.Color = color
+
+			self.Components['Tracer'].ZIndex = IsPlrHighlighted and 2 or 1
 		else
 			self.Components.Tracer.Visible = false
 		end
@@ -272,7 +298,7 @@ function ESP:Add(obj, options)
 	local box = setmetatable({
 		Name = options.Name or obj.Name,
 		Type = "Box",
-		Color = options.Color --[[or self:GetColor(obj)]],
+		Color = options.Color,
 		Size = options.Size or self.BoxSize,
 		Object = obj,
 		Player = options.Player or plrs:GetPlayerFromCharacter(obj),
@@ -295,23 +321,32 @@ function ESP:Add(obj, options)
 		Filled = false,
 		Visible = self.Enabled and self.Boxes
 	})
+
 	box.Components["Name"] = Draw("Text", {
 		Text = box.Name,
 		Color = box.Color,
 		Center = true,
 		Outline = true,
-		Size = 19,
+		Size = self.TextSize,
 		Visible = self.Enabled and self.Names
 	})
+
 	box.Components["Distance"] = Draw("Text", {
 		Color = box.Color,
 		Center = true,
 		Outline = true,
-		Size = 19,
+		Size = self.TextSize,
 		Visible = self.Enabled and self.Names
 	})
 	
 	box.Components["Tracer"] = Draw("Line", {
+		Thickness = ESP.Thickness,
+		Color = box.Color,
+		Transparency = 1,
+		Visible = self.Enabled and self.Tracers
+	})
+
+    box.Components["Tracer"] = Draw("Line", {
 		Thickness = ESP.Thickness,
 		Color = box.Color,
 		Transparency = 1,
@@ -331,7 +366,7 @@ function ESP:Add(obj, options)
 	end)
 
 	local hum = obj:FindFirstChildOfClass("Humanoid")
-	if hum then
+	if hum and (not ESP.IgnoreHumanoids) then
 		hum.Died:Connect(function()
 			if ESP.AutoRemove ~= false then
 				box:Remove()
@@ -377,7 +412,7 @@ for i,v in pairs(plrs:GetPlayers()) do
 	end
 end
 
-game:GetService("RunService").RenderStepped:Connect(function()
+game:GetService("RunService"):BindToRenderStep("ESP", 199, function()
 	cam = workspace.CurrentCamera
 	for i,v in (ESP.Enabled and pairs or ipairs)(ESP.Objects) do
 		if v.Update then
