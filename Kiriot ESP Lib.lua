@@ -310,11 +310,11 @@ function boxBase:Update()
             self.Components.Health.Visible = true
             self.Components.Health2.Visible = true
             
-            self.Components.Health2.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
-            self.Components.Health2.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY - offset)
+            self.Components.Health2.From = Vector2.new(TorsoPos.X - hOffsetX, TorsoPos.Y - hOffsetY)
+            self.Components.Health2.To = Vector2.new(TorsoPos.X - hOffsetX, TorsoPos.Y - hOffsetY - offset)
             
-            self.Components.Health.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY);
-            self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY);
+            self.Components.Health.From = Vector2.new(TorsoPos.X - hOffsetX, TorsoPos.Y - hOffsetY);
+            self.Components.Health.To = Vector2.new(TorsoPos.X  - hOffsetX, TorsoPos.Y - hOffsetY);
             
             local g = Color3.fromRGB(0, 255, 8)
             local r = Color3.fromRGB(255, 0, 0)
@@ -413,7 +413,7 @@ function ESP:Add(obj, options)
 	    Thickness = 4,
 	    Visible = self.Enabled and self.Health
 	})
-    
+
 	box.Components["Health2"] = Draw("Line", {
 	    Transparency = 1,
 	    Thickness = 2,
