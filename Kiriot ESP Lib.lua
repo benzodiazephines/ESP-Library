@@ -327,9 +327,9 @@ function boxBase:Update()
     end
     
     if ESP.Items then
-        local RootPart, Vis9 = WorldToViewportPoint(cam, self.PrimaryPart.Position)
+        local RootPart, Vis8 = WorldToViewportPoint(cam, self.PrimaryPart.Position)
         
-        if Vis9 then
+        if Vis8 then
             local Head = WorldToViewportPoint(cam, self.Object.Head.Position)
             local DistanceOff = math.clamp((Vector2.new(Head.X, Head.Y) - Vector2.new(RootPart.X, RootPart.Y)).Magnitude, 2, math.huge)
         
@@ -388,6 +388,26 @@ function ESP:Add(obj, options)
 		Outline = true,
 		Size = self.TextSize,
 		Visible = self.Enabled and self.Names
+	})
+
+    box.Components["Items"] = Draw("Text", {
+	    Color = box.Color,
+	    Center = true,
+	    Outline = true,
+	    Size = self.ItemTextSize,
+	    Visible = self.Enabled and self.Items
+	})
+    
+	box.Components["Health"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 4,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["Health2"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 2,
+	    Visible = self.Enabled and self.Health
 	})
 
 	box.Components["Distance"] = Draw("Text", {
