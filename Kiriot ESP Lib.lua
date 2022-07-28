@@ -1,6 +1,8 @@
+--Settings--
 local ESP = {
 	Enabled = false,
 	Boxes = true,
+    Distance = false
 	BoxShift = CFrame.new(0, -1.5, 0),
 	BoxSize = Vector3.new(4, 6, 0),
 	Color = Color3.fromRGB(255, 170, 0),
@@ -224,26 +226,34 @@ function boxBase:Update()
 	end
 
 	if ESP.Names then
-		local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
-		
-		if Vis5 then
-			self.Components.Name.Visible = true
-			self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
-			self.Components.Name.Text = self.Name
-			self.Components.Name.Color = color
-			
-			self.Components.Distance.Visible = true
-			self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
-			self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m away"
-			self.Components.Distance.Color = color
-		else
-			self.Components.Name.Visible = false
-			self.Components.Distance.Visible = false
-		end
-	else
-		self.Components.Name.Visible = false
-		self.Components.Distance.Visible = false
-	end
+        local TagPos, Vis4 = WorldToViewportPoint(cam, locs.TagPos.Position)
+        
+        if Vis4 then
+            self.Components.Name.Visible = true
+            self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
+            self.Components.Name.Text = self.Name
+            self.Components.Name.Color = color
+        else
+            self.Components.Name.Visible = false
+        end
+    else
+        self.Components.Name.Visible = false
+    end
+    
+    if ESP.Distance then
+        local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
+        
+        if Vis5 then
+            self.Components.Distance.Visible = true
+            self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
+            self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m"
+            self.Components.Distance.Color = color
+	    else
+	        self.Components.Distance.Visible = false
+        end
+    else
+	    self.Components.Distance.Visible = false
+    end
 	
 	if ESP.Tracers then
 		local TorsoPos, Vis6 = WorldToViewportPoint(cam, locs.Torso.p)
