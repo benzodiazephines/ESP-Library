@@ -13,11 +13,10 @@ local ESP = {
     TeamMates = false,
     Players = true,
     Health = true,
-    HealthOffsetX = 4,
-    HealthOffsetY = -2,
+    HealthOffsetX = 7,
+    HealthOffsetY = -2.9,
     Items = false,
     ItemOffset = 19,
-    ItemTextSize = 17,
     Objects = setmetatable({}, {__mode="kv"}),
     Overrides = {}
 }
@@ -194,39 +193,42 @@ function boxBase:Update()
     end
     local size = self.Size
     local locs = {
+        TopLeft = cf * ESP.BoxShift * CFrame.new(size.X/2,size.Y/2,0),
+        TopRight = cf * ESP.BoxShift * CFrame.new(-size.X/2,size.Y/2,0),
+        BottomLeft = cf * ESP.BoxShift * CFrame.new(size.X/2,-size.Y/2,0),
+        BottomRight = cf * ESP.BoxShift * CFrame.new(-size.X/2,-size.Y/2,0),
         TagPos = cf * ESP.BoxShift * CFrame.new(0,size.Y/2,0),
         Torso = cf * ESP.BoxShift
     }
 
     if ESP.Boxes then
-        local RootPart, Vis = WorldToViewportPoint(cam, self.PrimaryPart.Position)
-        
-        if self.Components.Quad and Vis then
-            local Head = WorldToViewportPoint(cam, self.Object.Head.Position)
-            local DistanceOff = math.clamp((Vector2.new(Head.X, Head.Y) - Vector2.new(RootPart.X, RootPart.Y)).Magnitude, 2, math.huge)
-            
-            self.Components.Quad.Visible = true
-            self.Components.Quad.PointA = Vector2.new(RootPart.X + DistanceOff, RootPart.Y - DistanceOff*2)
-            self.Components.Quad.PointB = Vector2.new(RootPart.X - DistanceOff, RootPart.Y - DistanceOff*2)
-            self.Components.Quad.PointC = Vector2.new(RootPart.X - DistanceOff, RootPart.Y + DistanceOff*2)
-            self.Components.Quad.PointD = Vector2.new(RootPart.X + DistanceOff, RootPart.Y + DistanceOff*2)
-            self.Components.Quad.Color = color
-        else
-            self.Components.Quad.Visible = false
+        local TopLeft, Vis1 = WorldToViewportPoint(cam, locs.TopLeft.p)
+        local TopRight, Vis2 = WorldToViewportPoint(cam, locs.TopRight.p)
+        local BottomLeft, Vis3 = WorldToViewportPoint(cam, locs.BottomLeft.p)
+        local BottomRight, Vis4 = WorldToViewportPoint(cam, locs.BottomRight.p)
+
+        if self.Components.Quad then
+            if Vis1 or Vis2 or Vis3 or Vis4 then
+                self.Components.Quad.Visible = true
+                self.Components.Quad.PointA = Vector2.new(TopRight.X, TopRight.Y)
+                self.Components.Quad.PointB = Vector2.new(TopLeft.X, TopLeft.Y)
+                self.Components.Quad.PointC = Vector2.new(BottomLeft.X, BottomLeft.Y)
+                self.Components.Quad.PointD = Vector2.new(BottomRight.X, BottomRight.Y)
+                self.Components.Quad.Color = color
+            else
+                self.Components.Quad.Visible = false
+            end
         end
     else
         self.Components.Quad.Visible = false
     end
 
     if ESP.Names then
-        local RootPart, Vis2 = WorldToViewportPoint(cam, self.PrimaryPart.Position)
+        local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
         
-        if Vis2 then
-            local Head = WorldToViewportPoint(cam, self.Object.Head.Position)
-            local DistanceOff = math.clamp((Vector2.new(Head.X, Head.Y) - Vector2.new(RootPart.X, RootPart.Y)).Magnitude, 2, math.huge)
-            
+        if Vis5 then
             self.Components.Name.Visible = true
-            self.Components.Name.Position = Vector2.new(Head.X, Head.Y - DistanceOff * -3)
+            self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
             self.Components.Name.Text = self.Name
             self.Components.Name.Color = color
         else
@@ -266,32 +268,29 @@ function boxBase:Update()
         self.Components.Tracer.Visible = false
     end
     
-    if ESP.Health then
-        local RootPart, Vis7 = WorldToViewportPoint(cam, self.PrimaryPart.Position)
+    if ESP.Health and self.Object and self.Object:FindFirstChild("Head") and self.Object:FindFirstChild("HumanoidRootPart") then
+        local HeadPos, Vis7 = WorldToViewportPoint(cam, self.Object.Head.Position)
+        local RootPos, Vis8 = WorldToViewportPoint(cam, self.Object.HumanoidRootPart.Position)
         
-        if Vis7 then
-            local Head = WorldToViewportPoint(cam, self.Object.Head.Position)
-            local DistanceOff = math.clamp((Vector2.new(Head.X, Head.Y) - Vector2.new(RootPart.X, RootPart.Y)).Magnitude, 2, math.huge)
-            local b = (Vector2.new(RootPart.X - DistanceOff, RootPart.Y - DistanceOff*2) - Vector2.new(RootPart.X - DistanceOff, RootPart.Y + DistanceOff*2)).Magnitude
-            local offset = nil;
-			
-	    if self.Object:FindFirstChild("Humanoid") then
-                offset = self.Object.Humanoid.Health / 100 * b
-	    end
+        if Vis7 or Vis8 then
+            local s = math.clamp((Vector2.new(HeadPos.X, HeadPos.Y) - Vector2.new(RootPos.X, RootPos.Y)).magnitude, 2, math.huge)
+            local b = (Vector2.new(RootPos.X - s, RootPos.Y - s*2) - Vector2.new(RootPos.X - s, RootPos.Y + s*2)).magnitude
+            local offset = self.Object.Humanoid.Health / self.Object.Humanoid.MaxHealth * b
+            
             local hOffsetX = ESP.HealthOffsetX
             local hOffsetY = ESP.HealthOffsetY
             self.Components.Health.Visible = true
             self.Components.Health2.Visible = true
             
-            self.Components.Health2.From = Vector2.new(RootPart.X - DistanceOff - hOffsetX, RootPart.Y - DistanceOff*hOffsetY)
-            self.Components.Health2.To = Vector2.new(RootPart.X - DistanceOff - hOffsetX, RootPart.Y - DistanceOff*hOffsetY - offset)
+            self.Components.Health2.From = Vector2.new(RootPos.X - s - hOffsetX, RootPos.Y - s*hOffsetY)
+            self.Components.Health2.To = Vector2.new(RootPos.X - s - hOffsetX, RootPos.Y - s*hOffsetY - offset)
             
-            self.Components.Health.From = Vector2.new(RootPart.X - DistanceOff - hOffsetX, RootPart.Y - DistanceOff*hOffsetY);
-            self.Components.Health.To = Vector2.new(RootPart.X - DistanceOff - hOffsetX, RootPart.Y - DistanceOff*hOffsetY);
+            self.Components.Health.From = Vector2.new(RootPos.X - s - hOffsetX, RootPos.Y - s*hOffsetY);
+            self.Components.Health.To = Vector2.new(RootPos.X - s - hOffsetX, RootPos.Y - s*hOffsetY);
             
             local g = Color3.fromRGB(0, 255, 8)
             local r = Color3.fromRGB(255, 0, 0)
-            self.Components.Health2.Color = r:lerp(g, self.Object.Humanoid.Health / 100)
+            self.Components.Health2.Color = r:lerp(g, self.Object.Humanoid.Health / self.Object.Humanoid.MaxHealth)
         else
             self.Components.Health.Visible = false
             self.Components.Health2.Visible = false
@@ -301,22 +300,14 @@ function boxBase:Update()
         self.Components.Health2.Visible = false
     end
     
-    if ESP.Items then
-        local RootPart, Vis9 = WorldToViewportPoint(cam, self.PrimaryPart.Position)
+    if ESP.Items and self.Object and self.Object:FindFirstChildWhichIsA("Tool") and self.Object:FindFirstChild("HumanoidRootPart") then
+        local RootPos, Vis9 = WorldToViewportPoint(cam, self.Object.HumanoidRootPart.Position)
         
         if Vis9 then
-            local Head = WorldToViewportPoint(cam, self.Object.Head.Position)
-            local DistanceOff = math.clamp((Vector2.new(Head.X, Head.Y) - Vector2.new(RootPart.X, RootPart.Y)).Magnitude, 2, math.huge)
-        
             local ItemOffset = ESP.ItemOffset
-	    if self.Object:FindFirstChild'Equipped' and self.Object.Equipped:FindFirstChildWhichIsA'Model' then
-            	self.Components.Items.Text = tostring(self.Object.Equipped:FindFirstChildWhichIsA'Model'.Name)
-	    elseif self.Object:FindFirstChild'Equipped' and not self.Object.Equipped:FindFirstChildWhichIsA'Model' then
-		self.Components.Items.Text = 'N/A'
-	    end
-            self.Components.Items.Position = Vector2.new(Head.X, Head.Y - DistanceOff * ItemOffset)
+            self.Components.Items.Text = tostring(self.Object:FindFirstChildWhichIsA'Tool'.Name)
+            self.Components.Items.Position = Vector2.new(RootPos.X, RootPos.Y + ItemOffset)
             self.Components.Items.Visible = true
-	    self.Components.Items.Size = ESP.ItemTextSize
             self.Components.Items.Color = color
         else
             self.Components.Items.Visible = false
@@ -369,7 +360,7 @@ function ESP:Add(obj, options)
 	    Color = box.Color,
 	    Center = true,
 	    Outline = true,
-	    Size = self.ItemTextSize,
+	    Size = 19,
 	    Visible = self.Enabled and self.Items
 	})
 	box.Components["Health"] = Draw("Line", {
