@@ -246,7 +246,6 @@ function boxBase:Update()
         if Vis5 then
             self.Components.Name.Visible = true
             self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
-            self.Components.Name.Size = ESP.TextSize
             self.Components.Name.Text = self.Name
             self.Components.Name.Color = color
         else
@@ -262,7 +261,6 @@ function boxBase:Update()
         if Vis6 then
             self.Components.Distance.Visible = true
             self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 28)
-            self.Components.Distance.Size = ESP.TextSize
             self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m"
             self.Components.Distance.Color = color
         else
