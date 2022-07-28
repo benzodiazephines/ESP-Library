@@ -222,25 +222,29 @@ function boxBase:Update()
 		Torso 		= cf * ESP.BoxShift
 	}
 
-    if ESP.Boxes then
-        local TorsoPart, Vis = WorldToViewportPoint(cam, locs.Torso.Position)
-        
-        if self.Components.Quad and Vis then
-            local TagPos = WorldToViewportPoint(cam, locs.TagPos.Position)
-            local DistanceOff = math.clamp((Vector2.new(TagPos.X, TagPos.Y) - Vector2.new(TorsoPart.X, TorsoPart.Y)).Magnitude, 2, math.huge)
-            
-            self.Components.Quad.Visible = true
-            self.Components.Quad.PointA = Vector2.new(TorsoPart.X + DistanceOff, TorsoPart.Y - DistanceOff*2)
-            self.Components.Quad.PointB = Vector2.new(TorsoPart.X - DistanceOff, TorsoPart.Y - DistanceOff*2)
-            self.Components.Quad.PointC = Vector2.new(TorsoPart.X - DistanceOff, TorsoPart.Y + DistanceOff*2)
-            self.Components.Quad.PointD = Vector2.new(TorsoPart.X + DistanceOff, TorsoPart.Y + DistanceOff*2)
-            self.Components.Quad.Color = color
-        else
-            self.Components.Quad.Visible = false
-        end
-    else
-        self.Components.Quad.Visible = false
-    end
+	if ESP.Boxes then
+		local TopLeft, Vis1 = WorldToViewportPoint(cam, locs.TopLeft.p)
+		local TopRight, Vis2 = WorldToViewportPoint(cam, locs.TopRight.p)
+		local BottomLeft, Vis3 = WorldToViewportPoint(cam, locs.BottomLeft.p)
+		local BottomRight, Vis4 = WorldToViewportPoint(cam, locs.BottomRight.p)
+
+		if self.Components.Quad then
+			if Vis1 or Vis2 or Vis3 or Vis4 then
+				self.Components.Quad.Visible = true
+				self.Components.Quad.PointA = Vector2.new(TopRight.X, TopRight.Y)
+				self.Components.Quad.PointB = Vector2.new(TopLeft.X, TopLeft.Y)
+				self.Components.Quad.PointC = Vector2.new(BottomLeft.X, BottomLeft.Y)
+				self.Components.Quad.PointD = Vector2.new(BottomRight.X, BottomRight.Y)
+				self.Components.Quad.Color = color
+
+				self.Components.Quad.ZIndex = IsPlrHighlighted and 2 or 1
+			else
+				self.Components.Quad.Visible = false
+			end
+		end
+	else
+		self.Components.Quad.Visible = false
+	end
 
     if ESP.Names then
         local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
@@ -306,11 +310,11 @@ function boxBase:Update()
             self.Components.Health.Visible = true
             self.Components.Health2.Visible = true
             
-            self.Components.Health2.From = Vector2.new(TorsoPos.X - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
-            self.Components.Health2.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY - offset)
+            self.Components.Health2.From = Vector2.new(TorsoPos.X - hOffsetX, TorsoPos.Y - hOffsetY)
+            self.Components.Health2.To = Vector2.new(TorsoPos.X - hOffsetX, TorsoPos.Y - hOffsetY - offset)
             
-            self.Components.Health.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY);
-            self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY);
+            self.Components.Health.From = Vector2.new(TorsoPos.X - hOffsetX, TorsoPos.Y - hOffsetY);
+            self.Components.Health.To = Vector2.new(TorsoPos.X - hOffsetX, TorsoPos.Y - hOffsetY);
             
             local g = Color3.fromRGB(0, 255, 8)
             local r = Color3.fromRGB(255, 0, 0)
