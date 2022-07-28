@@ -234,18 +234,18 @@ function boxBase:Update()
     end
 
     if ESP.Distance then
-        local TagPos, Vis6 = WorldToViewportPoint(cam, locs.TagPos.p)
-
-        if Vis6 then
+        local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
+        
+        if Vis5 then
             self.Components.Distance.Visible = true
-            self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 28)
+            self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
             self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m"
             self.Components.Distance.Color = color
-        else
-            self.Components.Distance.Visible = false
+	    else
+	        self.Components.Distance.Visible = false
         end
     else
-        self.Components.Distance.Visible = false
+	    self.Components.Distance.Visible = false
     end
 	
 	if ESP.Tracers then
