@@ -5,6 +5,12 @@ local ESP = {
 	Names = true,
     Distance = false,
 	Boxes = true,
+    Health = true,
+    HealthOffsetX = 4,
+    HealthOffsetY = -2,
+    Items = false,
+    ItemOffset = 19,
+    ItemTextSize = 17,
 	Tracers = false,
 	FaceCamera = false,
 	TeamColor = true,
@@ -286,6 +292,63 @@ function boxBase:Update()
 	else
 		self.Components.Tracer.Visible = false
 	end
+
+    if ESP.Health then
+        local TorsoPos, Vis8 = WorldToViewportPoint(cam, locs.Torso.p)
+        
+        if Vis8 then
+            local TagPos = WorldToViewportPoint(cam, locs.TagPos.p)
+            local DistanceOff = math.clamp((Vector2.new(TagPos.X, TagPos.Y) - Vector2.new(TorsoPos.X, TorsoPos.Y)).Magnitude, 2, math.huge)
+            local b = (Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y - DistanceOff*2) - Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y + DistanceOff*2)).Magnitude
+            local offset = nil;
+			
+	         if self.Object:FindFirstChildWhichIsA("Humanoid") then
+                offset = self.Object.Humanoid.Health / self.Object.Humanoid.MaxHealth * b
+	        end
+            local hOffsetX = ESP.HealthOffsetX
+            local hOffsetY = ESP.HealthOffsetY
+            self.Components.Health.Visible = true
+            self.Components.Health2.Visible = true
+            
+            self.Components.Health2.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
+            self.Components.Health2.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY - offset)
+            
+            self.Components.Health.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY);
+            self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY);
+            
+            local g = Color3.fromRGB(0, 255, 8)
+            local r = Color3.fromRGB(255, 0, 0)
+            self.Components.Health2.Color = r:lerp(g, self.Object.Humanoid.Health / self.Object.Humanoid.MaxHealth)
+        else
+            self.Components.Health.Visible = false
+            self.Components.Health2.Visible = false
+        end
+    else
+        self.Components.Health.Visible = false
+        self.Components.Health2.Visible = false
+    end
+    
+    if ESP.Items then
+        local TorsoPos, Vis9 = WorldToViewportPoint(cam, locs.Torso.p)
+        
+        if Vis9 then
+            local TagPos = WorldToViewportPoint(cam, locs.TagPos.p)
+            local DistanceOff = math.clamp((Vector2.new(TagPos.X, TagPos.Y) - Vector2.new(TorsoPos.X, TorsoPos.Y)).Magnitude, 2, math.huge)
+        
+            local ItemOffset = ESP.ItemOffset
+	        if self.Object:FindFirstChildWhichIsA("Tool") then
+            	self.Components.Items.Text = tostring(self.Object:FindFirstChildWhichIsA("Tool").Name)
+	        end
+            self.Components.Items.Position = Vector2.new(TagPos.X, TagPos.Y - DistanceOff * ItemOffset)
+            self.Components.Items.Visible = true
+	    self.Components.Items.Size = ESP.ItemTextSize
+            self.Components.Items.Color = color
+        else
+            self.Components.Items.Visible = false
+        end
+    else
+        self.Components.Items.Visible = false
+    end
 end
 
 function ESP:Add(obj, options)
@@ -335,6 +398,26 @@ function ESP:Add(obj, options)
 		Outline = true,
 		Size = self.TextSize,
 		Visible = self.Enabled and self.Names
+	})
+
+    box.Components["Items"] = Draw("Text", {
+	    Color = box.Color,
+	    Center = true,
+	    Outline = true,
+	    Size = self.ItemTextSize,
+	    Visible = self.Enabled and self.Items
+	})
+
+	box.Components["Health"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 4,
+	    Visible = self.Enabled and self.Health
+	})
+    
+	box.Components["Health2"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 2,
+	    Visible = self.Enabled and self.Health
 	})
 	
 	box.Components["Tracer"] = Draw("Line", {
