@@ -298,8 +298,6 @@ function boxBase:Update()
         
         if Vis8 then
             local TagPos = WorldToViewportPoint(cam, locs.TagPos.p)
-            local DistanceOff = math.clamp((Vector2.new(TagPos.X, TagPos.Y) - Vector2.new(TorsoPos.X, TorsoPos.Y)).Magnitude, 2, math.huge)
-            local b = (Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y - DistanceOff*2) - Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y + DistanceOff*2)).Magnitude
             local offset = nil;
 			
 	         if self.Object:FindFirstChildWhichIsA("Humanoid") then
@@ -310,11 +308,11 @@ function boxBase:Update()
             self.Components.Health.Visible = true
             self.Components.Health2.Visible = true
             
-            self.Components.Health2.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
-            self.Components.Health2.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY - offset)
+            self.Components.Health2.From = Vector2.new(TorsoPos.X - hOffsetX, TorsoPos.Y - hOffsetY)
+            self.Components.Health2.To = Vector2.new(TorsoPos.X - hOffsetX, TorsoPos.Y - hOffsetY)
             
-            self.Components.Health.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
-            self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
+            self.Components.Health.From = Vector2.new(TorsoPos.X - hOffsetX, TorsoPos.Y - hOffsetY)
+            self.Components.Health.To = Vector2.new(TorsoPos.X - hOffsetX, TorsoPos.Y - hOffsetY)
             
             local g = Color3.fromRGB(0, 255, 8)
             local r = Color3.fromRGB(255, 0, 0)
