@@ -377,7 +377,7 @@ for i,v in pairs(plrs:GetPlayers()) do
 	end
 end
 
-local function UpdateESP()
+game:GetService("RunService"):BindToRenderStep("Aimbot", 199, function()
 	cam = workspace.CurrentCamera
 	for i,v in (ESP.Enabled and pairs or ipairs)(ESP.Objects) do
 		if v.Update then
@@ -385,10 +385,6 @@ local function UpdateESP()
 			if not s then warn("[EU]", e, v.Object:GetFullName()) end
 		end
 	end
-end
-
-game:GetService("RunService"):UnbindFromRenderStep(UpdateESP)
-
-game:GetService("RunService"):BindToRenderStep(UpdateESP, 199, "ESP")
+end)
 
 return ESP
