@@ -1,4 +1,3 @@
---Settings--
 local ESP = {
 	Enabled = false,
 	Boxes = true,
@@ -12,12 +11,12 @@ local ESP = {
 	AttachShift = 1,
 	TeamMates = false,
 	Players = true,
-        Health = true,
-        HealthOffsetX = 4,
-        HealthOffsetY = -2,
-        Items = false,
-        ItemOffset = 19,
-        ItemTextSize = 17,
+    Health = true,
+    HealthOffsetX = 4,
+    HealthOffsetY = -2,
+    Items = false,
+    ItemOffset = 19,
+    ItemTextSize = 17,
 	Objects = setmetatable({}, {__mode="kv"}),
 	Overrides = {}
 }
@@ -262,12 +261,12 @@ function boxBase:Update()
 	end
 
     if ESP.Health then
-        local RootPart, Vis7 = WorldToViewportPoint(cam, self.PrimaryPart.Position)
+        local TorsoPos, Vis7 = WorldToViewportPoint(cam, locs.Torso.Position)
         
         if Vis7 then
             local Head = WorldToViewportPoint(cam, self.Object.Head.Position)
-            local DistanceOff = math.clamp((Vector2.new(Head.X, Head.Y) - Vector2.new(RootPart.X, RootPart.Y)).Magnitude, 2, math.huge)
-            local b = (Vector2.new(RootPart.X - DistanceOff, RootPart.Y - DistanceOff*2) - Vector2.new(RootPart.X - DistanceOff, RootPart.Y + DistanceOff*2)).Magnitude
+            local DistanceOff = math.clamp((Vector2.new(Head.X, Head.Y) - Vector2.new(TorsoPos.X, TorsoPos.Y)).Magnitude, 2, math.huge)
+            local b = (Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y - DistanceOff*2) - Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y + DistanceOff*2)).Magnitude
             local offset = nil
 			
 	        if self.Object:FindFirstChildWhichIsA("Humanoid") then
@@ -278,11 +277,11 @@ function boxBase:Update()
             self.Components.Health.Visible = true
             self.Components.Health2.Visible = true
             
-            self.Components.Health2.From = Vector2.new(RootPart.X - DistanceOff - hOffsetX, RootPart.Y - DistanceOff*hOffsetY)
-            self.Components.Health2.To = Vector2.new(RootPart.X - DistanceOff - hOffsetX, RootPart.Y - DistanceOff*hOffsetY - offset)
+            self.Components.Health2.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
+            self.Components.Health2.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY - offset)
             
-            self.Components.Health.From = Vector2.new(RootPart.X - DistanceOff - hOffsetX, RootPart.Y - DistanceOff*hOffsetY);
-            self.Components.Health.To = Vector2.new(RootPart.X - DistanceOff - hOffsetX, RootPart.Y - DistanceOff*hOffsetY);
+            self.Components.Health.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY);
+            self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY);
             
             local g = Color3.fromRGB(0, 255, 8)
             local r = Color3.fromRGB(255, 0, 0)
@@ -297,17 +296,17 @@ function boxBase:Update()
     end
     
     if ESP.Items then
-        local RootPart, Vis8 = WorldToViewportPoint(cam, self.PrimaryPart.Position)
+        local TorsoPos, Vis8 = WorldToViewportPoint(cam, locs.TorsoPos.Position)
         
         if Vis8 then
-            local Head = WorldToViewportPoint(cam, self.Object.Head.Position)
-            local DistanceOff = math.clamp((Vector2.new(Head.X, Head.Y) - Vector2.new(RootPart.X, RootPart.Y)).Magnitude, 2, math.huge)
+            local TagPos = WorldToViewportPoint(cam, locs.TagPos.Position)
+            local DistanceOff = math.clamp((Vector2.new(TagPos.X, TagPos.Y) - Vector2.new(TorsoPos.X, TorsoPos.Y)).Magnitude, 2, math.huge)
         
             local ItemOffset = ESP.ItemOffset
 	        if self.Object:FindFirstChildWhichIsA("Tool") then
             	self.Components.Items.Text = tostring(self.Object:FindFirstChildWhichIsA("Tool").Name)
 	        end
-            self.Components.Items.Position = Vector2.new(Head.X, Head.Y - DistanceOff * ItemOffset)
+            self.Components.Items.Position = Vector2.new(TagPos.X, TagPos.Y - DistanceOff * ItemOffset)
             self.Components.Items.Visible = true
 	    self.Components.Items.Size = ESP.ItemTextSize
             self.Components.Items.Color = color
