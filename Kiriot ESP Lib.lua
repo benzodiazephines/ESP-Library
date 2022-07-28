@@ -234,9 +234,9 @@ function boxBase:Update()
     end
 
     if ESP.Distance then
-        local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
+        local TagPos, Vis6 = WorldToViewportPoint(cam, locs.TagPos.p)
         
-        if Vis5 then
+        if Vis6 then
             self.Components.Distance.Visible = true
             self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
             self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m"
@@ -308,7 +308,7 @@ function ESP:Add(obj, options)
 		Center = true,
 		Outline = true,
 		Size = 19,
-		Visible = self.Enabled and self.Names
+		Visible = self.Enabled and self.Distance
 	})
 	
 	box.Components["Tracer"] = Draw("Line", {
