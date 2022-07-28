@@ -240,9 +240,9 @@ function boxBase:Update()
 	end
 
     if ESP.Names then
-        local TagPos, Vis4 = WorldToViewportPoint(cam, locs.TagPos.p)
+        local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
 
-        if Vis4 then
+        if Vis5 then
             self.Components.Name.Visible = true
 			self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
 			self.Components.Name.Text = self.Name
