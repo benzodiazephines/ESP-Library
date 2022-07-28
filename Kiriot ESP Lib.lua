@@ -275,8 +275,8 @@ function boxBase:Update()
             local b = (Vector2.new(RootPart.X - DistanceOff, RootPart.Y - DistanceOff*2) - Vector2.new(RootPart.X - DistanceOff, RootPart.Y + DistanceOff*2)).Magnitude
             local offset = nil;
 			
-	    if self.Object:FindFirstChild'Stats' and self.Object.Stats:FindFirstChild'Health' and self.Object.Stats.Health:FindFirstChild'Base' then
-                offset = self.Object.Stats.Health.Base.Value/100 * b
+	    if self.Object:FindFirstChild("Humanoid") then
+                offset = self.Object.Humanoid.Health / 100 * b
 	    end
             local hOffsetX = ESP.HealthOffsetX
             local hOffsetY = ESP.HealthOffsetY
@@ -291,7 +291,7 @@ function boxBase:Update()
             
             local g = Color3.fromRGB(0, 255, 8)
             local r = Color3.fromRGB(255, 0, 0)
-            self.Components.Health2.Color = r:lerp(g, self.Object.Stats.Health.Base.Value / 100)
+            self.Components.Health2.Color = r:lerp(g, self.Object.Humanoid.Health / 100)
         else
             self.Components.Health.Visible = false
             self.Components.Health2.Visible = false
@@ -327,24 +327,24 @@ function boxBase:Update()
 end
 
 function ESP:Add(obj, options)
-	if not obj.Parent and not options.RenderInNil then
-		return warn(obj, "has no parent")
-	end
+    if not obj.Parent and not options.RenderInNil then
+        return warn(obj, "has no parent")
+    end
 
-	local box = setmetatable({
-		Name = options.Name or obj.Name,
-		Type = "Box",
-		Color = options.Color --[[or self:GetColor(obj)]],
-		Size = options.Size or self.BoxSize,
-		Object = obj,
-		Player = options.Player or plrs:GetPlayerFromCharacter(obj),
-		PrimaryPart = options.PrimaryPart or obj.ClassName == "Model" and (obj.PrimaryPart or obj:FindFirstChild("HumanoidRootPart") or obj:FindFirstChildWhichIsA("BasePart")) or obj:IsA("BasePart") and obj,
-		Components = {},
-		IsEnabled = options.IsEnabled,
-		Temporary = options.Temporary,
-		ColorDynamic = options.ColorDynamic,
-		RenderInNil = options.RenderInNil
-	}, boxBase)
+    local box = setmetatable({
+        Name = options.Name or obj.Name,
+        Type = "Box",
+        Color = options.Color --[[or self:GetColor(obj)]],
+        Size = options.Size or self.BoxSize,
+        Object = obj,
+        Player = options.Player or plrs:GetPlayerFromCharacter(obj),
+        PrimaryPart = options.PrimaryPart or obj.ClassName == "Model" and (obj.PrimaryPart or obj:FindFirstChild("HumanoidRootPart") or obj:FindFirstChildWhichIsA("BasePart")) or obj:IsA("BasePart") and obj,
+        Components = {},
+        IsEnabled = options.IsEnabled,
+        Temporary = options.Temporary,
+        ColorDynamic = options.ColorDynamic,
+        RenderInNil = options.RenderInNil
+    }, boxBase)
 
     if self:GetBox(obj) then
         self:GetBox(obj):Remove()
