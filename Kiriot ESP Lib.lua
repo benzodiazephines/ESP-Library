@@ -284,6 +284,8 @@ function boxBase:Update()
 			self.Components.Tracer.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
 			self.Components.Tracer.To = Vector2.new(cam.ViewportSize.X/2,cam.ViewportSize.Y/ESP.AttachShift)
 			self.Components.Tracer.Color = color
+
+			self.Components['Tracer'].ZIndex = IsPlrHighlighted and 2 or 1
 		else
 			self.Components.Tracer.Visible = false
 		end
@@ -397,7 +399,7 @@ function ESP:Add(obj, options)
 	    Size = self.ItemTextSize,
 	    Visible = self.Enabled and self.Items
 	})
-    
+
 	box.Components["Health"] = Draw("Line", {
 	    Transparency = 1,
 	    Thickness = 4,
