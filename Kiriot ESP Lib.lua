@@ -6,7 +6,7 @@ local ESP = {
     Distance = false,
 	Boxes = true,
     Health = true,
-    HealthOffsetX = 4,
+    HealthOffsetX = 1,
     HealthOffsetY = -2,
     Items = false,
     ItemOffset = 19,
@@ -310,11 +310,11 @@ function boxBase:Update()
             self.Components.Health.Visible = true
             self.Components.Health2.Visible = true
             
-            self.Components.Health2.From = Vector2.new(TorsoPos.X - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
+            self.Components.Health2.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
             self.Components.Health2.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY - offset)
             
-            self.Components.Health.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY);
-            self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY);
+            self.Components.Health.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
+            self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
             
             local g = Color3.fromRGB(0, 255, 8)
             local r = Color3.fromRGB(255, 0, 0)
