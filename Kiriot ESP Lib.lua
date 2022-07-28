@@ -1,26 +1,23 @@
---Settings--
 local ESP = {
 	Enabled = false,
-	Boxes = true,
+	Players = true,
+	Names = true,
     Distance = false,
+	Boxes = true,
+	Tracers = false,
+	FaceCamera = false,
+	TeamColor = true,
+	TeamMates = true,
+	Font = "UI",
+	TextSize = 19,
 	BoxShift = CFrame.new(0, -1.5, 0),
 	BoxSize = Vector3.new(4, 6, 0),
 	Color = Color3.fromRGB(255, 170, 0),
-	FaceCamera = false,
-	Names = true,
-	TeamColor = true,
 	Thickness = 2,
 	AttachShift = 1,
-	TeamMates = false,
-	Players = true,
-    Health = true,
-    HealthOffsetX = 4,
-    HealthOffsetY = -2,
-    Items = false,
-    ItemOffset = 19,
-    ItemTextSize = 17,
-	Objects = setmetatable({}, {__mode="kv"}),
-	Overrides = {}
+	Objects = setmetatable({}, { __mode = "kv" }),
+	Overrides = {},
+	IgnoreHumanoids = false,
 }
 
 --Declarations--
@@ -42,6 +39,8 @@ local function Draw(obj, props)
 	end
 	return new
 end
+
+ESP.Draw = Draw
 
 function ESP:GetTeam(p)
 	local ov = self.Overrides.GetTeam
@@ -188,19 +187,32 @@ function boxBase:Update()
 		color = ESP.HighlightColor
 	end
 
+	local IsPlrHighlighted = (ESP.Highlighted == self.Object and self.Player ~= nil)
+
 	--calculations--
 	local cf = self.PrimaryPart.CFrame
 	if ESP.FaceCamera then
 		cf = CFrame.new(cf.p, cam.CFrame.p)
 	end
+
+	local distance = math.floor((cam.CFrame.p - cf.p).magnitude)
+	if self.Player and ESP.UsePlrDistance and distance > ESP.MaxPlrDistance then
+		for i,v in pairs(self.Components) do
+			v.Visible = false
+		end
+		return
+	end
+
+	self.Distance = distance;
+
 	local size = self.Size
 	local locs = {
-		TopLeft = cf * ESP.BoxShift * CFrame.new(size.X/2,size.Y/2,0),
-		TopRight = cf * ESP.BoxShift * CFrame.new(-size.X/2,size.Y/2,0),
-		BottomLeft = cf * ESP.BoxShift * CFrame.new(size.X/2,-size.Y/2,0),
-		BottomRight = cf * ESP.BoxShift * CFrame.new(-size.X/2,-size.Y/2,0),
-		TagPos = cf * ESP.BoxShift * CFrame.new(0,size.Y/2,0),
-		Torso = cf * ESP.BoxShift
+		TopLeft 	= cf * ESP.BoxShift * CFrame.new(size.X   / 2,  size.Y / 2, 0),
+		TopRight 	= cf * ESP.BoxShift * CFrame.new(-size.X  / 2,  size.Y / 2, 0),
+		BottomLeft 	= cf * ESP.BoxShift * CFrame.new(size.X   / 2, -size.Y / 2, 0),
+		BottomRight = cf * ESP.BoxShift * CFrame.new(-size.X  / 2, -size.Y / 2, 0),
+		TagPos 		= cf * ESP.BoxShift * CFrame.new(0,			 	size.Y / 2, 0),
+		Torso 		= cf * ESP.BoxShift
 	}
 
 	if ESP.Boxes then
@@ -217,6 +229,8 @@ function boxBase:Update()
 				self.Components.Quad.PointC = Vector2.new(BottomLeft.X, BottomLeft.Y)
 				self.Components.Quad.PointD = Vector2.new(BottomRight.X, BottomRight.Y)
 				self.Components.Quad.Color = color
+
+				self.Components.Quad.ZIndex = IsPlrHighlighted and 2 or 1
 			else
 				self.Components.Quad.Visible = false
 			end
@@ -225,14 +239,19 @@ function boxBase:Update()
 		self.Components.Quad.Visible = false
 	end
 
-	if ESP.Names then
+    if ESP.Names then
         local TagPos, Vis4 = WorldToViewportPoint(cam, locs.TagPos.p)
 
         if Vis4 then
             self.Components.Name.Visible = true
-            self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
-            self.Components.Name.Text = self.Name
-            self.Components.Name.Color = color
+			self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
+			self.Components.Name.Text = self.Name
+			self.Components.Name.Color = color
+            self.Components.Name.Size = ESP.FontSize
+            self.Components.Name.ZIndex = IsPlrHighlighted and 2 or 1
+            if Drawing.Fonts and Drawing.Fonts[ESP.Font] then
+				self.Components.Name.Font = Drawing.Fonts[ESP.Font]
+			end
         else
             self.Components.Name.Visible = false
         end
@@ -245,9 +264,14 @@ function boxBase:Update()
 
         if Vis5 then
             self.Components.Distance.Visible = true
-            self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 28)
-            self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m"
-            self.Components.Distance.Color = color
+			self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
+			self.Components.Distance.Text = distance .."m away"
+			self.Components.Distance.Color = color
+            self.Components.Distance.Size = ESP.FontSize
+            self.Components.Distance.ZIndex = IsPlrHighlighted and 2 or 1
+            if Drawing.Fonts and Drawing.Fonts[ESP.Font] then
+				self.Components.Distance.Font = Drawing.Fonts[ESP.Font]
+			end
         else
             self.Components.Distance.Visible = false
         end
@@ -263,69 +287,14 @@ function boxBase:Update()
 			self.Components.Tracer.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
 			self.Components.Tracer.To = Vector2.new(cam.ViewportSize.X/2,cam.ViewportSize.Y/ESP.AttachShift)
 			self.Components.Tracer.Color = color
+
+			self.Components['Tracer'].ZIndex = IsPlrHighlighted and 2 or 1
 		else
 			self.Components.Tracer.Visible = false
 		end
 	else
 		self.Components.Tracer.Visible = false
 	end
-
-    if ESP.Health then
-        local TorsoPos, Vis7 = WorldToViewportPoint(cam, locs.Torso.Position)
-        
-        if Vis7 then
-            local Head = WorldToViewportPoint(cam, self.Object.Head.Position)
-            local DistanceOff = math.clamp((Vector2.new(Head.X, Head.Y) - Vector2.new(TorsoPos.X, TorsoPos.Y)).Magnitude, 2, math.huge)
-            local b = (Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y - DistanceOff*2) - Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y + DistanceOff*2)).Magnitude
-            local offset = nil
-			
-	        if self.Object:FindFirstChildWhichIsA("Humanoid") then
-                offset = self.Object.Humanoid.Health / self.Object.Humanoid.MaxHealth * b
-	        end
-            local hOffsetX = ESP.HealthOffsetX
-            local hOffsetY = ESP.HealthOffsetY
-            self.Components.Health.Visible = true
-            self.Components.Health2.Visible = true
-            
-            self.Components.Health2.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
-            self.Components.Health2.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY - offset)
-            
-            self.Components.Health.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY);
-            self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY);
-            
-            local g = Color3.fromRGB(0, 255, 8)
-            local r = Color3.fromRGB(255, 0, 0)
-            self.Components.Health2.Color = r:lerp(g, self.Object.Humanoid.Health / self.Object.Humanoid.MaxHealth)
-        else
-            self.Components.Health.Visible = false
-            self.Components.Health2.Visible = false
-        end
-    else
-        self.Components.Health.Visible = false
-        self.Components.Health2.Visible = false
-    end
-    
-    if ESP.Items then
-        local TorsoPos, Vis8 = WorldToViewportPoint(cam, locs.TorsoPos.Position)
-        
-        if Vis8 then
-            local TagPos = WorldToViewportPoint(cam, locs.TagPos.Position)
-            local DistanceOff = math.clamp((Vector2.new(TagPos.X, TagPos.Y) - Vector2.new(TorsoPos.X, TorsoPos.Y)).Magnitude, 2, math.huge)
-        
-            local ItemOffset = ESP.ItemOffset
-	        if self.Object:FindFirstChildWhichIsA("Tool") then
-            	self.Components.Items.Text = tostring(self.Object:FindFirstChildWhichIsA("Tool").Name)
-	        end
-            self.Components.Items.Position = Vector2.new(TagPos.X, TagPos.Y - DistanceOff * ItemOffset)
-            self.Components.Items.Visible = true
-	    self.Components.Items.Size = ESP.ItemTextSize
-            self.Components.Items.Color = color
-        else
-            self.Components.Items.Visible = false
-        end
-    else
-        self.Components.Items.Visible = false
-    end
 end
 
 function ESP:Add(obj, options)
@@ -359,40 +328,21 @@ function ESP:Add(obj, options)
 		Filled = false,
 		Visible = self.Enabled and self.Boxes
 	})
+
 	box.Components["Name"] = Draw("Text", {
 		Text = box.Name,
 		Color = box.Color,
 		Center = true,
 		Outline = true,
-		Size = 19,
+		Size = self.TextSize,
 		Visible = self.Enabled and self.Names
-	})
-
-    box.Components["Items"] = Draw("Text", {
-	    Color = box.Color,
-	    Center = true,
-	    Outline = true,
-	    Size = self.ItemTextSize,
-	    Visible = self.Enabled and self.Items
-	})
-
-	box.Components["Health"] = Draw("Line", {
-	    Transparency = 1,
-	    Thickness = 4,
-	    Visible = self.Enabled and self.Health
-	})
-
-	box.Components["Health2"] = Draw("Line", {
-	    Transparency = 1,
-	    Thickness = 2,
-	    Visible = self.Enabled and self.Health
 	})
 
 	box.Components["Distance"] = Draw("Text", {
 		Color = box.Color,
 		Center = true,
 		Outline = true,
-		Size = 19,
+		Size = self.TextSize,
 		Visible = self.Enabled and self.Names
 	})
 	
@@ -416,7 +366,7 @@ function ESP:Add(obj, options)
 	end)
 
 	local hum = obj:FindFirstChildOfClass("Humanoid")
-	if hum then
+	if hum and (not ESP.IgnoreHumanoids) then
 		hum.Died:Connect(function()
 			if ESP.AutoRemove ~= false then
 				box:Remove()
