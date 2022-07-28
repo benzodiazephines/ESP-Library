@@ -276,7 +276,7 @@ function boxBase:Update()
 		self.Components.Distance.Visible = false
 	end
 	
-	if ESP.Tracers then
+    if ESP.Tracers then
 		local TorsoPos, Vis6 = WorldToViewportPoint(cam, locs.Torso.p)
 
 		if Vis6 then
@@ -284,8 +284,6 @@ function boxBase:Update()
 			self.Components.Tracer.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
 			self.Components.Tracer.To = Vector2.new(cam.ViewportSize.X/2,cam.ViewportSize.Y/ESP.AttachShift)
 			self.Components.Tracer.Color = color
-
-			self.Components['Tracer'].ZIndex = IsPlrHighlighted and 2 or 1
 		else
 			self.Components.Tracer.Visible = false
 		end
@@ -300,7 +298,7 @@ function boxBase:Update()
             local Head = WorldToViewportPoint(cam, self.Object.Head.Position)
             local DistanceOff = math.clamp((Vector2.new(Head.X, Head.Y) - Vector2.new(RootPart.X, RootPart.Y)).Magnitude, 2, math.huge)
             local b = (Vector2.new(RootPart.X - DistanceOff, RootPart.Y - DistanceOff*2) - Vector2.new(RootPart.X - DistanceOff, RootPart.Y + DistanceOff*2)).Magnitude
-            local offset = nil;
+            local offset = nil
 			
 	    if self.Object:FindFirstChild("Humanoid") then
                 offset = self.Object.Humanoid.Health / self.Object.Humanoid.MaxHealth * b
