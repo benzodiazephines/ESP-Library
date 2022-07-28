@@ -9,6 +9,7 @@ local ESP = {
     HealthOffsetX = 4,
     HealthOffsetY = -2,
     Items = false,
+    ItemOffset = 19,
     ItemTextSize = 17,
 	Tracers = false,
 	FaceCamera = false,
@@ -331,10 +332,11 @@ function boxBase:Update()
         local TorsoPos, Vis9 = WorldToViewportPoint(cam, locs.Torso.p)
         
         if Vis9 then        
-	        if self.Object:FindFirstChildWhichIsA("Tool") then
+	        if self.Object and self.Object:FindFirstChildWhichIsA("Tool") then
             	self.Components.Items.Text = tostring(self.Object:FindFirstChildWhichIsA("Tool").Name)
 	        end
-            self.Components.Items.Position = Vector2.new(TorsoPos.X, TorsoPos.Y)
+            local ItemOffset = ESP.ItemOffset
+            self.Components.Items.Position = Vector2.new(TorsoPos.X, TorsoPos.Y + ItemOffset)
             self.Components.Items.Visible = true
 	    self.Components.Items.Size = ESP.ItemTextSize
             self.Components.Items.Color = color
