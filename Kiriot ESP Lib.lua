@@ -1,3 +1,4 @@
+-- Settings
 local ESP = {
 	Enabled = false,
 	Players = true,
@@ -312,7 +313,7 @@ function boxBase:Update()
                 self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
                 local g = Color3.fromRGB(0, 255, 8)
                 local r = Color3.fromRGB(255, 0, 0)
-                self.Components.Health2.Color = r:lerp(g, self.Player.Stats.Health.Value / 100)
+                self.Components.Health2.Color = r:lerp(g, self.Player.Character.Humanoid.Health / self.Player.Character.Humanoid.MaxHealth)
             end
         else
             self.Components.Health.Visible = false
