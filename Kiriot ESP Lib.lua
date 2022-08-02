@@ -8,8 +8,7 @@ local ESP = {
     HealthOffsetX = 4,
     HealthOffsetY = -2,
     Items = false,
-    ItemOffset = 8,
-    ItemTextSize = 15,
+    ItemOffset = 10,
 	Tracers = false,
 	FaceCamera = false,
 	TeamColor = true,
@@ -332,7 +331,6 @@ function boxBase:Update()
                 local ItemOffset = ESP.ItemOffset
                 self.Components.Items.Position = Vector2.new(TorsoPos.X, TorsoPos.Y + ItemOffset)
                 self.Components.Items.Visible = true
-	            self.Components.Items.Size = ESP.ItemTextSize
                 self.Components.Items.Color = color
             end
         else
@@ -396,7 +394,7 @@ function ESP:Add(obj, options)
 	    Color = box.Color,
 	    Center = true,
 	    Outline = true,
-	    Size = self.ItemTextSize,
+	    Size = self.TextSize,
 	    Visible = self.Enabled and self.Items
 	})
 
