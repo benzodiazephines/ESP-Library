@@ -1,4 +1,3 @@
--- Settings
 local ESP = {
 	Enabled = false,
 	Players = true,
@@ -9,8 +8,8 @@ local ESP = {
     HealthOffsetX = 4,
     HealthOffsetY = -2,
     Items = false,
-    ItemOffset = 12,
-    ItemTextSize = 17,
+    ItemOffset = 10,
+    ItemTextSize = 15,
 	Tracers = false,
 	FaceCamera = false,
 	TeamColor = true,
