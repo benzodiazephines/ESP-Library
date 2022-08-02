@@ -9,7 +9,7 @@ local ESP = {
     HealthOffsetX = 4,
     HealthOffsetY = -2,
     Items = false,
-    ItemOffset = 19,
+    ItemOffset = 12,
     ItemTextSize = 17,
 	Tracers = false,
 	FaceCamera = false,
@@ -297,28 +297,24 @@ function boxBase:Update()
         local TorsoPos, Vis8 = WorldToViewportPoint(cam, locs.Torso.p)
         
         if Vis8 then
-            local TagPos = WorldToViewportPoint(cam, locs.TagPos.p)
-            local DistanceOff = math.clamp((Vector2.new(TagPos.X, TagPos.Y) - Vector2.new(TorsoPos.X, TorsoPos.Y)).Magnitude, 2, math.huge)
-            local b = (Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y - DistanceOff*2) - Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y + DistanceOff*2)).Magnitude
-            local offset = nil;
-			
-	         if self.Object:FindFirstChildWhichIsA("Humanoid") then
-                offset = self.Object.Humanoid.Health / self.Object.Humanoid.MaxHealth * b
-	        end
-            local hOffsetX = ESP.HealthOffsetX
-            local hOffsetY = ESP.HealthOffsetY
-            self.Components.Health.Visible = true
-            self.Components.Health2.Visible = true
-            
-            self.Components.Health2.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
-            self.Components.Health2.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY - offset)
-            
-            self.Components.Health.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
-            self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
-            
-            local g = Color3.fromRGB(0, 255, 8)
-            local r = Color3.fromRGB(255, 0, 0)
-            self.Components.Health2.Color = r:lerp(g, self.Object.Humanoid.Health / self.Object.Humanoid.MaxHealth)
+            if self.Player and self.Player.Character and self.Player.Character:FindFirstChildOfClass("Humanoid") then
+                local TagPos = WorldToViewportPoint(cam, locs.TagPos.p)
+                local DistanceOff = math.clamp((Vector2.new(TagPos.X, TagPos.Y) - Vector2.new(TorsoPos.X, TorsoPos.Y)).Magnitude, 2, math.huge)
+                local b = (Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y - DistanceOff*2) - Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y + DistanceOff*2)).Magnitude
+                local offset = nil
+                offset = self.Player.Character.Huamnoid.Health / self.Player.Character.Huamnoid.MaxHealth * b
+                local hOffsetX = ESP.HealthOffsetX
+                local hOffsetY = ESP.HealthOffsetY
+                self.Components.Health.Visible = true
+                self.Components.Health2.Visible = true
+                self.Components.Health2.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
+                self.Components.Health2.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY - offset)
+                self.Components.Health.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
+                self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
+                local g = Color3.fromRGB(0, 255, 8)
+                local r = Color3.fromRGB(255, 0, 0)
+                self.Components.Health2.Color = r:lerp(g, self.Player.Stats.Health.Value / 100)
+            end
         else
             self.Components.Health.Visible = false
             self.Components.Health2.Visible = false
@@ -332,14 +328,14 @@ function boxBase:Update()
         local TorsoPos, Vis9 = WorldToViewportPoint(cam, locs.Torso.p)
         
         if Vis9 then        
-	        if self.Object and self.Object:FindFirstChildWhichIsA("Tool") then
-            	self.Components.Items.Text = tostring(self.Object:FindFirstChildWhichIsA("Tool").Name)
-	        end
-            local ItemOffset = ESP.ItemOffset
-            self.Components.Items.Position = Vector2.new(TorsoPos.X, TorsoPos.Y + ItemOffset)
-            self.Components.Items.Visible = true
-	    self.Components.Items.Size = ESP.ItemTextSize
-            self.Components.Items.Color = color
+	        if self.Player and self.Player.Character and self.Player.Character:FindFirstChildOfClass("Tool") then
+            	self.Components.Items.Text = tostring(self.Player.Character:FindFirstChildOfClass("Tool").Name)
+                local ItemOffset = ESP.ItemOffset
+                self.Components.Items.Position = Vector2.new(TorsoPos.X, TorsoPos.Y + ItemOffset)
+                self.Components.Items.Visible = true
+	            self.Components.Items.Size = ESP.ItemTextSize
+                self.Components.Items.Color = color
+            end
         else
             self.Components.Items.Visible = false
         end
