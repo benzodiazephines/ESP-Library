@@ -332,6 +332,8 @@ function boxBase:Update()
                 self.Components.Items.Position = Vector2.new(TorsoPos.X, TorsoPos.Y + ItemOffset)
                 self.Components.Items.Visible = true
                 self.Components.Items.Color = color
+			else
+				self.Components.Items.Visible = false
             end
         else
             self.Components.Items.Visible = false
