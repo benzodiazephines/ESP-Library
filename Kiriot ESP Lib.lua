@@ -387,7 +387,6 @@ function boxBase:Update()
     end
 
 	local onScreen, size, position, TorsoPos = WorldToViewportPoint(cam, locs.Torso.p)
-    local distance = (currentCamera.CFrame.Position - torso.Position).Magnitude
     local canShow = onScreen and (size and position)
 
 	local viewportSize = cam.ViewportSize
