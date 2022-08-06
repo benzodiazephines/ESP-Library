@@ -346,6 +346,14 @@ function boxBase:Update()
     else
         self.Components.Items.Visible = false
     end
+
+	if ESP.Chams then
+        self.Components.Highlight.Enabled = true
+		self.Components.Highlight.FillColor = color
+		self.Components.Highlight.OutlineColor = ESP.OutlineColor
+    else
+        self.Components.Highlight.Enabled = false
+    end
 end
 
 function ESP:Add(obj, options)
@@ -432,7 +440,6 @@ function ESP:Add(obj, options)
 
 	if not obj:FindFirstChild(obj.Name .. "_HIGHLIGHT") then
 		local h = Instance.new("Highlight")
-		h.Enabled = true
 		h.FillTransparency = .35
 		h.OutlineTransparency = .35
 		h.FillColor = box.Color
