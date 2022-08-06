@@ -435,8 +435,8 @@ function ESP:Add(obj, options)
 		h.Enabled = true
 		h.FillTransparency = .35
 		h.OutlineTransparency = .35
-		h.FillColor = options.Color
-		h.OutlineColor = options.ChamsOutlineColor
+		h.FillColor = box.Color
+		h.OutlineColor = ESP.ChamsOutlineColor
 		h.DepthMode = 0
 		h.Name = obj.Name .. "_HIGHLIGHT"
 		h.Adornee = obj
