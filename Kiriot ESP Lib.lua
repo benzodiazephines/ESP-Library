@@ -9,6 +9,8 @@ local ESP = {
     HealthOffsetY = -2,
     Items = false,
     ItemOffset = 10,
+	Chams = false,
+	ChamsOutlineColor = Color3.fromRGB(255, 255, 255),
 	Tracers = false,
 	FaceCamera = false,
 	TeamColor = true,
@@ -91,9 +93,12 @@ function ESP:Toggle(bool)
 				if v.Temporary then
 					v:Remove()
 				else
-					for i,v in pairs(v.Components) do
+					pcall(function()
 						v.Visible = false
-					end
+					end)
+					pcall(function()
+						v.Enabled = false
+					end)
 				end
 			end
 		end
@@ -347,19 +352,6 @@ function ESP:Add(obj, options)
 	if not obj.Parent and not options.RenderInNil then
 		return warn(obj, "has no parent")
 	end
-	if not obj:FindFirstChild(obj.Name .. "_HIGHLIGHT") then
-    local h = Instance.new("Highlight")
-    h.Enabled = true
-    h.FillTransparency = .35
-    h.OutlineTransparency = .35
-    h.FillColor = Color3.new(1)
-    h.OutlineColor = Color3.new(1)
-    h.DepthMode = 0
-    h.Name = obj.Name .. "_HIGHLIGHT"
-    h.Adornee = obj
-    h.Parent = obj
-end
-
 	local box = setmetatable({
 		Name = options.Name or obj.Name,
 		Type = "Box",
@@ -437,6 +429,21 @@ end
 		Transparency = 1,
 		Visible = self.Enabled and self.Tracers
 	})
+
+	if not obj:FindFirstChild(obj.Name .. "_HIGHLIGHT") then
+		local h = Instance.new("Highlight")
+		h.Enabled = true
+		h.FillTransparency = .35
+		h.OutlineTransparency = .35
+		h.FillColor = options.Color
+		h.OutlineColor = options.ChamsOutlineColor
+		h.DepthMode = 0
+		h.Name = obj.Name .. "_HIGHLIGHT"
+		h.Adornee = obj
+		h.Parent = obj
+		box.Components["Highlight"] = h
+	end
+
 	self.Objects[obj] = box
 	
 	obj.AncestryChanged:Connect(function(_, parent)
