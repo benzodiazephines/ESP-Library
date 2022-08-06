@@ -10,12 +10,16 @@ local ESP = {
     Items = false,
     ItemOffset = 10,
 	Chams = false,
+	ChamsTransparency = 0.5,
 	ChamsOutlineColor = Color3.fromRGB(255, 255, 255),
 	Tracers = false,
+	OutOfViewArrows = false,
+	OutOfViewArrowsOutline = false,
+	OutOfViewArrowsOutlineColor = Color3.fromRGB(255, 255, 255),
 	FaceCamera = false,
 	TeamColor = true,
 	TeamMates = true,
-	Font = "UI",
+	Font = "Plex",
 	TextSize = 15,
 	BoxShift = CFrame.new(0, -1.5, 0),
 	BoxSize = Vector3.new(4, 6, 0),
@@ -35,8 +39,28 @@ local mouse = plr:GetMouse()
 
 local V3new = Vector3.new
 local WorldToViewportPoint = cam.WorldToViewportPoint
+local PointToObjectSpace = CFrame.new().PointToObjectSpace
+local Cross = Vector3.new().Cross
+
+local Folder = Instance.new("Folder", game.CoreGui)
 
 --Functions--
+
+local chars = {}
+for i = 17700, 17800 do
+    chars[#chars + 1] = utf8.char(i)
+end
+for i = 160, 700 do
+    chars[#chars + 1] = utf8.char(i)
+end
+function GenerateName(x)
+    local e = ""
+    for _ = 1, tonumber(x) or math.random(10, 999) do
+        e = e .. chars[math.random(1, #chars)]
+    end
+    return e
+end
+
 local function Draw(obj, props)
 	local new = Drawing.new(obj)
 	
@@ -93,9 +117,9 @@ function ESP:Toggle(bool)
 				if v.Temporary then
 					v:Remove()
 				else
-					for _, v in pairs(v.Components) do
-						if v == "Highlight" then
-							v.Enable = false
+					for i, v in pairs(v.Components) do
+						if i == "Highlight" then
+							v.Enabled = false
 						else
 							v.Visible = false
 						end
@@ -151,12 +175,13 @@ boxBase.__index = boxBase
 function boxBase:Remove()
 	ESP.Objects[self.Object] = nil
 	for i,v in pairs(self.Components) do
-		if v == "Highlight" then
-			v.Enable = false
+		if i == "Highlight" then
+			v.Enabled = false
+			v:Remove()
 		else
 			v.Visible = false
+			v:Remove()
 		end
-		v:Remove()
 		self.Components[i] = nil
 	end
 end
@@ -193,7 +218,11 @@ function boxBase:Update()
 
 	if not allow then
 		for i,v in pairs(self.Components) do
-			v.Visible = false
+			if i == "Highlight" then
+				v.Enabled = false
+			else
+			    v.Visible = false
+			end
 		end
 		return
 	end
@@ -213,7 +242,11 @@ function boxBase:Update()
 	local distance = math.floor((cam.CFrame.p - cf.p).magnitude)
 	if self.Player and ESP.UsePlrDistance and distance > ESP.MaxPlrDistance then
 		for i,v in pairs(self.Components) do
-			v.Visible = false
+			if i == "Highlight" then
+				v.Enabled = false
+			else
+			    v.Visible = false
+			end
 		end
 		return
 	end
@@ -352,10 +385,54 @@ function boxBase:Update()
         self.Components.Items.Visible = false
     end
 
+	local viewportSize = cam.ViewportSize
+    local screenCenter = Vector2.new(viewportSize.X / 2, viewportSize.Y / 2)
+    local objectSpacePoint = (PointToObjectSpace(cam.CFrame, locs.Torso.p) * Vector3.new(1, 0, 1)).Unit
+
+    if objectSpacePoint then
+		local crossVector = Cross(objectSpacePoint, Vector3.new(0, 1, 1))
+		local rightVector = Vector2.new(crossVector.X, crossVector.Z)
+		local arrowRadius, arrowSize = 100, 25
+		local arrowPosition = screenCenter + Vector2.new(objectSpacePoint.X, objectSpacePoint.Z) * arrowRadius
+		local arrowDirection = (arrowPosition - screenCenter).Unit
+		local pointA, pointB, pointC = arrowPosition, screenCenter + arrowDirection * (arrowRadius - arrowSize) + rightVector * arrowSize, screenCenter + arrowDirection * (arrowRadius - arrowSize) + -rightVector * arrowSize
+		if ESP.OutOfViewArrows then
+			self.Components.Arrow.Visible = true
+			self.Components.Arrow.Filled = true
+			self.Components.Arrow.Transparency = 0.5
+			self.Components.Arrow.Color = color
+			self.Components.Arrow.PointA = pointA
+			self.Components.Arrow.PointB = pointB
+			self.Components.Arrow.PointC = pointC
+		else
+			self.Components.Arrow.Visible = false
+		end
+		if ESP.OutOfViewArrowsOutline then
+			self.Components.Arrow2.Visible = true
+			self.Components.Arrow2.Filled = false
+			self.Components.Arrow2.Transparency = 1
+			self.Components.Arrow2.Color = ESP.OutOfViewArrowsOutlineColor
+			self.Components.Arrow2.PointA = pointA
+			self.Components.Arrow2.PointB = pointB
+			self.Components.Arrow2.PointC = pointC
+		else
+			self.Components.Arrow2.Visible = false
+		end
+    else
+		self.Components.Arrow.Visible = false
+        self.Components.Arrow2.Visible = false
+    end
+
 	if ESP.Chams then
-        self.Components.Highlight.Enabled = true
-		self.Components.Highlight.FillColor = color
-		self.Components.Highlight.OutlineColor = ESP.OutlineColor
+		local TorsoPos, Vis10 = WorldToViewportPoint(cam, locs.Torso.p)
+		if Vis10 then
+            self.Components.Highlight.Enabled = true
+		    self.Components.Highlight.FillColor = color
+		    self.Components.Highlight.FillTransparency = ESP.ChamsTransparency
+		    self.Components.Highlight.OutlineColor = ESP.ChamsOutlineColor
+		else
+			self.Components.Highlight.Enabled = false
+		end
     else
         self.Components.Highlight.Enabled = false
     end
@@ -442,20 +519,26 @@ function ESP:Add(obj, options)
 		Transparency = 1,
 		Visible = self.Enabled and self.Tracers
 	})
+
+	box.Components["Arrow"] = Draw("Triangle", {
+		Thickness = 1
+	})
+
+	box.Components["Arrow2"] = Draw("Triangle", {
+		Thickness = 1
+	})
     
-	local Folder = Instance.new("Folder", game.CoreGui)
-	if not obj:FindFirstChild(obj.Name .. "_HIGHLIGHT") then
-		local h = Instance.new("Highlight")
-		h.FillTransparency = .35
-		h.OutlineTransparency = .35
-		h.FillColor = ESP.Color
-		h.OutlineColor = ESP.ChamsOutlineColor
-		h.DepthMode = 0
-		h.Name = obj.Name .. "_HIGHLIGHT"
-		h.Parent = Folder
-		h.Adornee = obj
-		box.Components["Highlight"] = h
-	end
+	local h = Instance.new("Highlight")
+	h.Enabled = ESP.Chams
+	h.FillTransparency = .35
+	h.OutlineTransparency = .35
+	h.FillColor = ESP.Color
+	h.OutlineColor = ESP.ChamsOutlineColor
+	h.DepthMode = 0
+	h.Name = GenerateName(x)
+	h.Parent = Folder
+	h.Adornee = obj
+	box.Components["Highlight"] = h
 
 	self.Objects[obj] = box
 	
@@ -517,7 +600,7 @@ for i,v in pairs(plrs:GetPlayers()) do
 	end
 end
 
-game:GetService("RunService"):BindToRenderStep("ESP", 199, function()
+game:GetService("RunService"):BindToRenderStep("ESP", Enum.RenderPriority.Camera.Value + 1, function()
 	cam = workspace.CurrentCamera
 	for i,v in (ESP.Enabled and pairs or ipairs)(ESP.Objects) do
 		if v.Update then
