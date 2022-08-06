@@ -386,7 +386,7 @@ function boxBase:Update()
         self.Components.Items.Visible = false
     end
 
-	local onScreen, size, position, TorsoPos = WorldToViewportPoint(cam, locs.Torso.p)
+	local onScreen, size, position = WorldToViewportPoint(cam, locs.Torso.p)
     local canShow = onScreen and (size and position)
 
 	local viewportSize = cam.ViewportSize
