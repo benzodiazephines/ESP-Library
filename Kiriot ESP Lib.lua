@@ -442,7 +442,7 @@ function ESP:Add(obj, options)
 		local h = Instance.new("Highlight")
 		h.FillTransparency = .35
 		h.OutlineTransparency = .35
-		h.FillColor = box.Color
+		h.FillColor = ESP.Color
 		h.OutlineColor = ESP.ChamsOutlineColor
 		h.DepthMode = 0
 		h.Name = obj.Name .. "_HIGHLIGHT"
