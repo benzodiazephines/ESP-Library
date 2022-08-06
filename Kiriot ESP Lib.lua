@@ -347,6 +347,14 @@ function ESP:Add(obj, options)
 	if not obj.Parent and not options.RenderInNil then
 		return warn(obj, "has no parent")
 	end
+	local h = Instance.new("Highlight")
+    h.Enabled = true
+    h.FillTransparency = .35
+    h.OutlineTransparency = .35
+    h.FillColor = Color3.new(1)
+    h.OutlineColor = Color3.new(1)
+    h.DepthMode = 0
+    h.Adornee = obj
 
 	local box = setmetatable({
 		Name = options.Name or obj.Name,
