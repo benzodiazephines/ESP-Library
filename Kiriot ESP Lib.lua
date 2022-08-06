@@ -3,6 +3,7 @@ local ESP = {
 	Players = true,
 	Names = true,
     Distance = false,
+	MaxPlrDistance = math.huge, 
 	Boxes = true,
     Health = true,
     HealthOffsetX = 4,
