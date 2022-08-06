@@ -437,7 +437,8 @@ function ESP:Add(obj, options)
 		Transparency = 1,
 		Visible = self.Enabled and self.Tracers
 	})
-
+    
+	local Folder = Instance.new("Folder", game.CoreGui)
 	if not obj:FindFirstChild(obj.Name .. "_HIGHLIGHT") then
 		local h = Instance.new("Highlight")
 		h.FillTransparency = .35
@@ -446,8 +447,8 @@ function ESP:Add(obj, options)
 		h.OutlineColor = ESP.ChamsOutlineColor
 		h.DepthMode = 0
 		h.Name = obj.Name .. "_HIGHLIGHT"
+		h.Parent = Folder
 		h.Adornee = obj
-		h.Parent = obj
 		box.Components["Highlight"] = h
 	end
 
