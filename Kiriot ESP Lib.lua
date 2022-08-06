@@ -399,9 +399,6 @@ function boxBase:Update()
 		local arrowPosition = screenCenter + Vector2.new(objectSpacePoint.X, objectSpacePoint.Z) * arrowRadius
 		local arrowDirection = (arrowPosition - screenCenter).Unit
 		local pointA, pointB, pointC = arrowPosition, screenCenter + arrowDirection * (arrowRadius - arrowSize) + rightVector * arrowSize, screenCenter + arrowDirection * (arrowRadius - arrowSize) + -rightVector * arrowSize
-        self.Components.Arrow.Visible = true
-		self.Components.Arrow2.Visible = false
-	else
 		if ESP.OutOfViewArrows then
 			self.Components.Arrow.Visible = true
 			self.Components.Arrow.Filled = true
@@ -424,6 +421,9 @@ function boxBase:Update()
 		else
 			self.Components.Arrow2.Visible = false
 		end
+    else
+		self.Components.Arrow.Visible = false
+        self.Components.Arrow2.Visible = false
     end
 
 	if ESP.Chams then
