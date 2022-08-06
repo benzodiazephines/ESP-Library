@@ -62,6 +62,26 @@ function GenerateName(x)
     return e
 end
 
+function BadBruh(position)
+    local screenPosition, onScreen = WorldToViewportPoint(position)
+    return Vector2.new(screenPosition.X, screenPosition.Y), onScreen, screenPosition.Z
+end
+
+function round(number)
+    if (typeof(number) == "Vector2") then
+        return Vector2.new(round(number.X), round(number.Y))
+    else
+        return math.floor(number)
+    end
+end
+
+function GetBoundingBox(torso)
+    local torsoPosition, onScreen, depth = BadBruh(torso.Position)
+    local scaleFactor = 1 / (math.tan(math.rad(cam.FieldOfView * 0.5)) * 2 * depth) * 1000
+    local size = round(Vector2.new(4 * scaleFactor, 5 * scaleFactor))
+    return onScreen, size, round(Vector2.new(torsoPosition.X - (size.X * 0.5), torsoPosition.Y - (size.Y * 0.5))), torsoPosition
+end
+
 local function Draw(obj, props)
 	local new = Drawing.new(obj)
 	
@@ -386,7 +406,7 @@ function boxBase:Update()
         self.Components.Items.Visible = false
     end
 
-	local onScreen, size, position = WorldToViewportPoint(cam, locs.Torso.p)
+	local onScreen, size, position = GetBoundingBox(locs.Torso)
     local canShow = onScreen and (size and position)
 
 	local viewportSize = cam.ViewportSize
