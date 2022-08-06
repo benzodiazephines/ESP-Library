@@ -406,7 +406,7 @@ function boxBase:Update()
         self.Components.Items.Visible = false
     end
 
-	local onScreen, size, position = GetBoundingBox(locs.Torso)
+	local onScreen, size, position, TorsoPos = GetBoundingBox(locs.Torso)
     local canShow = onScreen and (size and position)
 
 	local viewportSize = cam.ViewportSize
