@@ -386,13 +386,15 @@ function boxBase:Update()
         self.Components.Items.Visible = false
     end
 
-	local TorsoPos, Vis10 = WorldToViewportPoint(cam, locs.Torso.p)
+	local onScreen, size, position, TorsoPos = WorldToViewportPoint(cam, locs.Torso.p)
+    local distance = (currentCamera.CFrame.Position - torso.Position).Magnitude
+    local canShow = onScreen and (size and position)
 
 	local viewportSize = cam.ViewportSize
     local screenCenter = Vector2.new(viewportSize.X / 2, viewportSize.Y / 2)
     local objectSpacePoint = (PointToObjectSpace(cam.CFrame, locs.Torso.p) * Vector3.new(1, 0, 1)).Unit
 
-    if Vis10 then
+    if canShow then
 		local crossVector = Cross(objectSpacePoint, Vector3.new(0, 1, 1))
 		local rightVector = Vector2.new(crossVector.X, crossVector.Z)
 		local arrowRadius, arrowSize = 100, 25
