@@ -93,12 +93,13 @@ function ESP:Toggle(bool)
 				if v.Temporary then
 					v:Remove()
 				else
-					pcall(function()
-						v.Visible = false
-					end)
-					pcall(function()
-						v.Enabled = false
-					end)
+					for _, v in pairs(v.Components) do
+						if v == "Highlight" then
+							v.Enable = false
+						else
+							v.Visible = false
+						end
+					end
 				end
 			end
 		end
