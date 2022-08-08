@@ -390,7 +390,7 @@ function boxBase:Update()
     local screenCenter = Vector2.new(viewportSize.X / 2, viewportSize.Y / 2)
     local objectSpacePoint = (PointToObjectSpace(cam.CFrame, locs.Torso.p) * Vector3.new(1, 0, 1)).Unit
 
-    if objectSpacePoint then
+    if screenCenter then
 		local crossVector = Cross(objectSpacePoint, Vector3.new(0, 1, 1))
 		local rightVector = Vector2.new(crossVector.X, crossVector.Z)
 		local arrowRadius, arrowSize = 100, 25
