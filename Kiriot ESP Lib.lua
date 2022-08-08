@@ -3,6 +3,7 @@ local ESP = {
 	Players = true,
 	Names = true,
     Distance = false,
+	UsePlrDistance = false,
 	MaxPlrDistance = math.huge, 
 	Boxes = true,
     Health = true,
@@ -386,20 +387,18 @@ function boxBase:Update()
         self.Components.Items.Visible = false
     end
 
-	local viewportSize = cam.ViewportSize
-    local screenCenter = Vector2.new(viewportSize.X / 2, viewportSize.Y / 2)
-    local objectSpacePoint = (PointToObjectSpace(cam.CFrame, locs.Torso.p) * Vector3.new(1, 0, 1)).Unit
+    local TorsoPos, Vis10 = WorldToViewportPoint(cam, locs.Torso.p)
 
-    if objectSpacePoint then
+    if not Vis10 then
+		local viewportSize = cam.ViewportSize
+        local screenCenter = Vector2.new(viewportSize.X / 2, viewportSize.Y / 2)
+        local objectSpacePoint = (PointToObjectSpace(cam.CFrame, locs.Torso.p) * Vector3.new(1, 0, 1)).Unit
 		local crossVector = Cross(objectSpacePoint, Vector3.new(0, 1, 1))
 		local rightVector = Vector2.new(crossVector.X, crossVector.Z)
 		local arrowRadius, arrowSize = 100, 25
 		local arrowPosition = screenCenter + Vector2.new(objectSpacePoint.X, objectSpacePoint.Z) * arrowRadius
 		local arrowDirection = (arrowPosition - screenCenter).Unit
 		local pointA, pointB, pointC = arrowPosition, screenCenter + arrowDirection * (arrowRadius - arrowSize) + rightVector * arrowSize, screenCenter + arrowDirection * (arrowRadius - arrowSize) + -rightVector * arrowSize
-        self.Components.Arrow.Visible = false
-        self.Components.Arrow2.Visible = false
-	else
 		if ESP.OutOfViewArrows then
 			self.Components.Arrow.Visible = true
 			self.Components.Arrow.Filled = true
@@ -422,11 +421,14 @@ function boxBase:Update()
 		else
 			self.Components.Arrow2.Visible = false
 		end
+	else
+		self.Components.Arrow.Visible = false
+        self.Components.Arrow2.Visible = false
     end
 
 	if ESP.Chams then
-		local TorsoPos, Vis10 = WorldToViewportPoint(cam, locs.Torso.p)
-		if Vis10 then
+		local TorsoPos, Vis11 = WorldToViewportPoint(cam, locs.Torso.p)
+		if Vis11 then
             self.Components.Highlight.Enabled = true
 		    self.Components.Highlight.FillColor = color
 		    self.Components.Highlight.FillTransparency = ESP.ChamsTransparency
