@@ -456,6 +456,21 @@ function boxBase:Update()
                     self.Components.R15SkeleRightLowerLegRightFoot.From = Vector2.new(RLL.X, RLL.Y)
                     self.Components.R15SkeleRightLowerLegRightFoot.To = Vector2.new(RF.X, RF.Y)
 
+					self.Components.R15SkeleHeadUpperTorso.Color = color
+					self.Components.R15SkeleUpperTorsoLowerTorso.Color = color
+					self.Components.R15SkeleUpperTorsoLeftUpperArm.Color = color
+					self.Components.R15SkeleLeftUpperArmLeftLowerArm.Color = color
+					self.Components.R15SkeleLeftLowerArmLeftHand.Color = color
+					self.Components.R15SkeleUpperTorsoRightUpperArm.Color = color
+					self.Components.R15SkeleRightUpperArmRightLowerArm.Color = color
+					self.Components.R15SkeleRightLowerArmRightHand.Color = color
+					self.Components.R15SkeleLowerTorsoLeftUpperLeg.Color = color
+					self.Components.R15SkeleLeftUpperLegLeftLowerLeg.Color = color
+					self.Components.R15SkeleLeftLowerLegLeftFoot.Color = color
+					self.Components.R15SkeleLowerTorsoRightUpperLeg.Color = color
+					self.Components.R15SkeleRightUpperLegRightLowerLeg.Color = color
+					self.Components.R15SkeleRightLowerLegRightFoot.Color = color
+
 					self.Components.R15SkeleHeadUpperTorso.Visible = true
 					self.Components.R15SkeleUpperTorsoLowerTorso.Visible = true
 					self.Components.R15SkeleUpperTorsoLeftUpperArm.Visible = true
@@ -521,6 +536,17 @@ function boxBase:Update()
 
                     self.Components.R6SkeleRightLegLowerTorso.From = Vector2.new(LT.X, LT.Y)
                     self.Components.R6SkeleRightLegLowerTorso.To = Vector2.new(RUL.X, RUL.Y)
+
+					self.Components.R6SkeleHeadSpine.Color = color
+					self.Components.R6SkeleSpine.Color = color
+					self.Components.R6SkeleLeftArm.Color = color
+					self.Components.R6SkeleLeftArmUpperTorso.Color = color
+					self.Components.R6SkeleRightArm.Color = color
+					self.Components.R6SkeleRightArmUpperTorso.Color = color
+					self.Components.R6SkeleLeftLeg.Color = color
+					self.Components.R6SkeleLeftLegLowerTorso.Color = color
+					self.Components.R6SkeleRightLeg.Color = color
+					self.Components.R6SkeleRightLegLowerTorso.Color = color
 					
 					self.Components.R6SkeleHeadSpine.Visible = true
 					self.Components.R6SkeleSpine.Visible = true
