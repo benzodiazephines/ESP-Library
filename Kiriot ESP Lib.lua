@@ -15,6 +15,7 @@ local ESP = {
 	ChamsTransparency = 0.5,
 	ChamsOutlineColor = Color3.fromRGB(255, 255, 255),
 	Tracers = false,
+	Skeleton = false,
 	OutOfViewArrows = false,
 	OutOfViewArrowsOutline = false,
 	OutOfViewArrowsOutlineColor = Color3.fromRGB(255, 255, 255),
