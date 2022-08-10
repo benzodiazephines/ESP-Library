@@ -802,7 +802,7 @@ function ESP:Add(obj, options)
 	    Visible = self.Enabled and self.Health
 	})
 
-	box.Components["R15SkeleLeftLowerLeg_LeftFoot"] = Draw("Line", {
+	box.Components["R15SkeleLeftLowerLegLeftFoot"] = Draw("Line", {
 	    Transparency = 1,
 	    Thickness = 1,
 	    Visible = self.Enabled and self.Health
