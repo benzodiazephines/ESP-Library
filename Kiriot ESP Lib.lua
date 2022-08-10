@@ -345,7 +345,7 @@ function boxBase:Update()
                 local DistanceOff = math.clamp((Vector2.new(TagPos.X, TagPos.Y) - Vector2.new(TorsoPos.X, TorsoPos.Y)).Magnitude, 2, math.huge)
                 local b = (Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y - DistanceOff*2) - Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y + DistanceOff*2)).Magnitude
                 local offset = nil
-                offset = self.Player.Character.Humanoid.Health / self.Player.Character.Humanoid.MaxHealth * b
+                offset = self.Player.Character:FindFirstChildOfClass("Humanoid").Health / self.Player.Character:FindFirstChildOfClass("Humanoid").MaxHealth * b
                 local hOffsetX = ESP.HealthOffsetX
                 local hOffsetY = ESP.HealthOffsetY
                 self.Components.Health.Visible = true
@@ -356,7 +356,7 @@ function boxBase:Update()
                 self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
                 local g = Color3.fromRGB(0, 255, 8)
                 local r = Color3.fromRGB(255, 0, 0)
-                self.Components.Health2.Color = r:lerp(g, self.Player.Character.Humanoid.Health / self.Player.Character.Humanoid.MaxHealth)
+                self.Components.Health2.Color = r:lerp(g, self.Player.Character:FindFirstChildOfClass("Humanoid").Health / self.Player.Character:FindFirstChildOfClass("Humanoid").MaxHealth)
             end
         else
             self.Components.Health.Visible = false
@@ -387,9 +387,74 @@ function boxBase:Update()
         self.Components.Items.Visible = false
     end
 
-    local TorsoPos, Vis10 = WorldToViewportPoint(cam, locs.Torso.p)
+	if ESP.Skeleton then
+        local TorsoPos, Vis10 = WorldToViewportPoint(cam, locs.Torso.p)
+        
+        if Vis10 then        
+	        if self.Player and self.Player.Character and self.Player.Character:FindFirstChildOfClass("Humanoid") then
+				if self.Player.Character:FindFirstChildOfClass("Humanoid") and self.Player.Character:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R6 then
+					local head_2d = WorldToViewportPoint(cam, self.Player.Character.Head.Position)
+                    local torso_upper_2d = WorldToViewportPoint(cam, self.Player.Character.Torso.Position)
+                    local torso_lower_2d = WorldToViewportPoint(cam, self.Player.Character.Torso.Position)
+                    
+                    local leftarm_2d = WorldToViewportPoint(cam, self.Player.Character["Left Arm"].Position)
+                    local rightarm_2d = WorldToViewportPoint(cam, self.Player.Character["Right Arm"].Position)
+                    local leftleg_2d = WorldToViewportPoint(cam, self.Player.Character["Left Leg"].Position)
+                    local rightleg_2d = WorldToViewportPoint(cam, self.Player.Character["Right Leg"].Position)
 
-    if not Vis10 then
+				    self.Components.SkeleHead.From = Vector2.new(head_2d.X, head_2d.Y)
+                    self.Components.SkeleHead.To = Vector2.new(torso_upper_2d.X, torso_upper_2d.Y)
+
+                    self.Components.SkeleTorso.From = Vector2.new(torso_upper_2d.X, torso_upper_2d.Y)
+                    self.Components.SkeleTorso.To = Vector2.new(torso_lower_2d.X, torso_lower_2d.Y)
+                    
+                    self.Components.SkeleLeftArm.From = Vector2.new(torso_upper_2d.X, torso_upper_2d.Y)
+                    self.Components.SkeleLeftArm.To = Vector2.new(leftarm_2d.X, leftarm_2d.Y)
+
+                    self.Components.SkeleRightArm.From = Vector2.new(torso_upper_2d.X, torso_upper_2d.Y)
+                    self.Components.SkeleRightArm.To = Vector2.new(rightarm_2d.X, rightarm_2d.Y)
+
+                    self.Components.SkeleLeftLeg.From = Vector2.new(torso_lower_2d.X, torso_lower_2d.Y)
+                    self.Components.SkeleLeftLeg.To = Vector2.new(leftleg_2d.X, leftleg_2d.Y)
+
+                    self.Components.SkeleRightLeg.From = Vector2.new(torso_lower_2d.X, torso_lower_2d.Y)
+                    self.Components.SkeleRightLeg.To = Vector2.new(rightleg_2d.X, rightleg_2d.Y)
+					
+					self.Components.SkeleHead.Visible = true
+					self.Components.SkeleTorso.Visible = true
+					self.Components.SkeleLeftArm.Visible = true
+					self.Components.SkeleRightArm.Visible = true
+					self.Components.SkeleLeftLeg.Visible = true
+					self.Components.SkeleRightLeg.Visible = true
+				end
+			else
+				self.Components.SkeleHead.Visible = false
+				self.Components.SkeleTorso.Visible = false
+				self.Components.SkeleLeftArm.Visible = false
+				self.Components.SkeleRightArm.Visible = false
+				self.Components.SkeleLeftLeg.Visible = false
+				self.Components.SkeleRightLeg.Visible = false
+            end
+        else
+            self.Components.SkeleHead.Visible = false
+			self.Components.SkeleTorso.Visible = false
+			self.Components.SkeleLeftArm.Visible = false
+			self.Components.SkeleRightArm.Visible = false
+			self.Components.SkeleLeftLeg.Visible = false
+			self.Components.SkeleRightLeg.Visible = false
+        end
+    else
+        self.Components.SkeleHead.Visible = false
+		self.Components.SkeleTorso.Visible = false
+		self.Components.SkeleLeftArm.Visible = false
+		self.Components.SkeleRightArm.Visible = false
+		self.Components.SkeleLeftLeg.Visible = false
+		self.Components.SkeleRightLeg.Visible = false
+    end
+
+    local TorsoPos, Vis11 = WorldToViewportPoint(cam, locs.Torso.p)
+
+    if not Vis11 then
 		local viewportSize = cam.ViewportSize
         local screenCenter = Vector2.new(viewportSize.X / 2, viewportSize.Y / 2)
         local objectSpacePoint = (PointToObjectSpace(cam.CFrame, locs.Torso.p) * Vector3.new(1, 0, 1)).Unit
@@ -427,8 +492,8 @@ function boxBase:Update()
     end
 
 	if ESP.Chams then
-		local TorsoPos, Vis11 = WorldToViewportPoint(cam, locs.Torso.p)
-		if Vis11 then
+		local TorsoPos, Vis12 = WorldToViewportPoint(cam, locs.Torso.p)
+		if Vis12 then
             self.Components.Highlight.Enabled = true
 		    self.Components.Highlight.FillColor = color
 		    self.Components.Highlight.FillTransparency = ESP.ChamsTransparency
@@ -516,11 +581,40 @@ function ESP:Add(obj, options)
 		Visible = self.Enabled and self.Tracers
 	})
 
-    box.Components["Tracer"] = Draw("Line", {
-		Thickness = ESP.Thickness,
-		Color = box.Color,
-		Transparency = 1,
-		Visible = self.Enabled and self.Tracers
+	box.Components["SkeleHead"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1.5,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["SkeleTorso"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1.5,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["SkeleLeftArm"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1.5,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["SkeleRightArm"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1.5,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["SkeleLeftLeg"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1.5,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["SkeleRightLeg"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1.5,
+	    Visible = self.Enabled and self.Health
 	})
 
 	box.Components["Arrow"] = Draw("Triangle", {
