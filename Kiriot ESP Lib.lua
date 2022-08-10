@@ -392,64 +392,224 @@ function boxBase:Update()
         
         if Vis10 then        
 	        if self.Player and self.Player.Character and self.Player.Character:FindFirstChildOfClass("Humanoid") then
-				if self.Player.Character:FindFirstChildOfClass("Humanoid") and self.Player.Character:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R6 then
-					local head_2d = WorldToViewportPoint(cam, self.Player.Character.Head.Position)
-                    local torso_upper_2d = WorldToViewportPoint(cam, self.Player.Character.Torso.Position)
-                    local torso_lower_2d = WorldToViewportPoint(cam, self.Player.Character.Torso.Position)
-                    
-                    local leftarm_2d = WorldToViewportPoint(cam, self.Player.Character["Left Arm"].Position)
-                    local rightarm_2d = WorldToViewportPoint(cam, self.Player.Character["Right Arm"].Position)
-                    local leftleg_2d = WorldToViewportPoint(cam, self.Player.Character["Left Leg"].Position)
-                    local rightleg_2d = WorldToViewportPoint(cam, self.Player.Character["Right Leg"].Position)
+				if self.Player.Character:FindFirstChildOfClass("Humanoid") and self.Player.Character:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R15 then
+					local UT = WorldToViewportPoint(cam, self.Player.Character.UpperTorso.Position)
+                    local LT = WorldToViewportPoint(cam, self.Player.Character.LowerTorso.Position)
 
-				    self.Components.SkeleHead.From = Vector2.new(head_2d.X, head_2d.Y)
-                    self.Components.SkeleHead.To = Vector2.new(torso_upper_2d.X, torso_upper_2d.Y)
+					local LUA = WorldToViewportPoint(cam, self.Player.Character.LeftUpperArm.Position)
+                    local LLA = WorldToViewportPoint(cam, self.Player.Character.LeftLowerArm.Position)
+                    local LH = WorldToViewportPoint(cam, self.Player.Character.LeftHand.Position)
 
-                    self.Components.SkeleTorso.From = Vector2.new(torso_upper_2d.X, torso_upper_2d.Y)
-                    self.Components.SkeleTorso.To = Vector2.new(torso_lower_2d.X, torso_lower_2d.Y)
-                    
-                    self.Components.SkeleLeftArm.From = Vector2.new(torso_upper_2d.X, torso_upper_2d.Y)
-                    self.Components.SkeleLeftArm.To = Vector2.new(leftarm_2d.X, leftarm_2d.Y)
+					local RUA = WorldToViewportPoint(cam, self.Player.Character.RightUpperArm.Position)
+                    local RLA = WorldToViewportPoint(cam, self.Player.Character.RightLowerArm.Position)
+                    local RH = WorldToViewportPoint(cam, self.Player.Character.RightHand.Position)
 
-                    self.Components.SkeleRightArm.From = Vector2.new(torso_upper_2d.X, torso_upper_2d.Y)
-                    self.Components.SkeleRightArm.To = Vector2.new(rightarm_2d.X, rightarm_2d.Y)
+					local LUL = WorldToViewportPoint(cam, self.Player.Character.LeftUpperLeg.Position)
+                    local LLL = WorldToViewportPoint(cam, self.Player.Character.LeftLowerLeg.Position)
+                    local LF = WorldToViewportPoint(cam, self.Player.Character.LeftFoot.Position)
 
-                    self.Components.SkeleLeftLeg.From = Vector2.new(torso_lower_2d.X, torso_lower_2d.Y)
-                    self.Components.SkeleLeftLeg.To = Vector2.new(leftleg_2d.X, leftleg_2d.Y)
+					local RUL = WorldToViewportPoint(cam, self.Player.Character.RightUpperLeg.Position)
+                    local RLL = WorldToViewportPoint(cam, self.Player.Character.RightLowerLeg.Position)
+                    local RF = WorldToViewportPoint(cam, self.Player.Character.RightFoot.Position)
 
-                    self.Components.SkeleRightLeg.From = Vector2.new(torso_lower_2d.X, torso_lower_2d.Y)
-                    self.Components.SkeleRightLeg.To = Vector2.new(rightleg_2d.X, rightleg_2d.Y)
+					self.Components.R15SkeleHeadUpperTorso.From = Vector2.new(H.X, H.Y)
+                    self.Components.R15SkeleHeadUpperTorso.To = Vector2.new(UT.X, UT.Y)
+
+                    self.Components.R15SkeleUpperTorsoLowerTorso.From = Vector2.new(UT.X, UT.Y)
+                    self.Components.R15SkeleUpperTorsoLowerTorso.To = Vector2.new(LT.X, LT.Y)
+
+                    self.Components.R15SkeleUpperTorsoLeftUpperArm.From = Vector2.new(UT.X, UT.Y)
+                    self.Components.R15SkeleUpperTorsoLeftUpperArm.To = Vector2.new(LUA.X, LUA.Y)
+
+                    self.Components.R15SkeleLeftUpperArmLeftLowerArm.From = Vector2.new(LUA.X, LUA.Y)
+                    self.Components.R15SkeleLeftUpperArmLeftLowerArm.To = Vector2.new(LLA.X, LLA.Y)
+
+                    self.Components.R15SkeleLeftLowerArmLeftHand.From = Vector2.new(LLA.X, LLA.Y)
+                    self.Components.R15SkeleLeftLowerArmLeftHand.To = Vector2.new(LH.X, LH.Y)
+
+                    self.Components.R15SkeleUpperTorsoRightUpperArm.From = Vector2.new(UT.X, UT.Y)
+                    self.Components.R15SkeleUpperTorsoRightUpperArm.To = Vector2.new(RUA.X, RUA.Y)
+
+                    self.Components.R15SkeleRightUpperArmRightLowerArm.From = Vector2.new(RUA.X, RUA.Y)
+                    self.Components.R15SkeleRightUpperArmRightLowerArm.To = Vector2.new(RLA.X, RLA.Y)
+
+                    self.Components.R15SkeleRightLowerArmRightHand.From = Vector2.new(RLA.X, RLA.Y)
+                    self.Components.R15SkeleRightLowerArmRightHand.To = Vector2.new(RH.X, RH.Y)
+
+                    self.Components.R15SkeleLowerTorsoLeftUpperLeg.From = Vector2.new(LT.X, LT.Y)
+                    self.Components.R15SkeleLowerTorsoLeftUpperLeg.To = Vector2.new(LUL.X, LUL.Y)
+
+                    self.Components.R15SkeleLeftUpperLegLeftLowerLeg.From = Vector2.new(LUL.X, LUL.Y)
+                    self.Components.R15SkeleLeftUpperLegLeftLowerLeg.To = Vector2.new(LLL.X, LLL.Y)
+
+                    self.Components.R15SkeleLeftLowerLegLeftFoot.From = Vector2.new(LLL.X, LLL.Y)
+                    self.Components.R15SkeleLeftLowerLegLeftFoot.To = Vector2.new(LF.X, LF.Y)
+
+                    self.Components.R15SkeleLowerTorsoRightUpperLeg.From = Vector2.new(LT.X, LT.Y)
+                    self.Components.R15SkeleLowerTorsoRightUpperLeg.To = Vector2.new(RUL.X, RUL.Y)
+
+                    self.Components.R15SkeleRightUpperLegRightLowerLeg.From = Vector2.new(RUL.X, RUL.Y)
+                    self.Components.R15SkeleRightUpperLegRightLowerLeg.To = Vector2.new(RLL.X, RLL.Y)
+
+                    self.Components.R15SkeleRightLowerLegRightFoot.From = Vector2.new(RLL.X, RLL.Y)
+                    self.Components.R15SkeleRightLowerLegRightFoot.To = Vector2.new(RF.X, RF.Y)
+
+					self.Components.R15SkeleHeadUpperTorso.Visible = true
+					self.Components.R15SkeleUpperTorsoLowerTorso.Visible = true
+					self.Components.R15SkeleUpperTorsoLeftUpperArm.Visible = true
+					self.Components.R15SkeleLeftUpperArmLeftLowerArm.Visible = true
+					self.Components.R15SkeleLeftLowerArmLeftHand.Visible = true
+					self.Components.R15SkeleUpperTorsoRightUpperArm.Visible = true
+					self.Components.R15SkeleRightUpperArmRightLowerArm.Visible = true
+					self.Components.R15SkeleRightLowerArmRightHand.Visible = true
+					self.Components.R15SkeleLowerTorsoLeftUpperLeg.Visible = true
+					self.Components.R15SkeleLeftUpperLegLeftLowerLeg.Visible = true
+					self.Components.R15SkeleLeftLowerLegLeftFoot.Visible = true
+					self.Components.R15SkeleLowerTorsoRightUpperLeg.Visible = true
+					self.Components.R15SkeleRightUpperLegRightLowerLeg.Visible = true
+					self.Components.R15SkeleRightLowerLegRightFoot.Visible = true
+				elseif self.Player.Character:FindFirstChildOfClass("Humanoid") and self.Player.Character:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R6 then
+					local T_Height = self.Player.Character.Torso.Size.Y / 2 - 0.2
+                    local UT = WorldToViewportPoint(cam, (self.Player.Character.Torso.CFrame * CFrame.new(0, T_Height, 0)).p)
+                    local LT = Camera:WorldToViewportPoint((self.Player.Character.Torso.CFrame * CFrame.new(0, -T_Height, 0)).p)
+
+                    local LA_Height = self.Player.Character["Left Arm"].Size.Y / 2 - 0.2
+                    local LUA = WorldToViewportPoint(cam, (self.Player.Character["Left Arm"].CFrame * CFrame.new(0, LA_Height, 0)).p)
+                    local LLA = WorldToViewportPoint(cam, (self.Player.Character["Left Arm"].CFrame * CFrame.new(0, -LA_Height, 0)).p)
+
+                    local RA_Height = self.Player.Character["Right Arm"].Size.Y / 2 - 0.2
+                    local RUA = WorldToViewportPoint(cam, (self.Player.Character["Right Arm"].CFrame * CFrame.new(0, RA_Height, 0)).p)
+                    local RLA = WorldToViewportPoint(cam, (self.Player.Character["Right Arm"].CFrame * CFrame.new(0, -RA_Height, 0)).p)
+
+                    local LL_Height = self.Player.Character["Left Leg"].Size.Y / 2 - 0.2
+                    local LUL = WorldToViewportPoint(cam, (self.Player.Character["Left Leg"].CFrame * CFrame.new(0, LL_Height, 0)).p)
+                    local LLL = WorldToViewportPoint(cam, (self.Player.Character["Left Leg"].CFrame * CFrame.new(0, -LL_Height, 0)).p)
+
+                    local RL_Height = self.Player.Character["Right Leg"].Size.Y / 2 - 0.2
+                    local RUL = WorldToViewportPoint(cam, (self.Player.Character["Right Leg"].CFrame * CFrame.new(0, RL_Height, 0)).p)
+                    local RLL = WorldToViewportPoint(cam, (self.Player.Character["Right Leg"].CFrame * CFrame.new(0, -RL_Height, 0)).p)
+
+					self.Components.R6SkeleHeadSpine.From = Vector2.new(H.X, H.Y)
+                    self.Components.R6SkeleHeadSpine.To = Vector2.new(UT.X, UT.Y)
+
+                    self.Components.R6SkeleSpine.From = Vector2.new(UT.X, UT.Y)
+                    self.Components.R6SkeleSpine.To = Vector2.new(LT.X, LT.Y)
+
+                    self.Components.R6SkeleLeftArm.From = Vector2.new(LUA.X, LUA.Y)
+                    self.Components.R6SkeleLeftArm.To = Vector2.new(LLA.X, LLA.Y)
+
+					self.Components.R6SkeleLeftArmUpperTorso.From = Vector2.new(UT.X, UT.Y)
+                    self.Components.R6SkeleLeftArmUpperTorso.To = Vector2.new(LUA.X, LUA.Y)
+
+                    self.Components.R6SkeleRightArm.From = Vector2.new(RUA.X, RUA.Y)
+                    self.Components.R6SkeleRightArm.To = Vector2.new(RLA.X, RLA.Y)
+
+                    self.Components.R6SkeleRightArmUpperTorso.From = Vector2.new(UT.X, UT.Y)
+                    self.Components.R6SkeleRightArmUpperTorso.To = Vector2.new(RUA.X, RUA.Y)
+
+                    self.Components.R6SkeleLeftLeg.From = Vector2.new(LUL.X, LUL.Y)
+                    self.Components.R6SkeleLeftLeg.To = Vector2.new(LLL.X, LLL.Y)
+
+                    self.Components.R6SkeleLeftLegLowerTorso.From = Vector2.new(LT.X, LT.Y)
+                    self.Components.R6SkeleLeftLegLowerTorso.To = Vector2.new(LUL.X, LUL.Y)
+
+                    self.Components.R6SkeleRightLeg.From = Vector2.new(RUL.X, RUL.Y)
+                    self.Components.R6SkeleRightLeg.To = Vector2.new(RLL.X, RLL.Y)
+
+                    self.Components.R6SkeleRightLegLowerTorso.From = Vector2.new(LT.X, LT.Y)
+                    self.Components.R6SkeleRightLegLowerTorso.To = Vector2.new(RUL.X, RUL.Y)
 					
-					self.Components.SkeleHead.Visible = true
-					self.Components.SkeleTorso.Visible = true
-					self.Components.SkeleLeftArm.Visible = true
-					self.Components.SkeleRightArm.Visible = true
-					self.Components.SkeleLeftLeg.Visible = true
-					self.Components.SkeleRightLeg.Visible = true
+					self.Components.R6SkeleHeadSpine.Visible = true
+					self.Components.R6SkeleSpine.Visible = true
+					self.Components.R6SkeleLeftArm.Visible = true
+					self.Components.R6SkeleLeftArmUpperTorso.Visible = true
+					self.Components.R6SkeleRightArm.Visible = true
+					self.Components.R6SkeleRightArmUpperTorso.Visible = true
+					self.Components.R6SkeleLeftLeg.Visible = true
+					self.Components.R6SkeleLeftLegLowerTorso.Visible = true
+					self.Components.R6SkeleRightLeg.Visible = true
+					self.Components.R6SkeleRightLegLowerTorso.Visible = true
 				end
 			else
-				self.Components.SkeleHead.Visible = false
-				self.Components.SkeleTorso.Visible = false
-				self.Components.SkeleLeftArm.Visible = false
-				self.Components.SkeleRightArm.Visible = false
-				self.Components.SkeleLeftLeg.Visible = false
-				self.Components.SkeleRightLeg.Visible = false
+				self.Components.R15SkeleHeadUpperTorso.Visible = false
+				self.Components.R15SkeleUpperTorsoLowerTorso.Visible = false
+				self.Components.R15SkeleUpperTorsoLeftUpperArm.Visible = false
+				self.Components.R15SkeleLeftUpperArmLeftLowerArm.Visible = false
+				self.Components.R15SkeleLeftLowerArmLeftHand.Visible = false
+				self.Components.R15SkeleUpperTorsoRightUpperArm.Visible = false
+				self.Components.R15SkeleRightUpperArmRightLowerArm.Visible = false
+				self.Components.R15SkeleRightLowerArmRightHand.Visible = false
+				self.Components.R15SkeleLowerTorsoLeftUpperLeg.Visible = false
+				self.Components.R15SkeleLeftUpperLegLeftLowerLeg.Visible = false
+				self.Components.R15SkeleLeftLowerLegLeftFoot.Visible = false
+				self.Components.R15SkeleLowerTorsoRightUpperLeg.Visible = false
+				self.Components.R15SkeleRightUpperLegRightLowerLeg.Visible = false
+				self.Components.R15SkeleRightLowerLegRightFoot.Visible = false
+
+				self.Components.R6SkeleHeadSpine.Visible = false
+				self.Components.R6SkeleSpine.Visible = false
+				self.Components.R6SkeleLeftArm.Visible = false
+				self.Components.R6SkeleLeftArmUpperTorso.Visible = false
+				self.Components.R6SkeleRightArm.Visible = false
+				self.Components.R6SkeleRightArmUpperTorso.Visible = false
+				self.Components.R6SkeleLeftLeg.Visible = false
+				self.Components.R6SkeleLeftLegLowerTorso.Visible = false
+				self.Components.R6SkeleRightLeg.Visible = false
+				self.Components.R6SkeleRightLegLowerTorso.Visible = false
             end
         else
-            self.Components.SkeleHead.Visible = false
-			self.Components.SkeleTorso.Visible = false
-			self.Components.SkeleLeftArm.Visible = false
-			self.Components.SkeleRightArm.Visible = false
-			self.Components.SkeleLeftLeg.Visible = false
-			self.Components.SkeleRightLeg.Visible = false
+			self.Components.R15SkeleHeadUpperTorso.Visible = false
+			self.Components.R15SkeleUpperTorsoLowerTorso.Visible = false
+			self.Components.R15SkeleUpperTorsoLeftUpperArm.Visible = false
+			self.Components.R15SkeleLeftUpperArmLeftLowerArm.Visible = false
+			self.Components.R15SkeleLeftLowerArmLeftHand.Visible = false
+			self.Components.R15SkeleUpperTorsoRightUpperArm.Visible = false
+			self.Components.R15SkeleRightUpperArmRightLowerArm.Visible = false
+			self.Components.R15SkeleRightLowerArmRightHand.Visible = false
+			self.Components.R15SkeleLowerTorsoLeftUpperLeg.Visible = false
+			self.Components.R15SkeleLeftUpperLegLeftLowerLeg.Visible = false
+			self.Components.R15SkeleLeftLowerLegLeftFoot.Visible = false
+			self.Components.R15SkeleLowerTorsoRightUpperLeg.Visible = false
+			self.Components.R15SkeleRightUpperLegRightLowerLeg.Visible = false
+			self.Components.R15SkeleRightLowerLegRightFoot.Visible = false
+
+            self.Components.R6SkeleHeadSpine.Visible = false
+			self.Components.R6SkeleSpine.Visible = false
+			self.Components.R6SkeleLeftArm.Visible = false
+			self.Components.R6SkeleLeftArmUpperTorso.Visible = false
+			self.Components.R6SkeleRightArm.Visible = false
+			self.Components.R6SkeleRightArmUpperTorso.Visible = false
+			self.Components.R6SkeleLeftLeg.Visible = false
+			self.Components.R6SkeleLeftLegLowerTorso.Visible = false
+			self.Components.R6SkeleRightLeg.Visible = false
+			self.Components.R6SkeleRightLegLowerTorso.Visible = false
         end
     else
-        self.Components.SkeleHead.Visible = false
-		self.Components.SkeleTorso.Visible = false
-		self.Components.SkeleLeftArm.Visible = false
-		self.Components.SkeleRightArm.Visible = false
-		self.Components.SkeleLeftLeg.Visible = false
-		self.Components.SkeleRightLeg.Visible = false
+		self.Components.R15SkeleHeadUpperTorso.Visible = false
+		self.Components.R15SkeleUpperTorsoLowerTorso.Visible = false
+		self.Components.R15SkeleUpperTorsoLeftUpperArm.Visible = false
+		self.Components.R15SkeleLeftUpperArmLeftLowerArm.Visible = false
+		self.Components.R15SkeleLeftLowerArmLeftHand.Visible = false
+		self.Components.R15SkeleUpperTorsoRightUpperArm.Visible = false
+		self.Components.R15SkeleRightUpperArmRightLowerArm.Visible = false
+		self.Components.R15SkeleRightLowerArmRightHand.Visible = false
+		self.Components.R15SkeleLowerTorsoLeftUpperLeg.Visible = false
+		self.Components.R15SkeleLeftUpperLegLeftLowerLeg.Visible = false
+		self.Components.R15SkeleLeftLowerLegLeftFoot.Visible = false
+		self.Components.R15SkeleLowerTorsoRightUpperLeg.Visible = false
+		self.Components.R15SkeleRightUpperLegRightLowerLeg.Visible = false
+		self.Components.R15SkeleRightLowerLegRightFoot.Visible = false
+
+        self.Components.R6SkeleHeadSpine.Visible = false
+		self.Components.R6SkeleSpine.Visible = false
+		self.Components.R6SkeleLeftArm.Visible = false
+	    self.Components.R6SkeleLeftArmUpperTorso.Visible = false
+		self.Components.R6SkeleRightArm.Visible = false
+		self.Components.R6SkeleRightArmUpperTorso.Visible = false
+		self.Components.R6SkeleLeftLeg.Visible = false
+		self.Components.R6SkeleLeftLegLowerTorso.Visible = false
+		self.Components.R6SkeleRightLeg.Visible = false
+		self.Components.R6SkeleRightLegLowerTorso.Visible = false
     end
 
     local TorsoPos, Vis11 = WorldToViewportPoint(cam, locs.Torso.p)
@@ -581,39 +741,147 @@ function ESP:Add(obj, options)
 		Visible = self.Enabled and self.Tracers
 	})
 
-	box.Components["SkeleHead"] = Draw("Line", {
+    box.Components["R15SkeleHeadUpperTorso"] = Draw("Line", {
 	    Transparency = 1,
-	    Thickness = 1.5,
+	    Thickness = 1,
 	    Visible = self.Enabled and self.Health
 	})
 
-	box.Components["SkeleTorso"] = Draw("Line", {
+	box.Components["R15SkeleUpperTorsoLowerTorso"] = Draw("Line", {
 	    Transparency = 1,
-	    Thickness = 1.5,
+	    Thickness = 1,
 	    Visible = self.Enabled and self.Health
 	})
 
-	box.Components["SkeleLeftArm"] = Draw("Line", {
+	box.Components["R15SkeleUpperTorsoLeftUpperArm"] = Draw("Line", {
 	    Transparency = 1,
-	    Thickness = 1.5,
+	    Thickness = 1,
 	    Visible = self.Enabled and self.Health
 	})
 
-	box.Components["SkeleRightArm"] = Draw("Line", {
+	box.Components["R15SkeleLeftUpperArmLeftLowerArm"] = Draw("Line", {
 	    Transparency = 1,
-	    Thickness = 1.5,
+	    Thickness = 1,
 	    Visible = self.Enabled and self.Health
 	})
 
-	box.Components["SkeleLeftLeg"] = Draw("Line", {
+	box.Components["R15SkeleLeftLowerArmLeftHand"] = Draw("Line", {
 	    Transparency = 1,
-	    Thickness = 1.5,
+	    Thickness = 1,
 	    Visible = self.Enabled and self.Health
 	})
 
-	box.Components["SkeleRightLeg"] = Draw("Line", {
+	box.Components["R15SkeleUpperTorsoRightUpperArm"] = Draw("Line", {
 	    Transparency = 1,
-	    Thickness = 1.5,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R15SkeleRightUpperArmRightLowerArm"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R15SkeleRightLowerArmRightHand"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R15SkeleLowerTorsoLeftUpperLeg"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R15SkeleLeftUpperLegLeftLowerLeg"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R15SkeleLeftLowerLeg_LeftFoot"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R15SkeleLowerTorsoRightUpperLeg"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R15SkeleRightUpperLegRightLowerLeg"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R15SkeleRightLowerLegRightFoot"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R6SkeleHeadSpine"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R6SkeleSpine"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R6SkeleLeftArm"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R6SkeleLeftArmUpperTorso"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R6SkeleRightArm"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R6SkeleRightArmUpperTorso"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R6SkeleLeftLeg"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R6SkeleLeftLegLowerTorso"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R6SkeleRightLeg"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
+	    Visible = self.Enabled and self.Health
+	})
+
+	box.Components["R6SkeleRightLegLowerTorso"] = Draw("Line", {
+	    Transparency = 1,
+	    Thickness = 1,
 	    Visible = self.Enabled and self.Health
 	})
 
