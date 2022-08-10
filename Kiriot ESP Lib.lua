@@ -394,6 +394,7 @@ function boxBase:Update()
         if Vis10 then        
 	        if self.Player and self.Player.Character and self.Player.Character:FindFirstChildOfClass("Humanoid") then
 				if self.Player.Character:FindFirstChildOfClass("Humanoid") and self.Player.Character:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R15 then
+					local H = WorldToViewportPoint(cam, self.Player.Character.Head.Position)
 					local UT = WorldToViewportPoint(cam, self.Player.Character.UpperTorso.Position)
                     local LT = WorldToViewportPoint(cam, self.Player.Character.LowerTorso.Position)
 
@@ -470,9 +471,10 @@ function boxBase:Update()
 					self.Components.R15SkeleRightUpperLegRightLowerLeg.Visible = true
 					self.Components.R15SkeleRightLowerLegRightFoot.Visible = true
 				elseif self.Player.Character:FindFirstChildOfClass("Humanoid") and self.Player.Character:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R6 then
+					local H = WorldToViewportPoint(cam, self.Player.Character.Head.Position)
 					local T_Height = self.Player.Character.Torso.Size.Y / 2 - 0.2
                     local UT = WorldToViewportPoint(cam, (self.Player.Character.Torso.CFrame * CFrame.new(0, T_Height, 0)).p)
-                    local LT = Camera:WorldToViewportPoint((self.Player.Character.Torso.CFrame * CFrame.new(0, -T_Height, 0)).p)
+                    local LT = WorldToViewportPoint(cam, (self.Player.Character.Torso.CFrame * CFrame.new(0, -T_Height, 0)).p)
 
                     local LA_Height = self.Player.Character["Left Arm"].Size.Y / 2 - 0.2
                     local LUA = WorldToViewportPoint(cam, (self.Player.Character["Left Arm"].CFrame * CFrame.new(0, LA_Height, 0)).p)
