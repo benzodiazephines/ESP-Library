@@ -355,17 +355,23 @@ function boxBase:Update()
                 self.Components.Health2.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY - offset)
                 self.Components.Health.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
                 self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
+				self.Components.HealthText.Text = self.Player.Character:FindFirstChildOfClass("Humanoid").Health / self.Player.Character:FindFirstChildOfClass("Humanoid").MaxHealth
+                self.Components.HealthText.Position = Vector2.new(- 5 + TorsoPos.X, TorsoPos.Y + 4)
+                self.Components.HealthText.Visible = true
                 local g = Color3.fromRGB(0, 255, 8)
                 local r = Color3.fromRGB(255, 0, 0)
+                self.Components.HealthText.Color = r:lerp(g, self.Player.Character:FindFirstChildOfClass("Humanoid").Health / self.Player.Character:FindFirstChildOfClass("Humanoid").MaxHealth)
                 self.Components.Health2.Color = r:lerp(g, self.Player.Character:FindFirstChildOfClass("Humanoid").Health / self.Player.Character:FindFirstChildOfClass("Humanoid").MaxHealth)
             end
         else
             self.Components.Health.Visible = false
             self.Components.Health2.Visible = false
+			self.Components.HealthText.Visible = false
         end
     else
         self.Components.Health.Visible = false
         self.Components.Health2.Visible = false
+		self.Components.HealthText.Visible = false
     end
     
     if ESP.Items then
@@ -762,6 +768,14 @@ function ESP:Add(obj, options)
 	    Thickness = 2,
 	    Visible = self.Enabled and self.Health
 	})
+
+	box.Components["HealthText"] = Draw("Text", {
+	    Color = box.Color,
+	    Center = true,
+	    Outline = true,
+	    Size = self.TextSize,
+	    Visible = self.Enabled and self.Health
+	})
 	
 	box.Components["Tracer"] = Draw("Line", {
 		Thickness = ESP.Thickness,
@@ -988,10 +1002,8 @@ local function PlayerAdded(p)
 	end
 end
 plrs.PlayerAdded:Connect(PlayerAdded)
-for i,v in pairs(plrs:GetPlayers()) do
-	if v ~= plr then
-		PlayerAdded(v)
-	end
+for i,v in next, plrs:GetPlayers(), 1 do
+	PlayerAdded(v)
 end
 
 game:GetService("RunService"):BindToRenderStep("ESP", Enum.RenderPriority.Camera.Value + 1, function()
