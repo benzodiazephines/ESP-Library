@@ -356,7 +356,7 @@ function boxBase:Update()
                 self.Components.Health.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
                 self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff*hOffsetY)
 				self.Components.HealthText.Text = math.floor(self.Player.Character:FindFirstChildOfClass("Humanoid").Health + 0.5) .. "|" .. self.Player.Character:FindFirstChildOfClass("Humanoid").MaxHealth
-                self.Components.HealthText.Position = Vector2.new(TorsoPos.X - 2, TorsoPos.Y - 4)
+                self.Components.HealthText.Position = Vector2.new(TorsoPos.X - 5, TorsoPos.Y - 4)
                 self.Components.HealthText.Visible = true
                 local g = Color3.fromRGB(0, 255, 8)
                 local r = Color3.fromRGB(255, 0, 0)
