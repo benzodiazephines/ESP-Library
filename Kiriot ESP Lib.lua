@@ -350,9 +350,9 @@ function boxBase:Update()
 	if ESP.Skeleton then
 		local TorsoPos, Vis10 = WorldToViewportPoint(cam, locs.Torso.p)
 		if Vis10 then
-			if self.Player and self.Object and self.Object:FindFirstChildOfClass("Humanoid") then
+			if self.Object and self.Object:FindFirstChildOfClass("Humanoid") then
 				if self.Object:FindFirstChildOfClass("Humanoid") and self.Object:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R15 then
-					if self.Player and self.Object and self.Object:FindFirstChild("Head") and self.Object:FindFirstChild("UpperTorso") and self.Object:FindFirstChild("LowerTorso") and self.Object:FindFirstChild("LeftUpperArm") and self.Object:FindFirstChild("LeftLowerArm") and self.Object:FindFirstChild("LeftHand") and self.Object:FindFirstChild("RightUpperArm") and self.Object:FindFirstChild("RightLowerArm") and self.Object:FindFirstChild("RightHand") and self.Object:FindFirstChild("LeftUpperLeg") and self.Object:FindFirstChild("LeftLowerLeg") and self.Object:FindFirstChild("LeftFoot") and self.Object:FindFirstChild("RightUpperLeg") and self.Object:FindFirstChild("RightLowerLeg") and self.Object:FindFirstChild("RightFoot") then
+					if self.Object and self.Object:FindFirstChild("Head") and self.Object:FindFirstChild("UpperTorso") and self.Object:FindFirstChild("LowerTorso") and self.Object:FindFirstChild("LeftUpperArm") and self.Object:FindFirstChild("LeftLowerArm") and self.Object:FindFirstChild("LeftHand") and self.Object:FindFirstChild("RightUpperArm") and self.Object:FindFirstChild("RightLowerArm") and self.Object:FindFirstChild("RightHand") and self.Object:FindFirstChild("LeftUpperLeg") and self.Object:FindFirstChild("LeftLowerLeg") and self.Object:FindFirstChild("LeftFoot") and self.Object:FindFirstChild("RightUpperLeg") and self.Object:FindFirstChild("RightLowerLeg") and self.Object:FindFirstChild("RightFoot") then
 						local H = WorldToViewportPoint(cam, self.Object.Head.Position)
 						local UT = WorldToViewportPoint(cam, self.Object.UpperTorso.Position)
 						local LT = WorldToViewportPoint(cam, self.Object.LowerTorso.Position)
@@ -426,7 +426,7 @@ function boxBase:Update()
 						self.Components.R15SkeleRightLowerLegRightFoot.Visible = true
 					end
 				elseif self.Object:FindFirstChildOfClass("Humanoid") and self.Object:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R6 then
-					if self.Player and self.Object and self.Object:FindFirstChild("Head") and self.Object:FindFirstChild("Torso") and self.Object:FindFirstChild("Left Arm") and self.Object:FindFirstChild("Right Arm") and self.Object:FindFirstChild("Left Leg") and self.Object:FindFirstChild("Right Leg") then
+					if self.Object and self.Object:FindFirstChild("Head") and self.Object:FindFirstChild("Torso") and self.Object:FindFirstChild("Left Arm") and self.Object:FindFirstChild("Right Arm") and self.Object:FindFirstChild("Left Leg") and self.Object:FindFirstChild("Right Leg") then
 						local H = WorldToViewportPoint(cam, self.Object.Head.Position)
 						local T_Height = self.Object.Torso.Size.Y / 2 - .2
 						local UT = WorldToViewportPoint(cam, (self.Object.Torso.CFrame * CFrame.new(0, T_Height, 0)).p)
