@@ -297,12 +297,12 @@ function boxBase:Update()
 	if ESP.Health then
 		local TorsoPos, Vis8 = WorldToViewportPoint(cam, locs.Torso.p)
 		if Vis8 then
-			if self.Player and self.Player.Character and self.Player.Character:FindFirstChildOfClass("Humanoid") then
+			if self.Object and self.Object:FindFirstChildOfClass("Humanoid") then
 				local TagPos = WorldToViewportPoint(cam, locs.TagPos.p)
 				local DistanceOff = math.clamp((Vector2.new(TagPos.X, TagPos.Y) - Vector2.new(TorsoPos.X, TorsoPos.Y)).Magnitude, 2, math.huge)
 				local b = (Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y - DistanceOff * 2) - Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y + DistanceOff * 2)).Magnitude
 				local offset = nil
-				offset = self.Player.Character:FindFirstChildOfClass("Humanoid").Health / self.Player.Character:FindFirstChildOfClass("Humanoid").MaxHealth * b
+				offset = self.Object:FindFirstChildOfClass("Humanoid").Health / self.Object:FindFirstChildOfClass("Humanoid").MaxHealth * b
 				local hOffsetX = ESP.HealthOffsetX
 				local hOffsetY = ESP.HealthOffsetY
 				self.Components.Health.Visible = true
@@ -311,13 +311,13 @@ function boxBase:Update()
 				self.Components.Health2.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff * hOffsetY - offset)
 				self.Components.Health.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff * hOffsetY)
 				self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff * hOffsetY)
-				self.Components.HealthText.Text = math.floor(self.Player.Character:FindFirstChildOfClass("Humanoid").Health + .5) .. " | " .. self.Player.Character:FindFirstChildOfClass("Humanoid").MaxHealth
+				self.Components.HealthText.Text = math.floor(self.Object:FindFirstChildOfClass("Humanoid").Health + .5) .. " | " .. self.Object:FindFirstChildOfClass("Humanoid").MaxHealth
 				self.Components.HealthText.Position = Vector2.new(TagPos.X, TagPos.Y - 65)
 				self.Components.HealthText.Visible = true
 				local g = Color3.fromRGB(0, 255, 8)
 				local r = Color3.fromRGB(255, 0, 0)
-				self.Components.HealthText.Color = r:lerp(g, self.Player.Character:FindFirstChildOfClass("Humanoid").Health / self.Player.Character:FindFirstChildOfClass("Humanoid").MaxHealth)
-				self.Components.Health2.Color = r:lerp(g, self.Player.Character:FindFirstChildOfClass("Humanoid").Health / self.Player.Character:FindFirstChildOfClass("Humanoid").MaxHealth)
+				self.Components.HealthText.Color = r:lerp(g, self.Object:FindFirstChildOfClass("Humanoid").Health / self.Object:FindFirstChildOfClass("Humanoid").MaxHealth)
+				self.Components.Health2.Color = r:lerp(g, self.Object:FindFirstChildOfClass("Humanoid").Health / self.Object:FindFirstChildOfClass("Humanoid").MaxHealth)
 			end
 		else
 			self.Components.Health.Visible = false
@@ -332,8 +332,8 @@ function boxBase:Update()
 	if ESP.Items then
 		local TorsoPos, Vis9 = WorldToViewportPoint(cam, locs.Torso.p)
 		if Vis9 then
-			if self.Player and self.Player.Character and self.Player.Character:FindFirstChildOfClass("Tool") then
-				self.Components.Items.Text = tostring(self.Player.Character:FindFirstChildOfClass("Tool").Name)
+			if self.Object and self.Object:FindFirstChildOfClass("Tool") then
+				self.Components.Items.Text = tostring(self.Object:FindFirstChildOfClass("Tool").Name)
 				local ItemOffset = ESP.ItemOffset
 				self.Components.Items.Position = Vector2.new(TorsoPos.X, TorsoPos.Y + ItemOffset)
 				self.Components.Items.Visible = true
@@ -350,24 +350,24 @@ function boxBase:Update()
 	if ESP.Skeleton then
 		local TorsoPos, Vis10 = WorldToViewportPoint(cam, locs.Torso.p)
 		if Vis10 then
-			if self.Player and self.Player.Character and self.Player.Character:FindFirstChildOfClass("Humanoid") then
-				if self.Player.Character:FindFirstChildOfClass("Humanoid") and self.Player.Character:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R15 then
-					if self.Player and self.Player.Character and self.Player.Character:FindFirstChild("Head") and self.Player.Character:FindFirstChild("UpperTorso") and self.Player.Character:FindFirstChild("LowerTorso") and self.Player.Character:FindFirstChild("LeftUpperArm") and self.Player.Character:FindFirstChild("LeftLowerArm") and self.Player.Character:FindFirstChild("LeftHand") and self.Player.Character:FindFirstChild("RightUpperArm") and self.Player.Character:FindFirstChild("RightLowerArm") and self.Player.Character:FindFirstChild("RightHand") and self.Player.Character:FindFirstChild("LeftUpperLeg") and self.Player.Character:FindFirstChild("LeftLowerLeg") and self.Player.Character:FindFirstChild("LeftFoot") and self.Player.Character:FindFirstChild("RightUpperLeg") and self.Player.Character:FindFirstChild("RightLowerLeg") and self.Player.Character:FindFirstChild("RightFoot") then
-						local H = WorldToViewportPoint(cam, self.Player.Character.Head.Position)
-						local UT = WorldToViewportPoint(cam, self.Player.Character.UpperTorso.Position)
-						local LT = WorldToViewportPoint(cam, self.Player.Character.LowerTorso.Position)
-						local LUA = WorldToViewportPoint(cam, self.Player.Character.LeftUpperArm.Position)
-						local LLA = WorldToViewportPoint(cam, self.Player.Character.LeftLowerArm.Position)
-						local LH = WorldToViewportPoint(cam, self.Player.Character.LeftHand.Position)
-						local RUA = WorldToViewportPoint(cam, self.Player.Character.RightUpperArm.Position)
-						local RLA = WorldToViewportPoint(cam, self.Player.Character.RightLowerArm.Position)
-						local RH = WorldToViewportPoint(cam, self.Player.Character.RightHand.Position)
-						local LUL = WorldToViewportPoint(cam, self.Player.Character.LeftUpperLeg.Position)
-						local LLL = WorldToViewportPoint(cam, self.Player.Character.LeftLowerLeg.Position)
-						local LF = WorldToViewportPoint(cam, self.Player.Character.LeftFoot.Position)
-						local RUL = WorldToViewportPoint(cam, self.Player.Character.RightUpperLeg.Position)
-						local RLL = WorldToViewportPoint(cam, self.Player.Character.RightLowerLeg.Position)
-						local RF = WorldToViewportPoint(cam, self.Player.Character.RightFoot.Position)
+			if self.Player and self.Object and self.Object:FindFirstChildOfClass("Humanoid") then
+				if self.Object:FindFirstChildOfClass("Humanoid") and self.Object:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R15 then
+					if self.Player and self.Object and self.Object:FindFirstChild("Head") and self.Object:FindFirstChild("UpperTorso") and self.Object:FindFirstChild("LowerTorso") and self.Object:FindFirstChild("LeftUpperArm") and self.Object:FindFirstChild("LeftLowerArm") and self.Object:FindFirstChild("LeftHand") and self.Object:FindFirstChild("RightUpperArm") and self.Object:FindFirstChild("RightLowerArm") and self.Object:FindFirstChild("RightHand") and self.Object:FindFirstChild("LeftUpperLeg") and self.Object:FindFirstChild("LeftLowerLeg") and self.Object:FindFirstChild("LeftFoot") and self.Object:FindFirstChild("RightUpperLeg") and self.Object:FindFirstChild("RightLowerLeg") and self.Object:FindFirstChild("RightFoot") then
+						local H = WorldToViewportPoint(cam, self.Object.Head.Position)
+						local UT = WorldToViewportPoint(cam, self.Object.UpperTorso.Position)
+						local LT = WorldToViewportPoint(cam, self.Object.LowerTorso.Position)
+						local LUA = WorldToViewportPoint(cam, self.Object.LeftUpperArm.Position)
+						local LLA = WorldToViewportPoint(cam, self.Object.LeftLowerArm.Position)
+						local LH = WorldToViewportPoint(cam, self.Object.LeftHand.Position)
+						local RUA = WorldToViewportPoint(cam, self.Object.RightUpperArm.Position)
+						local RLA = WorldToViewportPoint(cam, self.Object.RightLowerArm.Position)
+						local RH = WorldToViewportPoint(cam, self.Object.RightHand.Position)
+						local LUL = WorldToViewportPoint(cam, self.Object.LeftUpperLeg.Position)
+						local LLL = WorldToViewportPoint(cam, self.Object.LeftLowerLeg.Position)
+						local LF = WorldToViewportPoint(cam, self.Object.LeftFoot.Position)
+						local RUL = WorldToViewportPoint(cam, self.Object.RightUpperLeg.Position)
+						local RLL = WorldToViewportPoint(cam, self.Object.RightLowerLeg.Position)
+						local RF = WorldToViewportPoint(cam, self.Object.RightFoot.Position)
 						self.Components.R15SkeleHeadUpperTorso.From = Vector2.new(H.X, H.Y)
 						self.Components.R15SkeleHeadUpperTorso.To = Vector2.new(UT.X, UT.Y)
 						self.Components.R15SkeleUpperTorsoLowerTorso.From = Vector2.new(UT.X, UT.Y)
@@ -425,24 +425,24 @@ function boxBase:Update()
 						self.Components.R15SkeleRightUpperLegRightLowerLeg.Visible = true
 						self.Components.R15SkeleRightLowerLegRightFoot.Visible = true
 					end
-				elseif self.Player.Character:FindFirstChildOfClass("Humanoid") and self.Player.Character:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R6 then
-					if self.Player and self.Player.Character and self.Player.Character:FindFirstChild("Head") and self.Player.Character:FindFirstChild("Torso") and self.Player.Character:FindFirstChild("Left Arm") and self.Player.Character:FindFirstChild("Right Arm") and self.Player.Character:FindFirstChild("Left Leg") and self.Player.Character:FindFirstChild("Right Leg") then
-						local H = WorldToViewportPoint(cam, self.Player.Character.Head.Position)
-						local T_Height = self.Player.Character.Torso.Size.Y / 2 - .2
-						local UT = WorldToViewportPoint(cam, (self.Player.Character.Torso.CFrame * CFrame.new(0, T_Height, 0)).p)
-						local LT = WorldToViewportPoint(cam, (self.Player.Character.Torso.CFrame * CFrame.new(0, -T_Height, 0)).p)
-						local LA_Height = self.Player.Character["Left Arm"].Size.Y / 2 - .2
-						local LUA = WorldToViewportPoint(cam, (self.Player.Character["Left Arm"].CFrame * CFrame.new(0, LA_Height, 0)).p)
-						local LLA = WorldToViewportPoint(cam, (self.Player.Character["Left Arm"].CFrame * CFrame.new(0, -LA_Height, 0)).p)
-						local RA_Height = self.Player.Character["Right Arm"].Size.Y / 2 - .2
-						local RUA = WorldToViewportPoint(cam, (self.Player.Character["Right Arm"].CFrame * CFrame.new(0, RA_Height, 0)).p)
-						local RLA = WorldToViewportPoint(cam, (self.Player.Character["Right Arm"].CFrame * CFrame.new(0, -RA_Height, 0)).p)
-						local LL_Height = self.Player.Character["Left Leg"].Size.Y / 2 - .2
-						local LUL = WorldToViewportPoint(cam, (self.Player.Character["Left Leg"].CFrame * CFrame.new(0, LL_Height, 0)).p)
-						local LLL = WorldToViewportPoint(cam, (self.Player.Character["Left Leg"].CFrame * CFrame.new(0, -LL_Height, 0)).p)
-						local RL_Height = self.Player.Character["Right Leg"].Size.Y / 2 - .2
-						local RUL = WorldToViewportPoint(cam, (self.Player.Character["Right Leg"].CFrame * CFrame.new(0, RL_Height, 0)).p)
-						local RLL = WorldToViewportPoint(cam, (self.Player.Character["Right Leg"].CFrame * CFrame.new(0, -RL_Height, 0)).p)
+				elseif self.Object:FindFirstChildOfClass("Humanoid") and self.Object:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R6 then
+					if self.Player and self.Object and self.Object:FindFirstChild("Head") and self.Object:FindFirstChild("Torso") and self.Object:FindFirstChild("Left Arm") and self.Object:FindFirstChild("Right Arm") and self.Object:FindFirstChild("Left Leg") and self.Object:FindFirstChild("Right Leg") then
+						local H = WorldToViewportPoint(cam, self.Object.Head.Position)
+						local T_Height = self.Object.Torso.Size.Y / 2 - .2
+						local UT = WorldToViewportPoint(cam, (self.Object.Torso.CFrame * CFrame.new(0, T_Height, 0)).p)
+						local LT = WorldToViewportPoint(cam, (self.Object.Torso.CFrame * CFrame.new(0, -T_Height, 0)).p)
+						local LA_Height = self.Object["Left Arm"].Size.Y / 2 - .2
+						local LUA = WorldToViewportPoint(cam, (self.Object["Left Arm"].CFrame * CFrame.new(0, LA_Height, 0)).p)
+						local LLA = WorldToViewportPoint(cam, (self.Object["Left Arm"].CFrame * CFrame.new(0, -LA_Height, 0)).p)
+						local RA_Height = self.Object["Right Arm"].Size.Y / 2 - .2
+						local RUA = WorldToViewportPoint(cam, (self.Object["Right Arm"].CFrame * CFrame.new(0, RA_Height, 0)).p)
+						local RLA = WorldToViewportPoint(cam, (self.Object["Right Arm"].CFrame * CFrame.new(0, -RA_Height, 0)).p)
+						local LL_Height = self.Object["Left Leg"].Size.Y / 2 - .2
+						local LUL = WorldToViewportPoint(cam, (self.Object["Left Leg"].CFrame * CFrame.new(0, LL_Height, 0)).p)
+						local LLL = WorldToViewportPoint(cam, (self.Object["Left Leg"].CFrame * CFrame.new(0, -LL_Height, 0)).p)
+						local RL_Height = self.Object["Right Leg"].Size.Y / 2 - .2
+						local RUL = WorldToViewportPoint(cam, (self.Object["Right Leg"].CFrame * CFrame.new(0, RL_Height, 0)).p)
+						local RLL = WorldToViewportPoint(cam, (self.Object["Right Leg"].CFrame * CFrame.new(0, -RL_Height, 0)).p)
 						self.Components.R6SkeleHeadSpine.From = Vector2.new(H.X, H.Y)
 						self.Components.R6SkeleHeadSpine.To = Vector2.new(UT.X, UT.Y)
 						self.Components.R6SkeleSpine.From = Vector2.new(UT.X, UT.Y)
