@@ -17,6 +17,8 @@ local ESP = {
 	Tracers = false,
 	Skeleton = false,
 	OutOfViewArrows = false,
+	OutOfViewArrowsRadius = 100,
+	OutOfViewArrowsSize = 25,
 	OutOfViewArrowsOutline = false,
 	OutOfViewArrowsOutlineColor = Color3.fromRGB(255, 255, 255),
 	FaceCamera = false,
@@ -568,7 +570,7 @@ function boxBase:Update()
 		local objectSpacePoint = (PointToObjectSpace(cam.CFrame, locs.Torso.p) * Vector3.new(1, 0, 1)).Unit
 		local crossVector = Cross(objectSpacePoint, Vector3.new(0, 1, 1))
 		local rightVector = Vector2.new(crossVector.X, crossVector.Z)
-		local arrowRadius, arrowSize = 100, 25
+		local arrowRadius, arrowSize = ESP.OutOfViewArrowsRadius, ESP.OutOfViewArrowsSize
 		local arrowPosition = screenCenter + Vector2.new(objectSpacePoint.X, objectSpacePoint.Z) * arrowRadius
 		local arrowDirection = (arrowPosition - screenCenter).Unit
 		local pointA, pointB, pointC = arrowPosition, screenCenter + arrowDirection * (arrowRadius - arrowSize) + rightVector * arrowSize, screenCenter + arrowDirection * (arrowRadius - arrowSize) + -rightVector * arrowSize
