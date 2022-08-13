@@ -879,7 +879,7 @@ for _, v in next, plrs:GetPlayers(), 1 do
 end
 game:GetService("RunService"):BindToRenderStep("ESP", Enum.RenderPriority.Camera.Value + 1, function()
 	cam = workspace.CurrentCamera
-	for _, v in (ESP.Enabled and next), ESP.Objects do
+	for i,v in (ESP.Enabled and pairs or ipairs)(ESP.Objects) do
 		if v.Update then
 			local s, e = pcall(v.Update, v)
 			if not s then
