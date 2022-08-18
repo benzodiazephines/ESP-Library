@@ -249,29 +249,27 @@ function boxBase:Update()
 		BottomLeft = cf * ESP.BoxShift * CFrame.new(size.X / 2, -size.Y / 2, 0),
 		BottomRight = cf * ESP.BoxShift * CFrame.new(-size.X / 2, -size.Y / 2, 0),
 		TagPos = cf * ESP.BoxShift * CFrame.new(0, size.Y / 2, 0),
-		Torso = cf * ESP.BoxShift
+		Torso = cf
 	}
 	if ESP.Boxes then
-		if self.Object and self.Object:FindFirstChild("HumanoidRootPart") then
-			local onScreen, size, position, torsoPosition = GetBoundingBox(self.Object.HumanoidRootPart)
-			if self.Components.Box and self.Components.BoxOutline and self.Components.BoxFill then
-				if onScreen and position and size then
-					self.Components.Box.Visible = true
-					self.Components.Box.Color = color
-					self.Components.Box.Size = size
-					self.Components.Box.Position = position
-					self.Components.BoxOutline.Visible = true
-					self.Components.BoxOutline.Size = size
-					self.Components.BoxOutline.Position = position
-					self.Components.BoxFill.Visible = true
-					self.Components.BoxFill.Color = color
-					self.Components.BoxFill.Size = size
-					self.Components.BoxFill.Position = position
-				else
-					self.Components.Box.Visible = false
-					self.Components.BoxOutline.Visible = false
-					self.Components.BoxFill.Visible = false
-				end
+		local onScreen, size, position, torsoPosition = GetBoundingBox(locs.Torso)
+		if self.Components.Box and self.Components.BoxOutline and self.Components.BoxFill then
+			if onScreen and position and size then
+				self.Components.Box.Visible = true
+				self.Components.Box.Color = color
+				self.Components.Box.Size = size
+				self.Components.Box.Position = position
+				self.Components.BoxOutline.Visible = true
+				self.Components.BoxOutline.Size = size
+				self.Components.BoxOutline.Position = position
+				self.Components.BoxFill.Visible = true
+				self.Components.BoxFill.Color = color
+				self.Components.BoxFill.Size = size
+				self.Components.BoxFill.Position = position
+			else
+				self.Components.Box.Visible = false
+				self.Components.BoxOutline.Visible = false
+				self.Components.BoxFill.Visible = false
 			end
 		end
 	else
@@ -320,34 +318,32 @@ function boxBase:Update()
 		self.Components.Tracer.Visible = false
 	end
 	if ESP.Health then
-		if self.Object and self.Object:FindFirstChild("HumanoidRootPart") then
-			local onScreen, size, position, torsoPosition = GetBoundingBox(self.Object.HumanoidRootPart)
-			if onScreen and size and position then
-				if self.Object and self.Object:FindFirstChildOfClass("Humanoid") then
-					local Health, MaxHealth = self.Object:FindFirstChildOfClass("Humanoid").Health, self.Object:FindFirstChildOfClass("Humanoid").MaxHealth
-					local healthBarSize = round(Vector2.new(1, -(size.Y * (Health / MaxHealth))))
-					local healthBarPosition = round(Vector2.new(position.X - (3 + healthBarSize.X), position.Y + size.Y))
-					local g = Color3.fromRGB(0, 255, 8)
-					local r = Color3.fromRGB(255, 0, 0)
-					self.Components.HealthBar.Visible = true
-					self.Components.HealthBar.Color = r:lerp(g, Health / MaxHealth)
-					self.Components.HealthBar.Transparency = 1
-					self.Components.HealthBar.Size = healthBarSize
-					self.Components.HealthBar.Position = healthBarPosition
-					self.Components.HealthBarOutline.Visible = true
-					self.Components.HealthBarOutline.Transparency = 1
-					self.Components.HealthBarOutline.Size = round(Vector2.new(healthBarSize.X, -size.Y) + Vector2.new(2, -2))
-					self.Components.HealthBarOutline.Position = healthBarPosition - Vector2.new(1, -1)
-					self.Components.HealthText.Visible = true
-					self.Components.HealthText.Color = r:lerp(g, Health / MaxHealth)
-					self.Components.HealthText.Text = math.floor(Health + .5) .. " | " .. MaxHealth
-					self.Components.HealthText.Position = round(position + Vector2.new(size.X + 3, -3))
-				end
-			else
-				self.Components.HealthBar.Visible = false
-				self.Components.HealthBarOutline.Visible = false
-				self.Components.HealthText.Visible = false
+		local onScreen, size, position, torsoPosition = GetBoundingBox(locs.Torso)
+		if onScreen and size and position then
+			if self.Object and self.Object:FindFirstChildOfClass("Humanoid") then
+				local Health, MaxHealth = self.Object:FindFirstChildOfClass("Humanoid").Health, self.Object:FindFirstChildOfClass("Humanoid").MaxHealth
+				local healthBarSize = round(Vector2.new(1, -(size.Y * (Health / MaxHealth))))
+				local healthBarPosition = round(Vector2.new(position.X - (3 + healthBarSize.X), position.Y + size.Y))
+				local g = Color3.fromRGB(0, 255, 8)
+				local r = Color3.fromRGB(255, 0, 0)
+				self.Components.HealthBar.Visible = true
+				self.Components.HealthBar.Color = r:lerp(g, Health / MaxHealth)
+				self.Components.HealthBar.Transparency = 1
+				self.Components.HealthBar.Size = healthBarSize
+				self.Components.HealthBar.Position = healthBarPosition
+				self.Components.HealthBarOutline.Visible = true
+				self.Components.HealthBarOutline.Transparency = 1
+				self.Components.HealthBarOutline.Size = round(Vector2.new(healthBarSize.X, -size.Y) + Vector2.new(2, -2))
+				self.Components.HealthBarOutline.Position = healthBarPosition - Vector2.new(1, -1)
+				self.Components.HealthText.Visible = true
+				self.Components.HealthText.Color = r:lerp(g, Health / MaxHealth)
+				self.Components.HealthText.Text = math.floor(Health + .5) .. " | " .. MaxHealth
+				self.Components.HealthText.Position = round(position + Vector2.new(size.X + 3, -3))
 			end
+		else
+			self.Components.HealthBar.Visible = false
+			self.Components.HealthBarOutline.Visible = false
+			self.Components.HealthText.Visible = false
 		end
 	else
 		self.Components.HealthBar.Visible = false
