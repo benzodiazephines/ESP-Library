@@ -61,6 +61,23 @@ function GenerateName(x)
 	end
 	return e
 end
+function BrahWth(position)
+	local screenPosition, onScreen = WorldToViewportPoint(cam, position)
+	return Vector2.new(screenPosition.X, screenPosition.Y), onScreen, screenPosition.Z
+end
+local function round(number)
+	if (typeof(number) == "Vector2") then
+		return Vector2.new(round(number.X), round(number.Y))
+	else
+		return math.floor(number)
+	end
+end
+function GetBoundingBox(torso)
+	local torsoPosition, onScreen, depth = BrahWth(torso.Position)
+	local scaleFactor = 1 / (math.tan(math.rad(cam.FieldOfView * .5)) * 2 * depth) * 1e3
+	local size = round(Vector2.new(4 * scaleFactor, 5 * scaleFactor))
+	return onScreen, size, round(Vector2.new(torsoPosition.X - (size.X * .5), torsoPosition.Y - (size.Y * .5))), torsoPosition
+end
 local function Draw(obj, props)
 	local new = Drawing.new(obj)
 	props = props or {}
@@ -235,25 +252,32 @@ function boxBase:Update()
 		Torso = cf * ESP.BoxShift
 	}
 	if ESP.Boxes then
-		local TopLeft, Vis1 = WorldToViewportPoint(cam, locs.TopLeft.p)
-		local TopRight, Vis2 = WorldToViewportPoint(cam, locs.TopRight.p)
-		local BottomLeft, Vis3 = WorldToViewportPoint(cam, locs.BottomLeft.p)
-		local BottomRight, Vis4 = WorldToViewportPoint(cam, locs.BottomRight.p)
-		if self.Components.Quad then
-			if Vis1 or Vis2 or Vis3 or Vis4 then
-				self.Components.Quad.Visible = true
-				self.Components.Quad.PointA = Vector2.new(TopRight.X, TopRight.Y)
-				self.Components.Quad.PointB = Vector2.new(TopLeft.X, TopLeft.Y)
-				self.Components.Quad.PointC = Vector2.new(BottomLeft.X, BottomLeft.Y)
-				self.Components.Quad.PointD = Vector2.new(BottomRight.X, BottomRight.Y)
-				self.Components.Quad.Color = color
-				self.Components.Quad.ZIndex = IsPlrHighlighted and 2 or 1
-			else
-				self.Components.Quad.Visible = false
+		if self.Object and self.Object:FindFirstChild("HumanoidRootPart") then
+			local onScreen, size, position, torsoPosition = GetBoundingBox(self.Object.HumanoidRootPart)
+			if self.Components.Box and self.Components.BoxOutline and self.Components.BoxFill then
+				if onScreen and position and size then
+					self.Components.Box.Visible = true
+					self.Components.Box.Color = color
+					self.Components.Box.Size = size
+					self.Components.Box.Position = position
+					self.Components.BoxOutline.Visible = true
+					self.Components.BoxOutline.Size = size
+					self.Components.BoxOutline.Position = position
+					self.Components.BoxFill.Visible = true
+					self.Components.BoxFill.Color = color
+					self.Components.BoxFill.Size = size
+					self.Components.BoxFill.Position = position
+				else
+					self.Components.Box.Visible = false
+					self.Components.BoxOutline.Visible = false
+					self.Components.BoxFill.Visible = false
+				end
 			end
 		end
 	else
-		self.Components.Quad.Visible = false
+		self.Components.Box.Visible = false
+		self.Components.BoxOutline.Visible = false
+		self.Components.BoxFill.Visible = false
 	end
 	if ESP.Names then
 		local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
@@ -296,38 +320,38 @@ function boxBase:Update()
 		self.Components.Tracer.Visible = false
 	end
 	if ESP.Health then
-		local TorsoPos, Vis8 = WorldToViewportPoint(cam, locs.Torso.p)
-		if Vis8 then
-			if self.Object and self.Object:FindFirstChildOfClass("Humanoid") then
-				local TagPos = WorldToViewportPoint(cam, locs.TagPos.p)
-				local DistanceOff = math.clamp((Vector2.new(TagPos.X, TagPos.Y) - Vector2.new(TorsoPos.X, TorsoPos.Y)).Magnitude, 2, math.huge)
-				local b = (Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y - DistanceOff * 2) - Vector2.new(TorsoPos.X - DistanceOff, TorsoPos.Y + DistanceOff * 2)).Magnitude
-				local offset = nil
-				offset = self.Object:FindFirstChildOfClass("Humanoid").Health / self.Object:FindFirstChildOfClass("Humanoid").MaxHealth * b
-				local hOffsetX = ESP.HealthOffsetX
-				local hOffsetY = ESP.HealthOffsetY
-				self.Components.Health.Visible = true
-				self.Components.Health2.Visible = true
-				self.Components.Health2.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff * hOffsetY)
-				self.Components.Health2.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff * hOffsetY - offset)
-				self.Components.Health.From = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff * hOffsetY)
-				self.Components.Health.To = Vector2.new(TorsoPos.X - DistanceOff - hOffsetX, TorsoPos.Y - DistanceOff * hOffsetY)
-				self.Components.HealthText.Text = math.floor(self.Object:FindFirstChildOfClass("Humanoid").Health + .5) .. " | " .. self.Object:FindFirstChildOfClass("Humanoid").MaxHealth
-				self.Components.HealthText.Position = Vector2.new(TagPos.X, TagPos.Y - 65)
-				self.Components.HealthText.Visible = true
-				local g = Color3.fromRGB(0, 255, 8)
-				local r = Color3.fromRGB(255, 0, 0)
-				self.Components.HealthText.Color = r:lerp(g, self.Object:FindFirstChildOfClass("Humanoid").Health / self.Object:FindFirstChildOfClass("Humanoid").MaxHealth)
-				self.Components.Health2.Color = r:lerp(g, self.Object:FindFirstChildOfClass("Humanoid").Health / self.Object:FindFirstChildOfClass("Humanoid").MaxHealth)
+		if self.Object and self.Object:FindFirstChild("HumanoidRootPart") then
+			local onScreen, size, position, torsoPosition = GetBoundingBox(self.Object.HumanoidRootPart)
+			if onScreen and size and position then
+				if self.Object and self.Object:FindFirstChildOfClass("Humanoid") then
+					local Health, MaxHealth = self.Object:FindFirstChildOfClass("Humanoid").Health, self.Object:FindFirstChildOfClass("Humanoid").MaxHealth
+					local healthBarSize = round(Vector2.new(1, -(size.Y * (Health / MaxHealth))))
+					local healthBarPosition = round(Vector2.new(position.X - (3 + healthBarSize.X), position.Y + size.Y))
+					local g = Color3.fromRGB(0, 255, 8)
+					local r = Color3.fromRGB(255, 0, 0)
+					self.Components.HealthBar.Visible = true
+					self.Components.HealthBar.Color = r:lerp(g, Health / MaxHealth)
+					self.Components.HealthBar.Transparency = 1
+					self.Components.HealthBar.Size = healthBarSize
+					self.Components.HealthBar.Position = healthBarPosition
+					self.Components.HealthBarOutline.Visible = true
+					self.Components.HealthBarOutline.Transparency = 1
+					self.Components.HealthBarOutline.Size = round(Vector2.new(healthBarSize.X, -size.Y) + Vector2.new(2, -2))
+					self.Components.HealthBarOutline.Position = healthBarPosition - Vector2.new(1, -1)
+					self.Components.HealthText.Visible = true
+					self.Components.HealthText.Color = r:lerp(g, Health / MaxHealth)
+					self.Components.HealthText.Text = math.floor(Health + .5) .. " | " .. MaxHealth
+					self.Components.HealthText.Position = round(position + Vector2.new(size.X + 3, -3))
+				end
+			else
+				self.Components.HealthBar.Visible = false
+				self.Components.HealthBarOutline.Visible = false
+				self.Components.HealthText.Visible = false
 			end
-		else
-			self.Components.Health.Visible = false
-			self.Components.Health2.Visible = false
-			self.Components.HealthText.Visible = false
 		end
 	else
-		self.Components.Health.Visible = false
-		self.Components.Health2.Visible = false
+		self.Components.HealthBar.Visible = false
+		self.Components.HealthBarOutline.Visible = false
 		self.Components.HealthText.Visible = false
 	end
 	if ESP.Items then
@@ -637,7 +661,21 @@ function ESP:Add(obj, options)
 	if self:GetBox(obj) then
 		self:GetBox(obj):Remove()
 	end
-	box.Components["Quad"] = Draw("Quad", {
+	box.Components["Box"] = Draw("Square", {
+		Thickness = self.Thickness,
+		Color = color,
+		Transparency = 1,
+		Filled = false,
+		Visible = self.Enabled and self.Boxes
+	})
+	box.Components["BoxOutline"] = Draw("Square", {
+		Thickness = self.Thickness,
+		Color = color,
+		Transparency = 3,
+		Filled = false,
+		Visible = self.Enabled and self.Boxes
+	})
+	box.Components["BoxFill"] = Draw("Square", {
 		Thickness = self.Thickness,
 		Color = color,
 		Transparency = 1,
@@ -666,14 +704,15 @@ function ESP:Add(obj, options)
 		Size = self.TextSize,
 		Visible = self.Enabled and self.Items
 	})
-	box.Components["Health"] = Draw("Line", {
+	box.Components["HealthBarOutline"] = Draw("Square", {
 		Transparency = 1,
-		Thickness = 4,
+		Thickness = 1,
+		Filled = true,
 		Visible = self.Enabled and self.Health
 	})
-	box.Components["Health2"] = Draw("Line", {
+	box.Components["HealthBar"] = Draw("Square", {
 		Transparency = 1,
-		Thickness = 2,
+		Thickness = 1,
 		Visible = self.Enabled and self.Health
 	})
 	box.Components["HealthText"] = Draw("Text", {
@@ -692,122 +731,122 @@ function ESP:Add(obj, options)
 	box.Components["R15SkeleHeadUpperTorso"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R15SkeleUpperTorsoLowerTorso"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R15SkeleUpperTorsoLeftUpperArm"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R15SkeleLeftUpperArmLeftLowerArm"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R15SkeleLeftLowerArmLeftHand"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R15SkeleUpperTorsoRightUpperArm"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R15SkeleRightUpperArmRightLowerArm"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R15SkeleRightLowerArmRightHand"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R15SkeleLowerTorsoLeftUpperLeg"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R15SkeleLeftUpperLegLeftLowerLeg"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R15SkeleLeftLowerLegLeftFoot"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R15SkeleLowerTorsoRightUpperLeg"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R15SkeleRightUpperLegRightLowerLeg"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R15SkeleRightLowerLegRightFoot"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R6SkeleHeadSpine"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R6SkeleSpine"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R6SkeleLeftArm"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R6SkeleLeftArmUpperTorso"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R6SkeleRightArm"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R6SkeleRightArmUpperTorso"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R6SkeleLeftLeg"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R6SkeleLeftLegLowerTorso"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R6SkeleRightLeg"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["R6SkeleRightLegLowerTorso"] = Draw("Line", {
 		Transparency = 1,
 		Thickness = 1,
-		Visible = self.Enabled and self.Health
+		Visible = self.Enabled and self.Skeleton
 	})
 	box.Components["Arrow"] = Draw("Triangle", {
 		Thickness = 1
@@ -881,7 +920,7 @@ for _, v in next, plrs:GetPlayers(), 1 do
 end
 game:GetService("RunService"):BindToRenderStep("ESP", Enum.RenderPriority.Camera.Value + 1, function()
 	cam = workspace.CurrentCamera
-	for i,v in (ESP.Enabled and pairs or ipairs)(ESP.Objects) do
+	for _, v in (ESP.Enabled and pairs or ipairs)(ESP.Objects) do
 		if v.Update then
 			local s, e = pcall(v.Update, v)
 			if not s then
