@@ -13,6 +13,7 @@ local ESP = {
 	ItemOffset = 10,
 	Chams = false,
 	ChamsTransparency = .5,
+	ChamsOutlineTransparency = 0,
 	ChamsOutlineColor = Color3.fromRGB(255, 255, 255),
 	Tracers = false,
 	Skeleton = false,
@@ -606,6 +607,7 @@ function boxBase:Update()
 			self.Components.Highlight.Enabled = true
 			self.Components.Highlight.FillColor = color
 			self.Components.Highlight.FillTransparency = ESP.ChamsTransparency
+			self.Components.Highlight.OutlineTransparency = ESP.ChamsOutlineTransparency
 			self.Components.Highlight.OutlineColor = ESP.ChamsOutlineColor
 		else
 			self.Components.Highlight.Enabled = false
