@@ -252,7 +252,7 @@ function boxBase:Update()
 		Torso = cf
 	}
 	if ESP.Boxes then
-		local onScreen, size, position, torsoPosition = GetBoundingBox(locs.Torso)
+		local onScreen, size, position = GetBoundingBox(locs.Torso)
 		if self.Components.Box and self.Components.BoxOutline and self.Components.BoxFill then
 			if onScreen and position and size then
 				self.Components.Box.Visible = true
@@ -278,10 +278,10 @@ function boxBase:Update()
 		self.Components.BoxFill.Visible = false
 	end
 	if ESP.Names then
-		local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
-		if Vis5 then
+		local onScreen, size, position = GetBoundingBox(locs.Torso)
+		if onScreen and size and position then
 			self.Components.Name.Visible = true
-			self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
+			self.Components.Name.Position = round(position + Vector2.new(size.X * 0.5, -(self.Components.Name.TextBounds.Y + 2)))
 			self.Components.Name.Text = self.Name
 			self.Components.Name.Color = color
 		else
@@ -291,10 +291,10 @@ function boxBase:Update()
 		self.Components.Name.Visible = false
 	end
 	if ESP.Distance then
-		local TagPos, Vis6 = WorldToViewportPoint(cam, locs.TagPos.p)
-		if Vis6 then
+		local onScreen, size, position = GetBoundingBox(locs.Torso)
+		if onScreen and size and position then
 			self.Components.Distance.Visible = true
-			self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 28)
+			self.Components.Distance.Position = round(position + Vector2.new(size.X * 0.5, size.Y + 1))
 			self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .. "m"
 			self.Components.Distance.Color = color
 		else
@@ -318,7 +318,7 @@ function boxBase:Update()
 		self.Components.Tracer.Visible = false
 	end
 	if ESP.Health then
-		local onScreen, size, position, torsoPosition = GetBoundingBox(locs.Torso)
+		local onScreen, size, position = GetBoundingBox(locs.Torso)
 		if onScreen and size and position then
 			if self.Object and self.Object:FindFirstChildOfClass("Humanoid") then
 				local Health, MaxHealth = self.Object:FindFirstChildOfClass("Humanoid").Health, self.Object:FindFirstChildOfClass("Humanoid").MaxHealth
@@ -351,12 +351,12 @@ function boxBase:Update()
 		self.Components.HealthText.Visible = false
 	end
 	if ESP.Items then
-		local TorsoPos, Vis9 = WorldToViewportPoint(cam, locs.Torso.p)
-		if Vis9 then
+		local onScreen, size, position = GetBoundingBox(locs.Torso)
+		if onScreen and size and position then
 			if self.Object and self.Object:FindFirstChildOfClass("Tool") then
 				self.Components.Items.Text = tostring(self.Object:FindFirstChildOfClass("Tool").Name)
 				local ItemOffset = ESP.ItemOffset
-				self.Components.Items.Position = Vector2.new(TorsoPos.X, TorsoPos.Y + ItemOffset)
+				self.Components.Items.Position = round(position + Vector2.new(size.X * 0.5, size.Y - 50))
 				self.Components.Items.Visible = true
 				self.Components.Items.Color = color
 			else
