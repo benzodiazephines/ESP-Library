@@ -766,9 +766,6 @@ local function ApplyESP(v)
             })
         end
     end)
-    v.CharacterRemoving:Connect(function()
-        ESP:GetBox(v):Remove()
-    end)
     if CharTable[v] then
         local Char = CharTable[v].torso.Parent
         ESP:Add(Char, {
@@ -782,9 +779,6 @@ for _, v in next, plrs:GetPlayers(), 1 do
     ApplyESP(v)
 end
 plrs.PlayerAdded:Connect(ApplyESP)
-plrs.PlayerRemoving:Connect(function(v)
-    ESP:GetBox(v):Remove()
-end)
 game:GetService("RunService"):BindToRenderStep("ESP", Enum.RenderPriority.Camera.Value + 1, function()
 	cam = workspace.CurrentCamera
 	for _, v in (ESP.Enabled and pairs or ipairs)(ESP.Objects) do
