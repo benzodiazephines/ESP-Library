@@ -14,7 +14,6 @@ local ESP = {
 	ChamsOutlineTransparency = 0,
 	ChamsOutlineColor = Color3.fromRGB(255, 255, 255),
 	Tracers = false,
-	Skeleton = false,
 	OutOfViewArrows = false,
 	OutOfViewArrowsRadius = 100,
 	OutOfViewArrowsSize = 25,
@@ -30,6 +29,7 @@ local ESP = {
 	Color = Color3.fromRGB(255, 170, 0),
 	Thickness = 2,
 	AttachShift = 1,
+	AutoRemove = true,
 	Objects = setmetatable({}, {
 		__mode = "kv"
 	}),
@@ -334,8 +334,8 @@ function boxBase:Update()
 	if ESP.Health then
 		local onScreen, size, position = GetBoundingBox(locs.Torso)
 		if onScreen and size and position then
-			if self.Player and Health:getplayerhealth(self.Player) then
-                local Health, MaxHealth = Health:getplayerhealth(self.Player )
+			if self.Player then
+                local Health, MaxHealth = Health:getplayerhealth(self.Player)
 				local healthBarSize = round(Vector2.new(1, -(size.Y * (Health / MaxHealth))))
 				local healthBarPosition = round(Vector2.new(position.X - (3 + healthBarSize.X), position.Y + size.Y))
 				local g = Color3.fromRGB(0, 255, 8)
@@ -363,106 +363,6 @@ function boxBase:Update()
 		self.Components.HealthBar.Visible = false
 		self.Components.HealthBarOutline.Visible = false
 		self.Components.HealthText.Visible = false
-	end
-	if ESP.Skeleton then
-		local TorsoPos, Vis10 = WorldToViewportPoint(cam, locs.Torso.p)
-		if Vis10 then
-			if self.Player and self.Player:FindFirstChildOfClass("Humanoid") then
-				if self.Player and CharTable[self.Player] then
-					if self.Player and CharTable[self.Player] then
-						local H = WorldToViewportPoint(cam, CharTable[self.Player].head.Position)
-						local T_Height = CharTable[self.Player].torso.Size.Y / 2 - .2
-						local UT = WorldToViewportPoint(cam, (CharTable[self.Player].torso.CFrame * CFrame.new(0, T_Height, 0)).p)
-						local LT = WorldToViewportPoint(cam, (CharTable[self.Player].torso.CFrame * CFrame.new(0, -T_Height, 0)).p)
-						local LA_Height = CharTable[self.Player]["leftarm"].Size.Y / 2 - .2
-						local LUA = WorldToViewportPoint(cam, (CharTable[self.Player]["leftarm"].CFrame * CFrame.new(0, LA_Height, 0)).p)
-						local LLA = WorldToViewportPoint(cam, (CharTable[self.Player]["leftarm"].CFrame * CFrame.new(0, -LA_Height, 0)).p)
-						local RA_Height = CharTable[self.Player]["rightarm"].Size.Y / 2 - .2
-						local RUA = WorldToViewportPoint(cam, (CharTable[self.Player]["rightarm"].CFrame * CFrame.new(0, RA_Height, 0)).p)
-						local RLA = WorldToViewportPoint(cam, (CharTable[self.Player]["rightarm"].CFrame * CFrame.new(0, -RA_Height, 0)).p)
-						local LL_Height = CharTable[self.Player]["leftleg"].Size.Y / 2 - .2
-						local LUL = WorldToViewportPoint(cam, (CharTable[self.Player]["leftleg"].CFrame * CFrame.new(0, LL_Height, 0)).p)
-						local LLL = WorldToViewportPoint(cam, (CharTable[self.Player]["leftleg"].CFrame * CFrame.new(0, -LL_Height, 0)).p)
-						local RL_Height = CharTable[self.Player]["rightleg"].Size.Y / 2 - .2
-						local RUL = WorldToViewportPoint(cam, (CharTable[self.Player]["rightleg"].CFrame * CFrame.new(0, RL_Height, 0)).p)
-						local RLL = WorldToViewportPoint(cam, (CharTable[self.Player]["rightleg"].CFrame * CFrame.new(0, -RL_Height, 0)).p)
-						self.Components.R6SkeleHeadSpine.From = Vector2.new(H.X, H.Y)
-						self.Components.R6SkeleHeadSpine.To = Vector2.new(UT.X, UT.Y)
-						self.Components.R6SkeleSpine.From = Vector2.new(UT.X, UT.Y)
-						self.Components.R6SkeleSpine.To = Vector2.new(LT.X, LT.Y)
-						self.Components.R6SkeleLeftArm.From = Vector2.new(LUA.X, LUA.Y)
-						self.Components.R6SkeleLeftArm.To = Vector2.new(LLA.X, LLA.Y)
-						self.Components.R6SkeleLeftArmUpperTorso.From = Vector2.new(UT.X, UT.Y)
-						self.Components.R6SkeleLeftArmUpperTorso.To = Vector2.new(LUA.X, LUA.Y)
-						self.Components.R6SkeleRightArm.From = Vector2.new(RUA.X, RUA.Y)
-						self.Components.R6SkeleRightArm.To = Vector2.new(RLA.X, RLA.Y)
-						self.Components.R6SkeleRightArmUpperTorso.From = Vector2.new(UT.X, UT.Y)
-						self.Components.R6SkeleRightArmUpperTorso.To = Vector2.new(RUA.X, RUA.Y)
-						self.Components.R6SkeleLeftLeg.From = Vector2.new(LUL.X, LUL.Y)
-						self.Components.R6SkeleLeftLeg.To = Vector2.new(LLL.X, LLL.Y)
-						self.Components.R6SkeleLeftLegLowerTorso.From = Vector2.new(LT.X, LT.Y)
-						self.Components.R6SkeleLeftLegLowerTorso.To = Vector2.new(LUL.X, LUL.Y)
-						self.Components.R6SkeleRightLeg.From = Vector2.new(RUL.X, RUL.Y)
-						self.Components.R6SkeleRightLeg.To = Vector2.new(RLL.X, RLL.Y)
-						self.Components.R6SkeleRightLegLowerTorso.From = Vector2.new(LT.X, LT.Y)
-						self.Components.R6SkeleRightLegLowerTorso.To = Vector2.new(RUL.X, RUL.Y)
-						self.Components.R6SkeleHeadSpine.Color = color
-						self.Components.R6SkeleSpine.Color = color
-						self.Components.R6SkeleLeftArm.Color = color
-						self.Components.R6SkeleLeftArmUpperTorso.Color = color
-						self.Components.R6SkeleRightArm.Color = color
-						self.Components.R6SkeleRightArmUpperTorso.Color = color
-						self.Components.R6SkeleLeftLeg.Color = color
-						self.Components.R6SkeleLeftLegLowerTorso.Color = color
-						self.Components.R6SkeleRightLeg.Color = color
-						self.Components.R6SkeleRightLegLowerTorso.Color = color
-						self.Components.R6SkeleHeadSpine.Visible = true
-						self.Components.R6SkeleSpine.Visible = true
-						self.Components.R6SkeleLeftArm.Visible = true
-						self.Components.R6SkeleLeftArmUpperTorso.Visible = true
-						self.Components.R6SkeleRightArm.Visible = true
-						self.Components.R6SkeleRightArmUpperTorso.Visible = true
-						self.Components.R6SkeleLeftLeg.Visible = true
-						self.Components.R6SkeleLeftLegLowerTorso.Visible = true
-						self.Components.R6SkeleRightLeg.Visible = true
-						self.Components.R6SkeleRightLegLowerTorso.Visible = true
-					end
-				end
-			else
-				self.Components.R6SkeleHeadSpine.Visible = false
-				self.Components.R6SkeleSpine.Visible = false
-				self.Components.R6SkeleLeftArm.Visible = false
-				self.Components.R6SkeleLeftArmUpperTorso.Visible = false
-				self.Components.R6SkeleRightArm.Visible = false
-				self.Components.R6SkeleRightArmUpperTorso.Visible = false
-				self.Components.R6SkeleLeftLeg.Visible = false
-				self.Components.R6SkeleLeftLegLowerTorso.Visible = false
-				self.Components.R6SkeleRightLeg.Visible = false
-				self.Components.R6SkeleRightLegLowerTorso.Visible = false
-			end
-		else
-			self.Components.R6SkeleHeadSpine.Visible = false
-			self.Components.R6SkeleSpine.Visible = false
-			self.Components.R6SkeleLeftArm.Visible = false
-			self.Components.R6SkeleLeftArmUpperTorso.Visible = false
-			self.Components.R6SkeleRightArm.Visible = false
-			self.Components.R6SkeleRightArmUpperTorso.Visible = false
-			self.Components.R6SkeleLeftLeg.Visible = false
-			self.Components.R6SkeleLeftLegLowerTorso.Visible = false
-			self.Components.R6SkeleRightLeg.Visible = false
-			self.Components.R6SkeleRightLegLowerTorso.Visible = false
-		end
-	else
-		self.Components.R6SkeleHeadSpine.Visible = false
-		self.Components.R6SkeleSpine.Visible = false
-		self.Components.R6SkeleLeftArm.Visible = false
-		self.Components.R6SkeleLeftArmUpperTorso.Visible = false
-		self.Components.R6SkeleRightArm.Visible = false
-		self.Components.R6SkeleRightArmUpperTorso.Visible = false
-		self.Components.R6SkeleLeftLeg.Visible = false
-		self.Components.R6SkeleLeftLegLowerTorso.Visible = false
-		self.Components.R6SkeleRightLeg.Visible = false
-		self.Components.R6SkeleRightLegLowerTorso.Visible = false
 	end
 	local TorsoPos, Vis11 = WorldToViewportPoint(cam, locs.Torso.p)
 	if not Vis11 then
@@ -597,126 +497,6 @@ function ESP:Add(obj, options)
 		Transparency = 1,
 		Visible = self.Enabled and self.Tracers
 	})
-	box.Components["R15SkeleHeadUpperTorso"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R15SkeleUpperTorsoLowerTorso"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R15SkeleUpperTorsoLeftUpperArm"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R15SkeleLeftUpperArmLeftLowerArm"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R15SkeleLeftLowerArmLeftHand"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R15SkeleUpperTorsoRightUpperArm"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R15SkeleRightUpperArmRightLowerArm"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R15SkeleRightLowerArmRightHand"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R15SkeleLowerTorsoLeftUpperLeg"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R15SkeleLeftUpperLegLeftLowerLeg"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R15SkeleLeftLowerLegLeftFoot"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R15SkeleLowerTorsoRightUpperLeg"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R15SkeleRightUpperLegRightLowerLeg"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R15SkeleRightLowerLegRightFoot"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R6SkeleHeadSpine"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R6SkeleSpine"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R6SkeleLeftArm"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R6SkeleLeftArmUpperTorso"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R6SkeleRightArm"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R6SkeleRightArmUpperTorso"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R6SkeleLeftLeg"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R6SkeleLeftLegLowerTorso"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R6SkeleRightLeg"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
-	box.Components["R6SkeleRightLegLowerTorso"] = Draw("Line", {
-		Transparency = 1,
-		Thickness = 1,
-		Visible = self.Enabled and self.Skeleton
-	})
 	box.Components["Arrow"] = Draw("Triangle", {
 		Thickness = 1
 	})
@@ -755,17 +535,7 @@ function ESP:Add(obj, options)
 	end
 	return box
 end
-local function ApplyESP(v)
-    v.CharacterAdded:Connect(function()
-        if CharTable[v] then
-            local Char = CharTable[v].torso.Parent
-            ESP:Add(Char, {
-                Name = v.Name,
-                Player = v,
-                PrimaryPart = CharTable[v].torso
-            })
-        end
-    end)
+function ApplyESP(v)
     if CharTable[v] then
         local Char = CharTable[v].torso.Parent
         ESP:Add(Char, {
@@ -776,9 +546,15 @@ local function ApplyESP(v)
     end
 end
 for _, v in next, plrs:GetPlayers(), 1 do
-    ApplyESP(v)
+	ApplyESP(v)
 end
-plrs.PlayerAdded:Connect(ApplyESP)
+workspace.Players.DescendantAdded:Connect(function(d)
+	if d:IsA("Model") and d.Name == "Player" then
+        for _, v in next, plrs:GetPlayers(), 1 do
+	        ApplyESP(v)
+		end
+	end
+end)
 game:GetService("RunService"):BindToRenderStep("ESP", Enum.RenderPriority.Camera.Value + 1, function()
 	cam = workspace.CurrentCamera
 	for _, v in (ESP.Enabled and pairs or ipairs)(ESP.Objects) do
