@@ -29,7 +29,9 @@ local ESP = {
 	TextSize = 19,
 	BoxShift = CFrame.new(0, -1.5, 0),
 	BoxSize = Vector3.new(4, 6, 0),
-	Color = Color3.fromRGB(255, 170, 0),
+	Color = Color3.fromRGB(0, 166, 255),
+	WhitelistColor = Color3.fromRGB(166, 0, 255),
+	BlacklistColor = Color3.fromRGB(255, 0, 0),
 	Thickness = 2,
 	AttachShift = 1,
 	Objects = setmetatable({}, {
@@ -38,6 +40,8 @@ local ESP = {
 	Overrides = {},
 	IgnoreHumanoids = false
 }
+local WhitelistPlayer = {[""] = true}
+local BlacklistPlayer = {[""] = true}
 local cam = workspace.CurrentCamera
 local plrs = game:GetService("Players")
 local plr = plrs.LocalPlayer
@@ -78,7 +82,7 @@ function GetBoundingBox(torso)
 	local size = round(Vector2.new(4 * scaleFactor, 5 * scaleFactor))
 	return onScreen, size, round(Vector2.new(torsoPosition.X - (size.X * .5), torsoPosition.Y - (size.Y * .5))), torsoPosition
 end
-local function Draw(obj, props)
+function Draw(obj, props)
 	local new = Drawing.new(obj)
 	props = props or {}
 	for i, v in pairs(props) do
@@ -115,6 +119,23 @@ function ESP:GetPlrFromChar(char)
 		return ov(char)
 	end
 	return plrs:GetPlayerFromCharacter(char)
+end
+function ESP:GetTargetInTable(target, ttype)
+	if target then
+        if ttype == "Whitelist" then
+            WhitelistPlayer[target.Name] = true
+        elseif ttype == "Blacklist" then
+            BlacklistPlayer[target.Name] = true
+        end
+    end
+end
+function ESP:RemoveTargetInTable(target)
+	if target then
+	    if WhitelistPlayer and BlacklistPlayer then
+		    WhitelistPlayer[target.Name] = nil
+		    BlacklistPlayer[target.Name] = nil
+	    end
+	end
 end
 function ESP:Toggle(bool)
 	self.Enabled = bool
@@ -264,6 +285,12 @@ function boxBase:Update()
 				self.Components.BoxOutline.Position = position
 				self.Components.BoxFill.Visible = true
 				self.Components.BoxFill.Color = color
+				if WhitelistPlayer[self.Player.Name] then
+					self.Components.BoxFill.Color = ESP.WhitelistColor
+				end
+				if BlacklistPlayer[self.Player.Name] then
+					self.Components.BoxFill.Color = ESP.BlacklistColor
+				end
 				self.Components.BoxFill.Size = size
 				self.Components.BoxFill.Position = position
 			else
@@ -284,6 +311,12 @@ function boxBase:Update()
 			self.Components.Name.Position = round(position + Vector2.new(size.X * 0.5, -(self.Components.Name.TextBounds.Y + 2)))
 			self.Components.Name.Text = self.Name
 			self.Components.Name.Color = color
+			if WhitelistPlayer[self.Player.Name] then
+				self.Components.Name.Color = ESP.WhitelistColor
+			end
+			if BlacklistPlayer[self.Player.Name] then
+				self.Components.Name.Color = ESP.BlacklistColor
+			end
 		else
 			self.Components.Name.Visible = false
 		end
@@ -297,6 +330,12 @@ function boxBase:Update()
 			self.Components.Distance.Position = round(position + Vector2.new(size.X * 0.5, size.Y + 1))
 			self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .. "m"
 			self.Components.Distance.Color = color
+			if WhitelistPlayer[self.Player.Name] then
+				self.Components.Distance.Color = ESP.WhitelistColor
+			end
+			if BlacklistPlayer[self.Player.Name] then
+				self.Components.Distance.Color = ESP.BlacklistColor
+			end
 		else
 			self.Components.Distance.Visible = false
 		end
@@ -310,6 +349,12 @@ function boxBase:Update()
 			self.Components.Tracer.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
 			self.Components.Tracer.To = Vector2.new(cam.ViewportSize.X / 2, cam.ViewportSize.Y / ESP.AttachShift)
 			self.Components.Tracer.Color = color
+			if WhitelistPlayer[self.Player.Name] then
+				self.Components.Tracer.Color = ESP.WhitelistColor
+			end
+			if BlacklistPlayer[self.Player.Name] then
+				self.Components.Tracer.Color = ESP.BlacklistColor
+			end
 			self.Components["Tracer"].ZIndex = IsPlrHighlighted and 2 or 1
 		else
 			self.Components.Tracer.Visible = false
@@ -359,6 +404,12 @@ function boxBase:Update()
 				self.Components.Items.Position = round(position + Vector2.new(size.X * 0.5, size.Y - 50))
 				self.Components.Items.Visible = true
 				self.Components.Items.Color = color
+				if WhitelistPlayer[self.Player.Name] then
+					self.Components.Items.Color = ESP.WhitelistColor
+				end
+				if BlacklistPlayer[self.Player.Name] then
+					self.Components.Items.Color = ESP.BlacklistColor
+				end
 			else
 				self.Components.Items.Visible = false
 			end
@@ -431,6 +482,38 @@ function boxBase:Update()
 						self.Components.R15SkeleLowerTorsoRightUpperLeg.Color = color
 						self.Components.R15SkeleRightUpperLegRightLowerLeg.Color = color
 						self.Components.R15SkeleRightLowerLegRightFoot.Color = color
+						if WhitelistPlayer[self.Player.Name] then
+							self.Components.R15SkeleHeadUpperTorso.Color = ESP.WhitelistColor
+						    self.Components.R15SkeleUpperTorsoLowerTorso.Color = ESP.WhitelistColor
+						    self.Components.R15SkeleUpperTorsoLeftUpperArm.Color = ESP.WhitelistColor
+						    self.Components.R15SkeleLeftUpperArmLeftLowerArm.Color = ESP.WhitelistColor
+						    self.Components.R15SkeleLeftLowerArmLeftHand.Color = ESP.WhitelistColor
+						    self.Components.R15SkeleUpperTorsoRightUpperArm.Color = ESP.WhitelistColor
+						    self.Components.R15SkeleRightUpperArmRightLowerArm.Color = ESP.WhitelistColor
+						    self.Components.R15SkeleRightLowerArmRightHand.Color = ESP.WhitelistColor
+						    self.Components.R15SkeleLowerTorsoLeftUpperLeg.Color = ESP.WhitelistColor
+						    self.Components.R15SkeleLeftUpperLegLeftLowerLeg.Color = ESP.WhitelistColor
+						    self.Components.R15SkeleLeftLowerLegLeftFoot.Color = ESP.WhitelistColor
+						    self.Components.R15SkeleLowerTorsoRightUpperLeg.Color = ESP.WhitelistColor
+						    self.Components.R15SkeleRightUpperLegRightLowerLeg.Color = ESP.WhitelistColor
+						    self.Components.R15SkeleRightLowerLegRightFoot.Color = ESP.WhitelistColor
+						end
+						if BlacklistPlayer[self.Player.Name] then
+							self.Components.R15SkeleHeadUpperTorso.Color = ESP.BlacklistColor
+						    self.Components.R15SkeleUpperTorsoLowerTorso.Color = ESP.BlacklistColor
+						    self.Components.R15SkeleUpperTorsoLeftUpperArm.Color = ESP.BlacklistColor
+						    self.Components.R15SkeleLeftUpperArmLeftLowerArm.Color = ESP.BlacklistColor
+						    self.Components.R15SkeleLeftLowerArmLeftHand.Color = ESP.BlacklistColor
+						    self.Components.R15SkeleUpperTorsoRightUpperArm.Color = ESP.BlacklistColor
+						    self.Components.R15SkeleRightUpperArmRightLowerArm.Color = ESP.BlacklistColor
+						    self.Components.R15SkeleRightLowerArmRightHand.Color = ESP.BlacklistColor
+						    self.Components.R15SkeleLowerTorsoLeftUpperLeg.Color = ESP.BlacklistColor
+						    self.Components.R15SkeleLeftUpperLegLeftLowerLeg.Color = ESP.BlacklistColor
+						    self.Components.R15SkeleLeftLowerLegLeftFoot.Color = ESP.BlacklistColor
+						    self.Components.R15SkeleLowerTorsoRightUpperLeg.Color = ESP.BlacklistColor
+						    self.Components.R15SkeleRightUpperLegRightLowerLeg.Color = ESP.BlacklistColor
+						    self.Components.R15SkeleRightLowerLegRightFoot.Color = ESP.BlacklistColor
+						end
 						self.Components.R15SkeleHeadUpperTorso.Visible = true
 						self.Components.R15SkeleUpperTorsoLowerTorso.Visible = true
 						self.Components.R15SkeleUpperTorsoLeftUpperArm.Visible = true
@@ -494,6 +577,30 @@ function boxBase:Update()
 						self.Components.R6SkeleLeftLegLowerTorso.Color = color
 						self.Components.R6SkeleRightLeg.Color = color
 						self.Components.R6SkeleRightLegLowerTorso.Color = color
+						if WhitelistPlayer[self.Player.Name] then
+							self.Components.R6SkeleHeadSpine.Color = ESP.WhitelistColor
+						    self.Components.R6SkeleSpine.Color = ESP.WhitelistColor
+						    self.Components.R6SkeleLeftArm.Color = ESP.WhitelistColor
+						    self.Components.R6SkeleLeftArmUpperTorso.Color = ESP.WhitelistColor
+						    self.Components.R6SkeleRightArm.Color = ESP.WhitelistColor
+						    self.Components.R6SkeleRightArmUpperTorso.Color = ESP.WhitelistColor
+						    self.Components.R6SkeleLeftLeg.Color = ESP.WhitelistColor
+						    self.Components.R6SkeleLeftLegLowerTorso.Color = ESP.WhitelistColor
+						    self.Components.R6SkeleRightLeg.Color = ESP.WhitelistColor
+						    self.Components.R6SkeleRightLegLowerTorso.Color = ESP.WhitelistColor
+						end
+						if BlacklistPlayer[self.Player.Name] then
+							self.Components.R6SkeleHeadSpine.Color = ESP.BlacklistColor
+						    self.Components.R6SkeleSpine.Color = ESP.BlacklistColor
+						    self.Components.R6SkeleLeftArm.Color = ESP.BlacklistColor
+						    self.Components.R6SkeleLeftArmUpperTorso.Color = ESP.BlacklistColor
+						    self.Components.R6SkeleRightArm.Color = ESP.BlacklistColor
+						    self.Components.R6SkeleRightArmUpperTorso.Color = ESP.BlacklistColor
+						    self.Components.R6SkeleLeftLeg.Color = ESP.BlacklistColor
+						    self.Components.R6SkeleLeftLegLowerTorso.Color = ESP.BlacklistColor
+						    self.Components.R6SkeleRightLeg.Color = ESP.BlacklistColor
+						    self.Components.R6SkeleRightLegLowerTorso.Color = ESP.BlacklistColor
+						end
 						self.Components.R6SkeleHeadSpine.Visible = true
 						self.Components.R6SkeleSpine.Visible = true
 						self.Components.R6SkeleLeftArm.Visible = true
@@ -600,6 +707,12 @@ function boxBase:Update()
 			self.Components.Arrow.Filled = true
 			self.Components.Arrow.Transparency = .5
 			self.Components.Arrow.Color = color
+			if WhitelistPlayer[self.Player.Name] then
+				self.Components.Arrow.Color = ESP.WhitelistColor
+			end
+			if BlacklistPlayer[self.Player.Name] then
+				self.Components.Arrow.Color = ESP.BlacklistColor
+			end
 			self.Components.Arrow.PointA = pointA
 			self.Components.Arrow.PointB = pointB
 			self.Components.Arrow.PointC = pointC
@@ -626,6 +739,12 @@ function boxBase:Update()
 		if Vis12 then
 			self.Components.Highlight.Enabled = true
 			self.Components.Highlight.FillColor = color
+			if WhitelistPlayer[self.Player.Name] then
+				self.Components.Highlight.FillColor = ESP.WhitelistColor
+			end
+			if BlacklistPlayer[self.Player.Name] then
+				self.Components.Highlight.FillColor = ESP.BlacklistColor
+			end
 			self.Components.Highlight.FillTransparency = ESP.ChamsTransparency
 			self.Components.Highlight.OutlineTransparency = ESP.ChamsOutlineTransparency
 			self.Components.Highlight.OutlineColor = ESP.ChamsOutlineColor
