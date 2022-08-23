@@ -123,17 +123,17 @@ end
 function ESP:GetTargetInTable(target, ttype)
 	if target then
         if ttype == "Whitelist" then
-            WhitelistPlayer[target] = true
+            WhitelistPlayer[target.Name] = true
         elseif ttype == "Blacklist" then
-            BlacklistPlayer[target] = true
+            BlacklistPlayer[target.Name] = true
         end
     end
 end
 function ESP:RemoveTargetInTable(target)
 	if target then
 	    if WhitelistPlayer and BlacklistPlayer then
-		    WhitelistPlayer[target] = nil
-		    BlacklistPlayer[target] = nil
+		    WhitelistPlayer[target.Name] = nil
+		    BlacklistPlayer[target.Name] = nil
 	    end
 	end
 end
