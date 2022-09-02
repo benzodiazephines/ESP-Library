@@ -131,7 +131,7 @@ function ESP:GetTargetInTable(target, ttype)
 end
 function ESP:RemoveTargetInTable(target)
 	if target then
-	    if WhitelistPlayer and BlacklistPlayer then
+	    if ESP.WhitelistPlayer and ESP.BlacklistPlayer then
 		    ESP.WhitelistPlayer[target] = nil
 		    ESP.BlacklistPlayer[target] = nil
 	    end
