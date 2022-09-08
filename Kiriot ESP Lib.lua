@@ -16,6 +16,7 @@ local ESP = {
 	ChamsOutlineTransparency = 0,
 	ChamsOutlineColor = Color3.fromRGB(255, 255, 255),
 	Tracers = false,
+	Origin = "Bottom",
 	Skeleton = false,
 	OutOfViewArrows = false,
 	OutOfViewArrowsRadius = 100,
@@ -46,6 +47,7 @@ local cam = workspace.CurrentCamera
 local plrs = game:GetService("Players")
 local plr = plrs.LocalPlayer
 local mouse = plr:GetMouse()
+local uis = game:GetService("UserInputService")
 local V3new = Vector3.new
 local WorldToViewportPoint = cam.WorldToViewportPoint
 local PointToObjectSpace = CFrame.new().PointToObjectSpace
@@ -346,7 +348,7 @@ function boxBase:Update()
 		local TorsoPos, Vis7 = WorldToViewportPoint(cam, locs.Torso.p)
 		if Vis7 then
 			self.Components.Tracer.Visible = true
-			self.Components.Tracer.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
+			self.Components.Tracer.From = ESP.Origin == "Mouse" and uis:GetMouseLocation() or ESP.Origin == "Bottom" and Vector2.new(TorsoPos.X, TorsoPos.Y)
 			self.Components.Tracer.To = Vector2.new(cam.ViewportSize.X / 2, cam.ViewportSize.Y / ESP.AttachShift)
 			self.Components.Tracer.Color = color
 			if self.Player and WhitelistPlayer[self.Player.Name] then
