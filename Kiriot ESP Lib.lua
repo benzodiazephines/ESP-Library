@@ -348,8 +348,8 @@ function boxBase:Update()
 		local TorsoPos, Vis7 = WorldToViewportPoint(cam, locs.Torso.p)
 		if Vis7 then
 			self.Components.Tracer.Visible = true
-			self.Components.Tracer.From = ESP.Origin == "Mouse" and uis:GetMouseLocation() or ESP.Origin == "Bottom" and Vector2.new(TorsoPos.X, TorsoPos.Y)
-			self.Components.Tracer.To = Vector2.new(cam.ViewportSize.X / 2, cam.ViewportSize.Y / ESP.AttachShift)
+			self.Components.Tracer.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
+			self.Components.Tracer.To = ESP.Origin == "Mouse" and uis:GetMouseLocation() or ESP.Origin == "Bottom" and Vector2.new(cam.ViewportSize.X / 2, cam.ViewportSize.Y / ESP.AttachShift)
 			self.Components.Tracer.Color = color
 			if self.Player and WhitelistPlayer[self.Player.Name] then
 				self.Components.Tracer.Color = ESP.WhitelistColor
