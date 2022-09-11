@@ -18,6 +18,8 @@ local ESP = {
 	Tracers = false,
 	Origin = "Bottom",
 	Skeleton = false,
+	PP = false,
+	PPSize = 40,
 	OutOfViewArrows = false,
 	OutOfViewArrowsRadius = 100,
 	OutOfViewArrowsSize = 25,
@@ -251,9 +253,9 @@ function boxBase:Update()
 	local IsPlrHighlighted = (ESP.Highlighted == self.Object and self.Player ~= nil)
 	local cf = self.PrimaryPart.CFrame
 	if ESP.FaceCamera then
-		cf = CFrame.new(cf.p, cam.CFrame.p)
+		cf = CFrame.new(cf.Position, cam.CFrame.Position)
 	end
-	local distance = math.floor((cam.CFrame.p - cf.p).magnitude)
+	local distance = math.floor((cam.CFrame.Position - cf.Position).magnitude)
 	if self.Player and ESP.UsePlrDistance and distance > ESP.MaxPlrDistance then
 		for i, v in pairs(self.Components) do
 			if i == "Highlight" then
@@ -330,7 +332,7 @@ function boxBase:Update()
 		if onScreen and size and position then
 			self.Components.Distance.Visible = true
 			self.Components.Distance.Position = round(position + Vector2.new(size.X * 0.5, size.Y + 1))
-			self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .. "m"
+			self.Components.Distance.Text = math.floor((cam.CFrame.Position - cf.Position).magnitude) .. "m"
 			self.Components.Distance.Color = color
 			if self.Player and WhitelistPlayer[self.Player.Name] then
 				self.Components.Distance.Color = ESP.WhitelistColor
@@ -345,7 +347,7 @@ function boxBase:Update()
 		self.Components.Distance.Visible = false
 	end
 	if ESP.Tracers then
-		local TorsoPos, Vis7 = WorldToViewportPoint(cam, locs.Torso.p)
+		local TorsoPos, Vis7 = WorldToViewportPoint(cam, locs.Torso.Position)
 		if Vis7 then
 			self.Components.Tracer.Visible = true
 			self.Components.Tracer.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
@@ -422,7 +424,7 @@ function boxBase:Update()
 		self.Components.Items.Visible = false
 	end
 	if ESP.Skeleton then
-		local TorsoPos, Vis10 = WorldToViewportPoint(cam, locs.Torso.p)
+		local TorsoPos, Vis10 = WorldToViewportPoint(cam, locs.Torso.Position)
 		if Vis10 then
 			if self.Object and self.Object:FindFirstChildOfClass("Humanoid") then
 				if self.Object:FindFirstChildOfClass("Humanoid") and self.Object:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R15 then
@@ -535,20 +537,20 @@ function boxBase:Update()
 					if self.Object and self.Object:FindFirstChild("Head") and self.Object:FindFirstChild("Torso") and self.Object:FindFirstChild("Left Arm") and self.Object:FindFirstChild("Right Arm") and self.Object:FindFirstChild("Left Leg") and self.Object:FindFirstChild("Right Leg") then
 						local H = WorldToViewportPoint(cam, self.Object.Head.Position)
 						local T_Height = self.Object.Torso.Size.Y / 2 - .2
-						local UT = WorldToViewportPoint(cam, (self.Object.Torso.CFrame * CFrame.new(0, T_Height, 0)).p)
-						local LT = WorldToViewportPoint(cam, (self.Object.Torso.CFrame * CFrame.new(0, -T_Height, 0)).p)
+						local UT = WorldToViewportPoint(cam, (self.Object.Torso.CFrame * CFrame.new(0, T_Height, 0)).Position)
+						local LT = WorldToViewportPoint(cam, (self.Object.Torso.CFrame * CFrame.new(0, -T_Height, 0)).Position)
 						local LA_Height = self.Object["Left Arm"].Size.Y / 2 - .2
-						local LUA = WorldToViewportPoint(cam, (self.Object["Left Arm"].CFrame * CFrame.new(0, LA_Height, 0)).p)
-						local LLA = WorldToViewportPoint(cam, (self.Object["Left Arm"].CFrame * CFrame.new(0, -LA_Height, 0)).p)
+						local LUA = WorldToViewportPoint(cam, (self.Object["Left Arm"].CFrame * CFrame.new(0, LA_Height, 0)).Position)
+						local LLA = WorldToViewportPoint(cam, (self.Object["Left Arm"].CFrame * CFrame.new(0, -LA_Height, 0)).Position)
 						local RA_Height = self.Object["Right Arm"].Size.Y / 2 - .2
-						local RUA = WorldToViewportPoint(cam, (self.Object["Right Arm"].CFrame * CFrame.new(0, RA_Height, 0)).p)
-						local RLA = WorldToViewportPoint(cam, (self.Object["Right Arm"].CFrame * CFrame.new(0, -RA_Height, 0)).p)
+						local RUA = WorldToViewportPoint(cam, (self.Object["Right Arm"].CFrame * CFrame.new(0, RA_Height, 0)).Position)
+						local RLA = WorldToViewportPoint(cam, (self.Object["Right Arm"].CFrame * CFrame.new(0, -RA_Height, 0)).Position)
 						local LL_Height = self.Object["Left Leg"].Size.Y / 2 - .2
-						local LUL = WorldToViewportPoint(cam, (self.Object["Left Leg"].CFrame * CFrame.new(0, LL_Height, 0)).p)
-						local LLL = WorldToViewportPoint(cam, (self.Object["Left Leg"].CFrame * CFrame.new(0, -LL_Height, 0)).p)
+						local LUL = WorldToViewportPoint(cam, (self.Object["Left Leg"].CFrame * CFrame.new(0, LL_Height, 0)).Position)
+						local LLL = WorldToViewportPoint(cam, (self.Object["Left Leg"].CFrame * CFrame.new(0, -LL_Height, 0)).Position)
 						local RL_Height = self.Object["Right Leg"].Size.Y / 2 - .2
-						local RUL = WorldToViewportPoint(cam, (self.Object["Right Leg"].CFrame * CFrame.new(0, RL_Height, 0)).p)
-						local RLL = WorldToViewportPoint(cam, (self.Object["Right Leg"].CFrame * CFrame.new(0, -RL_Height, 0)).p)
+						local RUL = WorldToViewportPoint(cam, (self.Object["Right Leg"].CFrame * CFrame.new(0, RL_Height, 0)).Position)
+						local RLL = WorldToViewportPoint(cam, (self.Object["Right Leg"].CFrame * CFrame.new(0, -RL_Height, 0)).Position)
 						self.Components.R6SkeleHeadSpine.From = Vector2.new(H.X, H.Y)
 						self.Components.R6SkeleHeadSpine.To = Vector2.new(UT.X, UT.Y)
 						self.Components.R6SkeleSpine.From = Vector2.new(UT.X, UT.Y)
@@ -693,11 +695,74 @@ function boxBase:Update()
 		self.Components.R6SkeleRightLeg.Visible = false
 		self.Components.R6SkeleRightLegLowerTorso.Visible = false
 	end
-	local TorsoPos, Vis11 = WorldToViewportPoint(cam, locs.Torso.p)
+	if ESP.PP then
+		local TorsoPos, Vis10 = WorldToViewportPoint(cam, locs.Torso.Position)
+		if Vis10 then
+			if self.Object:FindFirstChildOfClass("Humanoid") and self.Object:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R15 then
+				if self.Object and self.Object:FindFirstChild("LowerTorso") then
+					local LT = WorldToViewportPoint(cam, self.Object.LowerTorso.Position)
+					self.Components.Ball.Position = Vector2.new(LT.X + 3, LT.Y)
+					self.Components.Ball2.Position = Vector2.new(LT.X - 3, LT.Y)
+					self.Components.Wanker.From = Vector2.new(LT.X, LT.Y)
+					self.Components.Wanker.To = Vector2.new(LT.X, LT.Y + ESP.PPSize)
+					self.Components.Ball.Color = color
+					self.Components.Ball2.Color = color
+					self.Components.Wanker.Color = color
+					if self.Player and WhitelistPlayer[self.Player.Name] then
+						self.Components.Ball.Color = ESP.WhitelistColor
+						self.Components.Ball2.Color = ESP.WhitelistColor
+						self.Components.Wanker.Color = ESP.BlacklistColor
+					end
+					if self.Player and BlacklistPlayer[self.Player.Name] then
+						self.Components.Ball.Color = ESP.BlacklistColor
+						self.Components.Ball2.Color = ESP.BlacklistColor
+						self.Components.Wanker.Color = ESP.BlacklistColor
+					end
+					self.Components.Ball.Visible = true
+			        self.Components.Ball2.Visible = true
+					self.Components.Wanker.Visible = true
+				end
+			elseif self.Object:FindFirstChildOfClass("Humanoid") and self.Object:FindFirstChildOfClass("Humanoid").RigType == Enum.HumanoidRigType.R6 then
+				if self.Object and self.Object:FindFirstChild("Torso") then
+					local T_Height = self.Object.Torso.Size.Y / 2 - .2
+					local Torso = WorldToViewportPoint(cam, (self.Object.Torso.CFrame * CFrame.new(0, -T_Height, 0)).Position)
+                    self.Components.Ball.Position = Vector2.new(Torso.X + 3, Torso.Y)
+                    self.Components.Ball2.Position = Vector2.new(Torso.X - 3, Torso.Y)
+                    self.Components.Wanker.From = Vector2.new(Torso.X, Torso.Y)
+                    self.Components.Wanker.To = Vector2.new(Torso.X, Torso.Y + ESP.PPSize)
+					self.Components.Ball.Color = color
+					self.Components.Ball2.Color = color
+					self.Components.Wanker.Color = color
+					if self.Player and WhitelistPlayer[self.Player.Name] then
+						self.Components.Ball.Color = ESP.WhitelistColor
+						self.Components.Ball2.Color = ESP.WhitelistColor
+						self.Components.Wanker.Color = ESP.WhitelistColor
+					end
+					if self.Player and BlacklistPlayer[self.Player.Name] then
+						self.Components.Ball.Color = ESP.BlacklistColor
+						self.Components.Ball2.Color = ESP.BlacklistColor
+						self.Components.Wanker.Color = ESP.BlacklistColor
+					end
+					self.Components.Ball.Visible = true
+			        self.Components.Ball2.Visible = true
+					self.Components.Wanker.Visible = true
+				end
+			end
+		else
+			self.Components.Ball.Visible = false
+			self.Components.Ball2.Visible = false
+			self.Components.Wanker.Visible = false
+		end
+	else
+		self.Components.Ball.Visible = false
+		self.Components.Ball2.Visible = false
+		self.Components.Wanker.Visible = false
+	end
+	local TorsoPos, Vis11 = WorldToViewportPoint(cam, locs.Torso.Position)
 	if not Vis11 then
 		local viewportSize = cam.ViewportSize
 		local screenCenter = Vector2.new(viewportSize.X / 2, viewportSize.Y / 2)
-		local objectSpacePoint = (PointToObjectSpace(cam.CFrame, locs.Torso.p) * Vector3.new(1, 0, 1)).Unit
+		local objectSpacePoint = (PointToObjectSpace(cam.CFrame, locs.Torso.Position) * Vector3.new(1, 0, 1)).Unit
 		local crossVector = Cross(objectSpacePoint, Vector3.new(0, 1, 1))
 		local rightVector = Vector2.new(crossVector.X, crossVector.Z)
 		local arrowRadius, arrowSize = ESP.OutOfViewArrowsRadius, ESP.OutOfViewArrowsSize
@@ -737,7 +802,7 @@ function boxBase:Update()
 		self.Components.Arrow2.Visible = false
 	end
 	if ESP.Chams then
-		local TorsoPos, Vis12 = WorldToViewportPoint(cam, locs.Torso.p)
+		local TorsoPos, Vis12 = WorldToViewportPoint(cam, locs.Torso.Position)
 		if Vis12 then
 			self.Components.Highlight.Enabled = true
 			self.Components.Highlight.FillColor = color
@@ -964,6 +1029,23 @@ function ESP:Add(obj, options)
 		Transparency = 1,
 		Thickness = 1,
 		Visible = self.Enabled and self.Skeleton
+	})
+	box.Components["Ball"] = Draw("Circle", {
+		Transparency = 1,
+		Thickness = 1,
+		Radius = 4,
+		Visible = self.Enabled and self.PP
+	})
+	box.Components["Ball2"] = Draw("Circle", {
+		Transparency = 1,
+		Thickness = 1,
+		Radius = 4,
+		Visible = self.Enabled and self.PP
+	})
+	box.Components["Wanker"] = Draw("Line", {
+		Transparency = 1,
+		Thickness = 1,
+		Visible = self.Enabled and self.PP
 	})
 	box.Components["Arrow"] = Draw("Triangle", {
 		Thickness = 1
