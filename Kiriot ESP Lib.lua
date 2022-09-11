@@ -711,7 +711,7 @@ function boxBase:Update()
 					if self.Player and WhitelistPlayer[self.Player.Name] then
 						self.Components.Ball.Color = ESP.WhitelistColor
 						self.Components.Ball2.Color = ESP.WhitelistColor
-						self.Components.Wanker.Color = ESP.BlacklistColor
+						self.Components.Wanker.Color = ESP.WhitelistColor
 					end
 					if self.Player and BlacklistPlayer[self.Player.Name] then
 						self.Components.Ball.Color = ESP.BlacklistColor
