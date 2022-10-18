@@ -56,6 +56,7 @@ local PointToObjectSpace = CFrame.new().PointToObjectSpace
 local Cross = Vector3.new().Cross
 local Folder = Instance.new("Folder", game.CoreGui)
 local chars = {}
+local lastFov, lastScale = nil, nil
 for i = 17700, 17800 do
 	chars[#chars + 1] = utf8.char(i)
 end
@@ -69,20 +70,23 @@ function GenerateName(x)
 	end
 	return e
 end
+function round(number)
+    return typeof(number) == "Vector2" and Vector2.new(round(number.X), round(number.Y)) or math.floor(number)
+end
+function GetScaleFactor(fov, depth)
+    if (fov ~= lastFov) then
+        lastScale = math.tan(math.rad(fov * 0.5)) * 2
+        lastFov = fov
+    end
+    return 1 / (depth * lastScale) * 1000
+end
 function BrahWth(position)
 	local screenPosition, onScreen = WorldToViewportPoint(cam, position)
 	return Vector2.new(screenPosition.X, screenPosition.Y), onScreen, screenPosition.Z
 end
-local function round(number)
-	if (typeof(number) == "Vector2") then
-		return Vector2.new(round(number.X), round(number.Y))
-	else
-		return math.floor(number)
-	end
-end
 function GetBoundingBox(torso)
 	local torsoPosition, onScreen, depth = BrahWth(torso.Position)
-	local scaleFactor = 1 / (math.tan(math.rad(cam.FieldOfView * .5)) * 2 * depth) * 1e3
+	local scaleFactor = GetScaleFactor(cam.FieldOfView, depth)
 	local size = round(Vector2.new(4 * scaleFactor, 5 * scaleFactor))
 	return onScreen, size, round(Vector2.new(torsoPosition.X - (size.X * .5), torsoPosition.Y - (size.Y * .5))), torsoPosition
 end
@@ -277,7 +281,7 @@ function boxBase:Update()
 		Torso = cf
 	}
 	if ESP.Boxes then
-		local onScreen, size, position = GetBoundingBox(locs.Torso)
+		local onScreen, size, position = GetBoundingBox(locs.Torso, Vector3.new(5, 6))
 		if self.Components.Box and self.Components.BoxOutline and self.Components.BoxFill then
 			if onScreen and position and size then
 				self.Components.Box.Visible = true
@@ -309,7 +313,7 @@ function boxBase:Update()
 		self.Components.BoxFill.Visible = false
 	end
 	if ESP.Names then
-		local onScreen, size, position = GetBoundingBox(locs.Torso)
+		local onScreen, size, position = GetBoundingBox(locs.Torso, Vector3.new(5, 6))
 		if onScreen and size and position then
 			self.Components.Name.Visible = true
 			self.Components.Name.Position = round(position + Vector2.new(size.X * 0.5, -(self.Components.Name.TextBounds.Y + 2)))
@@ -328,7 +332,7 @@ function boxBase:Update()
 		self.Components.Name.Visible = false
 	end
 	if ESP.Distance then
-		local onScreen, size, position = GetBoundingBox(locs.Torso)
+		local onScreen, size, position = GetBoundingBox(locs.Torso, Vector3.new(5, 6))
 		if onScreen and size and position then
 			self.Components.Distance.Visible = true
 			self.Components.Distance.Position = round(position + Vector2.new(size.X * 0.5, size.Y + 1))
@@ -367,7 +371,7 @@ function boxBase:Update()
 		self.Components.Tracer.Visible = false
 	end
 	if ESP.Health then
-		local onScreen, size, position = GetBoundingBox(locs.Torso)
+		local onScreen, size, position = GetBoundingBox(locs.Torso, Vector3.new(5, 6))
 		if onScreen and size and position then
 			if self.Object and self.Object:FindFirstChildOfClass("Humanoid") then
 				local Health, MaxHealth = self.Object:FindFirstChildOfClass("Humanoid").Health, self.Object:FindFirstChildOfClass("Humanoid").MaxHealth
@@ -400,7 +404,7 @@ function boxBase:Update()
 		self.Components.HealthText.Visible = false
 	end
 	if ESP.Items then
-		local onScreen, size, position = GetBoundingBox(locs.Torso)
+		local onScreen, size, position = GetBoundingBox(locs.Torso, Vector3.new(5, 6))
 		if onScreen and size and position then
 			if self.Object and self.Object:FindFirstChildOfClass("Tool") then
 				self.Components.Items.Text = tostring(self.Object:FindFirstChildOfClass("Tool").Name)
