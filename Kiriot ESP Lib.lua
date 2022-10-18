@@ -1132,3 +1132,4 @@ game:GetService("RunService"):BindToRenderStep("ESP", Enum.RenderPriority.Camera
 		end
 	end
 end)
+return ESP
