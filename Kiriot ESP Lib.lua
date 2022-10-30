@@ -43,7 +43,7 @@ local ESP = {
 	Overrides = {},
 	IgnoreHumanoids = false,
 	UseRenderValue = false,
-	RenderValue = 199
+	RenderValue = 300
 }
 local WhitelistPlayer = {[""] = true}
 local BlacklistPlayer = {[""] = true}
