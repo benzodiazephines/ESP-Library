@@ -41,7 +41,9 @@ local ESP = {
 		__mode = "kv"
 	}),
 	Overrides = {},
-	IgnoreHumanoids = false
+	IgnoreHumanoids = false,
+	UseRenderValue = false,
+	RenderValue = 199
 }
 local WhitelistPlayer = {[""] = true}
 local BlacklistPlayer = {[""] = true}
@@ -1121,7 +1123,7 @@ plrs.PlayerAdded:Connect(PlayerAdded)
 for _, v in next, plrs:GetPlayers(), 1 do
 	PlayerAdded(v)
 end
-game:GetService("RunService"):BindToRenderStep("ESP", Enum.RenderPriority.Camera.Value + 1, function()
+game:GetService("RunService"):BindToRenderStep("ESP", (ESP.UseRenderValue and ESP.RenderValue) or Enum.RenderPriority.Camera.Value + 1, function()
 	cam = workspace.CurrentCamera
 	for _, v in (ESP.Enabled and pairs or ipairs)(ESP.Objects) do
 		if v.Update then
