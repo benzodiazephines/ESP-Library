@@ -28,8 +28,8 @@ local ESP = {
 	FaceCamera = false,
 	TeamColor = true,
 	TeamMates = true,
-	Font = "Plex",
-	TextSize = 19,
+	Font = 2,
+	TextSize = 13,
 	BoxShift = CFrame.new(0, -1.5, 0),
 	BoxSize = Vector3.new(4, 6, 0),
 	Color = Color3.fromRGB(0, 166, 255),
@@ -875,6 +875,7 @@ function ESP:Add(obj, options)
 		Color = box.Color,
 		Center = true,
 		Outline = true,
+		Font = 2,
 		Size = self.TextSize,
 		Visible = self.Enabled and self.Names
 	})
@@ -882,6 +883,7 @@ function ESP:Add(obj, options)
 		Color = box.Color,
 		Center = true,
 		Outline = true,
+		Font = 2,
 		Size = self.TextSize,
 		Visible = self.Enabled and self.Names
 	})
@@ -889,6 +891,7 @@ function ESP:Add(obj, options)
 		Color = box.Color,
 		Center = true,
 		Outline = true,
+		Font = 2,
 		Size = self.TextSize,
 		Visible = self.Enabled and self.Items
 	})
@@ -907,6 +910,7 @@ function ESP:Add(obj, options)
 		Color = box.Color,
 		Center = true,
 		Outline = true,
+		Font = 2,
 		Size = self.TextSize,
 		Visible = self.Enabled and self.Health
 	})
